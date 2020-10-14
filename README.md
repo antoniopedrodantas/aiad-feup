@@ -8,6 +8,6 @@ Repository of code developed for the course AIAD @FEUP.
 
 ## Assignments
 * **First Assignment:** [here](https://github.com/vitorhugo13/feup-aiad/tree/main/1st%20Assignment)
-* **Second Assignment:** add link
+* **Second Assignment:** [here](https://github.com/vitorhugo13/feup-aiad/tree/main/2nd%20Assignment)
 
 
