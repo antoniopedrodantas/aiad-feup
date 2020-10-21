@@ -1,0 +1,6 @@
+*.DS_Store
+.idea/*
+out/*
+bin/*
+APDescription.txt
+MTPs-Main-Container.txt
