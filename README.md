@@ -7,7 +7,7 @@ Repository of code developed for the course AIAD @FEUP.
 * **Contributors** : [António Pedro Dantas](https://github.com/antoniopedrodantas), [João Macedo](https://github.com/j-vm), [Vítor Gonçalves](https://github.com/vitorhugo13)
 
 ## Assignments
-* **First Assignment:** add link
-* **Second Assignment:** add link
+* **First Assignment:** [here](https://github.com/vitorhugo13/feup-aiad/tree/main/1st%20Assignment)
+* **Second Assignment:** [here](https://github.com/vitorhugo13/feup-aiad/tree/main/2nd%20Assignment)
 
 
