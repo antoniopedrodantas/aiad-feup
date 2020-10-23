@@ -1,4 +1,5 @@
 import agents.BuildingAgent;
+import agents.LiftAgent;
 
 import java.io.IOException;
 import jade.core.Profile;
@@ -31,6 +32,16 @@ public class JADELauncher {
 		try {
 			ac1 = ct.acceptNewAgent("building", new BuildingAgent(args));
 			ac1.start();
+		} catch(StaleProxyException e) {
+			e.printStackTrace();
+		}
+		
+		AgentController ac2;
+		
+		
+		try {
+			ac2 = ct.acceptNewAgent("lift1", new LiftAgent());
+			ac2.start();
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
