@@ -1,4 +1,4 @@
-import agents.LiftAgent;
+import agents.BuildingAgent;
 
 import java.io.IOException;
 import jade.core.Profile;
@@ -24,12 +24,13 @@ public class JADELauncher {
 	}
 	
 	protected void launchAgents(ContainerController ct) {
+		
 		AgentController ac1;
+		String[] args = {"50", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
 		
 		try {
-			ac1 = ct.acceptNewAgent("vitor", new LiftAgent());
+			ac1 = ct.acceptNewAgent("building", new BuildingAgent(args));
 			ac1.start();
-			ac1.kill();
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
