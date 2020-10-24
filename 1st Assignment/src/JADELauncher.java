@@ -18,10 +18,10 @@ public class JADELauncher {
 		Runtime runTime = Runtime.instance();
 		Profile profile = new ProfileImpl();
 		ContainerController mainContainer = runTime.createMainContainer(profile);
-		launchAgents(mainContainer);
+		launchBuilding(mainContainer);
 	}
 	
-	protected void launchAgents(ContainerController mainContainer) {
+	protected void launchBuilding(ContainerController mainContainer) {
 		
 		AgentController agentController;
 		String[] args = {"50", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 

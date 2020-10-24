@@ -31,6 +31,8 @@ public class BuildingAgent extends Agent{
 		launchLiftAgents(this.nmrLifts);
 	}
 	
+	
+	//TODO: when taking down Building Agent, Lift and FloorPanel agents will also be taken down
 	public void takedown() {
 		System.out.println(getLocalName() + ": done working.");
 	}
@@ -49,12 +51,17 @@ public class BuildingAgent extends Agent{
 		
 		
 		try {
-			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, new LiftAgent(lift));
+			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, new LiftAgent(buildArgs(lift)));
 			liftAgent.start();
 		} catch(StaleProxyException e) {
 			System.err.println("Error launching liftAgent");
 			e.printStackTrace();
 		}
+	}
+	
+	protected String[] buildArgs(Integer lift) {
+		String[] args = {String.valueOf(lift), "600.0", "2.5"};
+		return args;
 	}
 	
 	@Override
