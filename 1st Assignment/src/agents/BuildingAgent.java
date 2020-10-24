@@ -1,6 +1,10 @@
 package agents;
+import agents.LiftAgent;
 
 import jade.core.Agent;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 
 @SuppressWarnings("serial")
 public class BuildingAgent extends Agent{
@@ -10,22 +14,47 @@ public class BuildingAgent extends Agent{
 	private float maxWeight;
 	private float maxSpeed;
 	private float floorDistance;
+	private ContainerController mainContainer;
 	
-	public BuildingAgent(String[] args){
+	public BuildingAgent(String[] args, ContainerController mainContainer){
         this.nmrFloors = Integer.parseInt(args[0]);
         this.nmrLifts = Integer.parseInt(args[1]);
         this.maxWeight = Float.parseFloat(args[2]);
         this.maxSpeed = Float.parseFloat(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
+        this.mainContainer = mainContainer;
     }
 	
 	public void setup() {
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
+		launchLiftAgents(this.nmrLifts);
 	}
 	
 	public void takedown() {
 		System.out.println(getLocalName() + ": done working.");
+	}
+	
+	protected void launchLiftAgents(Integer nmrLifts) {
+		
+		int lift;
+		for(lift = 1; lift <= nmrLifts; lift++) {
+			createLiftAgent(lift);
+		}
+	}
+	
+	protected void createLiftAgent(Integer lift) {
+		
+		AgentController liftAgent;
+		
+		
+		try {
+			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, new LiftAgent(lift));
+			liftAgent.start();
+		} catch(StaleProxyException e) {
+			System.err.println("Error launching liftAgent");
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -34,23 +63,27 @@ public class BuildingAgent extends Agent{
     }
 	
 	/*getters*/
-	private int getFloors() {
+	public int getFloors() {
 		return this.nmrFloors;
 	}
 	
-	private int getLifts() {
+	public int getLifts() {
 		return this.nmrLifts;
 	}
 	
-	private float getWeight() {
+	public float getWeight() {
 		return this.maxWeight;
 	}
 	
-	private float getSpeed() {
+	public float getSpeed() {
 		return this.maxSpeed;
 	}
 	
-	private float getDistance() {
+	public float getDistance() {
 		return this.floorDistance;
+	}
+	
+	public ContainerController getController() {
+		return this.mainContainer;
 	}
 }
