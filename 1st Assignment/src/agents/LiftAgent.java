@@ -6,7 +6,7 @@ import jade.core.Agent;
 public class LiftAgent extends Agent{
 	
 	public void setup() {
-		System.out.println("Hey, lift here");
+		System.out.println("Hey, lift here\n");
 	}
 	
     public void takeDown() {

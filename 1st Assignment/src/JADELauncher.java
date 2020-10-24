@@ -17,31 +17,32 @@ public class JADELauncher {
 	
 	protected void launchJade(){
 		
-		Runtime rt = Runtime.instance();
-		Profile p1 = new ProfileImpl();
-		ContainerController mainContainer = rt.createMainContainer(p1);
+		Runtime runTime = Runtime.instance();
+		Profile profile = new ProfileImpl();
+		ContainerController mainContainer = runTime.createMainContainer(profile);
 		launchAgents(mainContainer);
 		
 	}
 	
-	protected void launchAgents(ContainerController ct) {
+	protected void launchAgents(ContainerController mainContainer) {
 		
-		AgentController ac1;
+		AgentController agentController1;
 		String[] args = {"50", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
 		
 		try {
-			ac1 = ct.acceptNewAgent("building", new BuildingAgent(args));
-			ac1.start();
+			agentController1 = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args));
+			agentController1.start();
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
 		
-		AgentController ac2;
 		
+		//just here for testing reason - will be called from BuildingAgent
+		AgentController agentController2;
 		
 		try {
-			ac2 = ct.acceptNewAgent("lift1", new LiftAgent());
-			ac2.start();
+			agentController2 = mainContainer.acceptNewAgent("liftAgent1", new LiftAgent());
+			agentController2.start();
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
