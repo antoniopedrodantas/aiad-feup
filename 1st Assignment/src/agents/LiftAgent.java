@@ -23,12 +23,12 @@ public class LiftAgent extends Agent{
         this.taskList = new int[5];
 	}
 	
-	public void setup() {
+	public void setup() { //register in DFService
 		System.out.println("Hey, " + this.getLocalName() + " here\n");
 		System.out.println(this.toString());
 	}
 	
-    public void takeDown() {
+    public void takeDown() { //deregister in DFService
         System.out.println(getLocalName() + ": done working.");
     }
     

@@ -6,7 +6,7 @@ import jade.core.Agent;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-
+ 
 @SuppressWarnings("serial")
 public class BuildingAgent extends Agent{
 	
@@ -20,7 +20,7 @@ public class BuildingAgent extends Agent{
 	public BuildingAgent(String[] args, ContainerController mainContainer){
         this.nmrFloors = Integer.parseInt(args[0]);
         this.nmrLifts = Integer.parseInt(args[1]);
-        this.maxWeight = Float.parseFloat(args[2]);
+        this.maxWeight = Float.parseFloat(args[2]); 
         this.maxSpeed = Float.parseFloat(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
         this.mainContainer = mainContainer;
@@ -37,6 +37,8 @@ public class BuildingAgent extends Agent{
 	//TODO: when taking down Building Agent, Lift and FloorPanel agents will also be taken down
 	public void takeDown() {
 		System.out.println(getLocalName() + ": done working."); 
+		killLiftAgents();
+		killFloorPanelAgents();
 	}
 	
 	
@@ -94,6 +96,16 @@ public class BuildingAgent extends Agent{
 		}
 	}
 	
+	
+	/* Killing Agents functions */
+	
+	protected void killLiftAgents() {
+		System.out.println("not finished 1");
+	}
+	
+	protected void killFloorPanelAgents() {
+		System.out.println("not finished 2");
+	}
 	
 	
 	@Override
