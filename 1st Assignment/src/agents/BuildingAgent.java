@@ -35,8 +35,8 @@ public class BuildingAgent extends Agent{
 	
 	
 	//TODO: when taking down Building Agent, Lift and FloorPanel agents will also be taken down
-	public void takedown() {
-		System.out.println(getLocalName() + ": done working.");
+	public void takeDown() {
+		System.out.println(getLocalName() + ": done working."); 
 	}
 	
 	

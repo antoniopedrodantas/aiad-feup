@@ -10,27 +10,34 @@ import jade.core.Runtime;
 
 public class JADELauncher {
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException, StaleProxyException {
 		new JADELauncher().launchJade();
     }
 	
-	protected void launchJade(){
+	protected void launchJade() throws InterruptedException, StaleProxyException{
 		Runtime runTime = Runtime.instance();
 		Profile profile = new ProfileImpl();
 		ContainerController mainContainer = runTime.createMainContainer(profile);
 		launchBuilding(mainContainer);
 	}
 	
-	protected void launchBuilding(ContainerController mainContainer) {
+	protected void launchBuilding(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
 		
 		AgentController agentController;
-		String[] args = {"10", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
+		String[] args = {"10", "3", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
 		
 		try {
 			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer));
 			agentController.start();
+			
+			Thread.sleep(2000); //just for testing reasons
+			
+			agentController.kill();
+			
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 }

@@ -12,10 +12,10 @@ public class FloorPanelAgent extends Agent {
 	}
 	 
 	public void setup() {
-		System.out.println(this.toString());
+		System.out.println(this.toString()); 
 	}
 	
-	public void takedown() {
+	public void takeDown() {
 		System.out.println(getLocalName() + ": done working.");
 	}
 	
