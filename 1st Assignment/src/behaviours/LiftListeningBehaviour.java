@@ -3,6 +3,7 @@ package behaviours;
 import jade.core.behaviours.CyclicBehaviour;
 
 import jade.lang.acl.ACLMessage;
+
 import agents.LiftAgent;
 
 @SuppressWarnings("serial")
