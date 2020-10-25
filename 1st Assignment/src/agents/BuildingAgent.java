@@ -1,5 +1,6 @@
 package agents;
 import agents.LiftAgent;
+import agents.FloorPanelAgent;
 
 import jade.core.Agent;
 import jade.wrapper.AgentController;
@@ -29,6 +30,7 @@ public class BuildingAgent extends Agent{
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
 		launchLiftAgents(this.nmrLifts);
+		launchFloorPanelAgents(this.nmrFloors);
 	}
 	
 	
@@ -36,6 +38,9 @@ public class BuildingAgent extends Agent{
 	public void takedown() {
 		System.out.println(getLocalName() + ": done working.");
 	}
+	
+	
+	/*LiftAgents launching functions */
 	
 	protected void launchLiftAgents(Integer nmrLifts) {
 		
@@ -64,10 +69,39 @@ public class BuildingAgent extends Agent{
 		return args;
 	}
 	
+	
+	/* FloorPanelAgents launching functions */
+	
+	protected void launchFloorPanelAgents(Integer nmrFloors) {
+		
+		int floor;
+		for(floor = 0; floor <= nmrFloors; floor++) {
+			createFloorPanelAgent(floor);
+		}
+	}
+	
+	protected void createFloorPanelAgent(Integer floor) {
+		
+		AgentController floorPanelAgent;
+		
+		
+		try {
+			floorPanelAgent = this.mainContainer.acceptNewAgent("floorPanelAgent" + floor, new FloorPanelAgent(floor));
+			floorPanelAgent.start();
+		} catch(StaleProxyException e) {
+			System.err.println("Error launching floorPanelAgent");
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	@Override
     public String toString() {
         return "INFORMATION\n" + "Agent: " + getLocalName()+"\n" + "Floors: " + this.nmrFloors + "\n" + "Lifts: " + this.nmrLifts + "\n" + "Max weight: " + this.maxWeight + "\n" + "Max speed: " + this.maxSpeed + "\n" + "Floor distance: " + this.floorDistance + "\n";
     }
+	
+	
 	
 	/*getters*/
 	public int getFloors() {

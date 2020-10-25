@@ -24,7 +24,7 @@ public class JADELauncher {
 	protected void launchBuilding(ContainerController mainContainer) {
 		
 		AgentController agentController;
-		String[] args = {"50", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
+		String[] args = {"10", "8", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
 		
 		try {
 			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer));
