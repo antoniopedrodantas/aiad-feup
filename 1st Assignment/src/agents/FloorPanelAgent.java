@@ -9,9 +9,14 @@ public class FloorPanelAgent extends Agent {
 	
 	private int floor;
 	
+	// for JADE testing purposes
+	public FloorPanelAgent() {
+		this.floor = 2;
+	}
+	
+	// for the REAL DEAL
 	public FloorPanelAgent(int floor) {
 		this.floor = floor;
-		// this.floor = 2;
 	}
 	 
 	public void setup() {

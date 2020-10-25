@@ -3,7 +3,6 @@ package agents;
 import behaviours.LiftListeningBehaviour;
 
 import jade.core.Agent;
-import jade.lang.acl.ACLMessage;
 
 
 @SuppressWarnings("serial")
@@ -17,17 +16,26 @@ public class LiftAgent extends Agent{
 	private float currentWeight;
 	private int[] taskList;
 	
-	public LiftAgent(/*String[] args*/) {
-		/*
-		this.id = Integer.parseInt(args[0]);
-        this.maxWeight = Float.parseFloat(args[1]);
-        this.speed = Float.parseFloat(args[2]);
-        */
-		
+	// for JADE testing purposes
+	public LiftAgent() {
+      	
 		this.id = 1;
 		this.maxWeight = 600;
 		this.speed = 25;
 		
+        
+        this.currentFloor = 0;
+        this.currentWeight = 0;
+        this.taskList = new int[5];
+        
+	}
+	
+	// for the REAL deal
+	public LiftAgent(String[] args) {
+		
+		this.id = Integer.parseInt(args[0]);
+        this.maxWeight = Float.parseFloat(args[1]);
+        this.speed = Float.parseFloat(args[2]);
         
         this.currentFloor = 0;
         this.currentWeight = 0;
