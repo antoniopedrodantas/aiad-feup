@@ -3,6 +3,10 @@ package agents;
 import behaviours.LiftListeningBehaviour;
 
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 
 @SuppressWarnings("serial")
@@ -21,7 +25,7 @@ public class LiftAgent extends Agent{
       	
 		this.id = 1;
 		this.maxWeight = 600;
-		this.speed = 25;
+		this.speed = 25; 
 		
         
         this.currentFloor = 0;
@@ -44,9 +48,28 @@ public class LiftAgent extends Agent{
 	}
 	
 	public void setup() { //register in DFService
+		
 		System.out.println("Hey, " + this.getLocalName() + " here\n");
 		System.out.println(this.toString());
 		addBehaviour(new LiftListeningBehaviour(this));
+		
+		/* DF service register */
+		
+		DFAgentDescription df = new DFAgentDescription();
+		df.setName(getAID());
+		
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("lift-service");
+		sd.setName(getLocalName());
+		
+		df.addServices(sd);
+		
+		try {
+			DFService.register(this, df);
+			System.out.println("Register done successfully");
+		} catch(FIPAException fe) {
+			fe.printStackTrace();
+		}
 	}
 	
     public void takeDown() { //deregister in DFService
