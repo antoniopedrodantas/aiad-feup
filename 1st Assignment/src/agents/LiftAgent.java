@@ -1,6 +1,10 @@
 package agents;
 
+import behaviours.LiftListeningBehaviour;
+
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
+
 
 @SuppressWarnings("serial")
 public class LiftAgent extends Agent{
@@ -13,19 +17,28 @@ public class LiftAgent extends Agent{
 	private float currentWeight;
 	private int[] taskList;
 	
-	public LiftAgent(String[] args) {
+	public LiftAgent(/*String[] args*/) {
+		/*
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
         this.speed = Float.parseFloat(args[2]);
+        */
+		
+		this.id = 1;
+		this.maxWeight = 600;
+		this.speed = 25;
+		
         
         this.currentFloor = 0;
         this.currentWeight = 0;
         this.taskList = new int[5];
+        
 	}
 	
 	public void setup() { //register in DFService
 		System.out.println("Hey, " + this.getLocalName() + " here\n");
 		System.out.println(this.toString());
+		addBehaviour(new LiftListeningBehaviour(this));
 	}
 	
     public void takeDown() { //deregister in DFService
@@ -61,4 +74,6 @@ public class LiftAgent extends Agent{
     public int[] getTaskList() {
     	return this.taskList;
     }
+    
+    
 }
