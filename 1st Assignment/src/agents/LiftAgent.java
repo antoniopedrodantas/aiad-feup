@@ -47,7 +47,7 @@ public class LiftAgent extends Agent{
         
 	}
 	
-	public void setup() { //register in DFService
+	public void setup() { 
 		
 		System.out.println("Hey, " + this.getLocalName() + " here\n");
 		System.out.println(this.toString());
@@ -72,8 +72,15 @@ public class LiftAgent extends Agent{
 		}
 	}
 	
-    public void takeDown() { //deregister in DFService
-        System.out.println(getLocalName() + ": done working.");
+    public void takeDown() {
+    	
+    	try {
+			DFService.deregister(this);
+			System.out.println("Register done successfully");
+			System.out.println(getLocalName() + ": done working.");
+		} catch(FIPAException fe) {
+			fe.printStackTrace();
+		}
     }
     
     @Override

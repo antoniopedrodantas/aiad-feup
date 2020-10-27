@@ -11,7 +11,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 
-
 @SuppressWarnings("serial")
 public class FloorListeningBehaviour extends CyclicBehaviour {
 	
@@ -24,7 +23,9 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 	public void action() {
 
 		ACLMessage msg = myAgent.receive();
+		
 		if(msg != null && msg.getPerformative() != ACLMessage.INFORM) {
+			
 			System.out.println(msg);
 			ACLMessage reply = msg.createReply();
 			reply.setPerformative(ACLMessage.INFORM);
@@ -48,6 +49,7 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 	
 	
 	protected ArrayList<String> getLiftListeners() {
+		
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 			
@@ -59,7 +61,6 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 		try {
 			DFAgentDescription[] result = DFService.search(myAgent, template);
 			for(int i = 0; i < result.length; ++i) {
-				//System.out.println("Found " + result[i].getName());
 				liftListeners.add(result[i].getName().getLocalName());
 			}
 			

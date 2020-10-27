@@ -16,12 +16,16 @@ public class DFSubscriptionInit extends SubscriptionInitiator{
 	}
 	
 	protected void handleInform(ACLMessage inform) {
+		
 		try {
+			
 			DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
+			
 			for(int i=0; i<dfds.length; i++) {
 				AID agent = dfds[i].getName();
 				System.out.println("New agent in town: " + agent.getLocalName());
 			}
+			
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
 		}
