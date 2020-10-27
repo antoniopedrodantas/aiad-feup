@@ -26,7 +26,17 @@ public class SenderFloorLift {
 		for(String listener : this.listeners) {
 			 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 	         msg.addReceiver(new AID(listener,AID.ISLOCALNAME));
-	         msg.setContent(this.type + "," + this.floor);
+	         switch(this.type) {
+	         	case "Down":
+	         		msg.setContent(Integer.toString(-1 * this.floor));
+	         		break;
+	         	case "Up":
+	         		msg.setContent(Integer.toString(this.floor));
+	         		break;
+	         	default:
+	         		break;
+	         }
+	         
 	         this.floorPanelAgent.send(msg);
 		}
 	}

@@ -83,6 +83,35 @@ public class LiftAgent extends Agent{
 		}
     }
     
+    // Calculates Lift's direction
+    // 0 -> static || -1 -> down || 1 -> up 
+    public int calculateMyDirection() {
+		if(this.taskList.length == 0) {
+			return 0;
+		}
+		else if(this.currentFloor > this.taskList[0]) {
+    		return -1;
+    	}
+		else if (this.currentFloor < this.taskList[0]){
+			return 1;
+		}
+		else {
+			
+			// [ATTENTION] May be lacking if cases
+			
+			if(this.taskList.length == 1) {
+				return 0;
+			}
+			else if(this.taskList[0] < this.taskList[1]) {
+				return 1;
+			}
+			else {
+				return -1;
+			}
+
+		}
+    }
+    
     @Override
     public String toString() {
         return "Lift ID: " + this.id + "\n" +  "Max weight: " + this.maxWeight + "\n" + "Max speed: " + this.speed + "\n";
