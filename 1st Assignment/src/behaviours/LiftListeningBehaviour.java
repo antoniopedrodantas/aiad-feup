@@ -25,8 +25,6 @@ public class LiftListeningBehaviour extends CyclicBehaviour {
 		ACLMessage msg = myAgent.receive();
 		if(msg != null) {
 			
-			// prints received message
-			//System.out.println(msg);
 			
 			ACLMessage reply = msg.createReply();
 			reply.setPerformative(ACLMessage.INFORM);
@@ -65,8 +63,12 @@ public class LiftListeningBehaviour extends CyclicBehaviour {
 	}
 	
 	//Calculates time for a new request
+	// lift @ 5 taks[4,3,2,1] 
+	// calc time calculates 5-4, 4-3, 3-2,2-1 => returns sum
 	protected float calcTime(int request) {
+		
 		float liftSpeed = this.myAgent.getSpeed();
+		
 		if(this.taskList.isEmpty())
 			return Math.abs(this.myAgent.getFloor() - Math.abs(request)) * liftSpeed;
 		else {

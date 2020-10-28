@@ -29,7 +29,16 @@ public class BuildingAgent extends Agent{
 	public void setup() {
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
+		
 		launchLiftAgents(this.nmrLifts);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		launchFloorPanelAgents(this.nmrFloors);
 	}
 	
@@ -38,6 +47,7 @@ public class BuildingAgent extends Agent{
 	public void takeDown() {
 		System.out.println(getLocalName() + ": done working."); 
 		killLiftAgents();
+		//dar kill atraves da referencia ao mainCOntainer
 		killFloorPanelAgents();
 	}
 	

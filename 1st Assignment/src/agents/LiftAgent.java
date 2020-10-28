@@ -7,6 +7,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.util.leap.ArrayList;
 
 
 @SuppressWarnings("serial")
@@ -44,12 +45,11 @@ public class LiftAgent extends Agent{
         this.currentFloor = 0;
         this.currentWeight = 0;
         this.taskList = new int[5];
-        
+          
 	}
 	
 	public void setup() { 
 		
-		System.out.println("Hey, " + this.getLocalName() + " here\n");
 		System.out.println(this.toString());
 		addBehaviour(new LiftListeningBehaviour(this));
 		
@@ -76,7 +76,7 @@ public class LiftAgent extends Agent{
     	
     	try {
 			DFService.deregister(this);
-			System.out.println("Register done successfully");
+			System.out.println("Deregister done successfully");
 			System.out.println(getLocalName() + ": done working.");
 		} catch(FIPAException fe) {
 			fe.printStackTrace();
