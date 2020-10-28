@@ -32,10 +32,10 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 			reply.setContent(myAgent.getAID().getLocalName() + ": Got your message!");
 			myAgent.send(reply);
 			
-			//Getting all lifts
-			ArrayList<String> liftListeners = getLiftListeners();
+			/* Obtaining all lifts in the building */
+			ArrayList<String> liftListeners = this.myAgent.getLiftList();
 			
-			//Sending message to all lifts
+			/* Sending request to all lifts */
 			if(liftListeners.size() != 0) {
 				SenderFloorLift senderFloorLift = new SenderFloorLift(liftListeners, myAgent, "Down", myAgent.getFloor());
 				senderFloorLift.sendToLift();
@@ -46,29 +46,5 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 		}
 		
 	}
-	
-	
-	protected ArrayList<String> getLiftListeners() {
-		
-		DFAgentDescription template = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-			
-		ArrayList<String> liftListeners = new ArrayList<>();
-		
-		sd.setType("lift-service");
-		template.addServices(sd);
-		
-		try {
-			DFAgentDescription[] result = DFService.search(myAgent, template);
-			for(int i = 0; i < result.length; ++i) {
-				liftListeners.add(result[i].getName().getLocalName());
-			}
-			
-		} catch(FIPAException fe) {
-			fe.printStackTrace();
-		}
-		
-		return liftListeners;
-	}
-	
+
 }

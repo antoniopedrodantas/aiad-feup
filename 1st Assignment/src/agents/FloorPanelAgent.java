@@ -1,18 +1,15 @@
 package agents;
 
 import behaviours.FloorListeningBehaviour;
-import utils.LiftTaskListEntry;
+
 
 import java.util.ArrayList;
-
-import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.lang.acl.ACLMessage;
-import jade.proto.SubscriptionInitiator;
+
 
 
 @SuppressWarnings("serial")
@@ -42,29 +39,34 @@ public class FloorPanelAgent extends Agent {
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("lift-service");
 		template.addServices(sd);
-		//addBehaviour(new DFSubscriptionInit(this, template));
 		
-		
+		/* Finds all the lifts that have already subscribed to the service and adds them to the liftList */
 		try {
+			
 			DFAgentDescription[] result = DFService.search(this, template);
+			
 			for(int i = 0; i < result.length; ++i) {
-				System.out.println("Found " + result[i].getName());
+				this.addLiftToList(result[i].getName().getLocalName());
 			}
+			
 		} catch(FIPAException fe) {
 			fe.printStackTrace();
 		}
+		
+		System.out.println("FloorPanel" + this.floor + "\n" + getLiftsAvailable() + "\n");
 	}
 	
 	
 	public String getLiftsAvailable() {
-		String lifts = new String();
+		String lifts = "Available lifts: ";
 		
 		for(int i = 0; i < this.liftList.size(); i++) {
-			lifts = lifts + this.liftList.get(i) + ";";
+			lifts = lifts + this.liftList.get(i) + "; ";
 		}
 		
 		return lifts;
 	}
+	
 	public void takeDown() {
 		System.out.println(getLocalName() + ": done working.");
 	}
@@ -79,33 +81,16 @@ public class FloorPanelAgent extends Agent {
 		return this.floor;
 	}
 	
+	public ArrayList<String> getLiftList(){
+		return this.liftList;
+	}
+	
 	/*setters*/
 	public void addLiftToList(String liftName) {
 		if(!this.liftList.contains(liftName)) {
 			this.liftList.add(liftName);
 		}
 	}
-/*	
-	
-class DFSubscriptionInit extends SubscriptionInitiator {
-		
-		DFSubscriptionInit(Agent agent, DFAgentDescription dfad) {
-			super(agent, DFService.createSubscriptionMessage(agent, getDefaultDF(), dfad, null));
-		}
-		
-		protected void handleInform(ACLMessage inform) {
-			try {
-				DFAgentDescription[] dfds = DFService.decodeNotification(inform.getContent());
-				
-				for(int i=0; i<dfds.length; i++) {
-					AID agent = dfds[i].getName();
-					System.out.println("New agent in town: " + agent.getLocalName());
-				}
-			} catch (FIPAException fe) {
-				fe.printStackTrace();
-			}
-		}
-		
-	}*/
+
 
 }

@@ -33,9 +33,8 @@ public class BuildingAgent extends Agent{
 		launchLiftAgents(this.nmrLifts);
 		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1200);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -44,10 +43,10 @@ public class BuildingAgent extends Agent{
 	
 	
 	//TODO: when taking down Building Agent, Lift and FloorPanel agents will also be taken down
+	//dar kill atraves da referencia ao mainCOntainer
 	public void takeDown() {
 		System.out.println(getLocalName() + ": done working."); 
 		killLiftAgents();
-		//dar kill atraves da referencia ao mainCOntainer
 		killFloorPanelAgents();
 	}
 	
