@@ -1,8 +1,16 @@
 package agents;
+
 import agents.LiftAgent;
 import agents.FloorPanelAgent;
 
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.Agent;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.ShutdownPlatform;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
@@ -42,12 +50,25 @@ public class BuildingAgent extends Agent{
 	}
 	
 	
-	//TODO: when taking down Building Agent, Lift and FloorPanel agents will also be taken down
-	//dar kill atraves da referencia ao mainCOntainer
 	public void takeDown() {
+		
+		Codec codec = new SLCodec();    
+		Ontology jmo = JADEManagementOntology.getInstance();
+		getContentManager().registerLanguage(codec);
+		getContentManager().registerOntology(jmo);
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(getAMS());
+		msg.setLanguage(codec.getName());
+		msg.setOntology(jmo.getName());
+		try {
+		    getContentManager().fillContent(msg, new Action(getAID(), new ShutdownPlatform()));
+		    send(msg);
+		}
+		catch (Exception e) {
+			
+		}
+		
 		System.out.println(getLocalName() + ": done working."); 
-		killLiftAgents();
-		killFloorPanelAgents();
 	}
 	
 	
@@ -103,17 +124,6 @@ public class BuildingAgent extends Agent{
 			System.err.println("Error launching floorPanelAgent");
 			e.printStackTrace();
 		}
-	}
-	
-	
-	/* Killing Agents functions */
-	
-	protected void killLiftAgents() {
-		System.out.println("not finished 1");
-	}
-	
-	protected void killFloorPanelAgents() {
-		System.out.println("not finished 2");
 	}
 	
 	

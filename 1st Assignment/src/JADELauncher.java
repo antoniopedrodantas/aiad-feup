@@ -30,6 +30,9 @@ public class JADELauncher {
 			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer));
 			agentController.start();
 			
+			Thread.sleep(5000);
+			agentController.kill();
+			
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
