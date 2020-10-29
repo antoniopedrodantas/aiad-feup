@@ -29,9 +29,9 @@ public class RequestAgent extends Agent{
 	private void sendRequests() {
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                sendRequest();
-            }
+            	public void run() {
+            		sendRequest();
+            	}
           	}, 1000, 1500, TimeUnit.MILLISECONDS);
 	}
 	
@@ -54,3 +54,4 @@ public class RequestAgent extends Agent{
         this.send(msg);
 	}
 }
+
