@@ -31,7 +31,7 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 			reply.setPerformative(ACLMessage.INFORM);
 			reply.setContent(myAgent.getAID().getLocalName() + ": Got your message!");
 			myAgent.send(reply);
-			
+			//TODO: change body of message in line 40 to content in send floor lift
 			/* Obtaining all lifts in the building */
 			ArrayList<String> liftListeners = this.myAgent.getLiftList();
 			

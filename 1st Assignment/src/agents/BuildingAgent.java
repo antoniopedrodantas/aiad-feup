@@ -47,9 +47,16 @@ public class BuildingAgent extends Agent{
 		}
 		
 		launchFloorPanelAgents(this.nmrFloors);
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		launchRequestAgent(this.nmrFloors);
 	}
-	
-	
+
 	public void takeDown() {
 		
 		Codec codec = new SLCodec();    
@@ -126,6 +133,17 @@ public class BuildingAgent extends Agent{
 		}
 	}
 	
+	private void launchRequestAgent(int nmrFloors) {
+		AgentController requestAgent;
+		
+		try {
+			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", new RequestAgent(nmrFloors));
+			requestAgent.start();
+		} catch(StaleProxyException e) {
+			System.err.println("Error launching liftAgent");
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
     public String toString() {
