@@ -2,6 +2,7 @@ package agents;
 
 import agents.LiftAgent;
 import agents.FloorPanelAgent;
+import agents.RequestAgent;
 
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -35,6 +36,7 @@ public class BuildingAgent extends Agent{
     }
 	
 	public void setup() {
+		
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
 		
@@ -49,7 +51,7 @@ public class BuildingAgent extends Agent{
 		launchFloorPanelAgents(this.nmrFloors);
 
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -140,7 +142,7 @@ public class BuildingAgent extends Agent{
 			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", new RequestAgent(nmrFloors));
 			requestAgent.start();
 		} catch(StaleProxyException e) {
-			System.err.println("Error launching liftAgent");
+			System.err.println("Error launching requestAgent");
 			e.printStackTrace();
 		}
 	}
