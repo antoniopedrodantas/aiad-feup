@@ -65,11 +65,11 @@ public class FloorPanelAgent extends Agent {
 		
 		System.out.println("FloorPanel" + this.floor + "\n" + getLiftsAvailable() + "\n");
 		
-		addListener(); //adds AchieveREResponder
+		addFloorListener(); //adds AchieveREResponder
 	}
 	
 	/* AchieveREResponder */
-	protected void addListener() {
+	protected void addFloorListener() {
 		
 		System.out.println("Agent "+ getLocalName()+ " waiting for requests...");
 		
@@ -82,7 +82,7 @@ public class FloorPanelAgent extends Agent {
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
-				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getName() + ". Action is "+ request.getContent());
+				System.out.println("FLOORPANEL AGENT: Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
 					
@@ -119,14 +119,16 @@ public class FloorPanelAgent extends Agent {
 		if(this.liftList.size() != 0) {
 			
 				this.nmrResponders = this.liftList.size();
-				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		         
 				for(String listener : this.liftList) {
-					msg.addReceiver(new AID(listener,AID.ISLOCALNAME));
+					System.out.println(listener);
+					msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
 				}
 				
+				
 				msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-		        msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+		        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
 		        
 		        switch(this.type) {
 		     	case "Down":
@@ -138,8 +140,12 @@ public class FloorPanelAgent extends Agent {
 		     	default:
 		     		break;
 		     }
+		        
+		        System.out.println("oi: " + msg.getContent());
          
+		       
 		     addBehaviour(new AchieveREInitiator(this, msg) {
+		    	 
 				protected void handleInform(ACLMessage inform) {
 					System.out.println("Agent " + inform.getSender().getName()+ " successfully performed the requested action");
 				}
@@ -158,7 +164,7 @@ public class FloorPanelAgent extends Agent {
 				protected void handleAllResultNotifications(Vector notifications) {
 					if (notifications.size() < nmrResponders) {
 						// Some responder didn't reply within the specified timeout
-						System.out.println("Timeout expired: missing "+(nmrResponders - notifications.size())+" responses");
+						System.out.println("PANEL: Timeout expired: missing "+(nmrResponders - notifications.size())+" responses");
 					}
 				}
 			} );

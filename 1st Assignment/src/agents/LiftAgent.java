@@ -104,7 +104,7 @@ public class LiftAgent extends Agent{
 	  	
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
-				
+				System.out.println("recebi");
 				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
@@ -122,8 +122,9 @@ public class LiftAgent extends Agent{
 			}
 			
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
-
+					System.out.println("w8");
 					System.out.println("Agent "+ getLocalName() + ": Action successfully performed");
+					System.out.println("w9");
 					ACLMessage inform = request.createReply();
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
