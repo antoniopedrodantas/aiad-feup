@@ -32,23 +32,26 @@ public class RequestAgent extends Agent{
             	public void run() {
             		sendRequest();
             	}
-          	}, 1000, 1500, TimeUnit.MILLISECONDS);
+          	}, 2000, 3000, TimeUnit.MILLISECONDS);
 	}
 	
 	private void sendRequest() {
+		
 		Random rand = new Random();
 		int randomInteger = rand.nextInt(floors);
 		Boolean randomBoolean = rand.nextBoolean();
-		
 		System.out.println(randomBoolean);
+		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
+        
         String content;
         if (randomBoolean) {
 			content = "Up";
 		} else {
 			content = "Down";
 		}
+        
         msg.setContent(content);
         System.out.println("Floor: "+ randomInteger + "  Message: " + content);
         this.send(msg);
