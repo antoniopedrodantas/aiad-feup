@@ -63,7 +63,7 @@ public class FloorPanelAgent extends Agent {
 			fe.printStackTrace();
 		}
 		
-		System.out.println("FloorPanel" + this.floor + "\n" + getLiftsAvailable() + "\n");
+		System.out.println("FloorPanel" + this.floor + "\n" + getLiftsAvailable());
 		
 		addFloorListener(); //adds AchieveREResponder
 	}
@@ -71,7 +71,7 @@ public class FloorPanelAgent extends Agent {
 	/* AchieveREResponder */
 	protected void addFloorListener() {
 		
-		System.out.println("Agent "+ getLocalName()+ " waiting for requests...");
+		System.out.println("Agent "+ getLocalName()+ " waiting for requests...\n");
 		
 	  	MessageTemplate template = MessageTemplate.and(
   		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
@@ -82,7 +82,7 @@ public class FloorPanelAgent extends Agent {
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
-				System.out.println("FLOORPANEL AGENT: Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getName() + ". Action is "+ request.getContent());
+				System.out.println("FLOORPANEL AGENT: Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
 					
@@ -93,7 +93,7 @@ public class FloorPanelAgent extends Agent {
 					
 				}
 				else {
-					System.out.println("Agent "+ getLocalName()+ ": Refuse");
+					System.out.println("Agent " + getLocalName()+ ": Refuse");
 					throw new RefuseException("check-failed");
 				}
 			}
@@ -101,13 +101,13 @@ public class FloorPanelAgent extends Agent {
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
 				
 				if(sendRequestToLifts()) {
-					System.out.println("Agent "+ getLocalName() + ": Action successfully performed");
+					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
 					ACLMessage inform = request.createReply();
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
 				else {
-					System.out.println("Agent "+ getLocalName() + ": Action failed");
+					System.out.println("Agent " + getLocalName() + ": Action failed");
 					throw new FailureException("unexpected-error");
 				}
 			}
@@ -122,7 +122,6 @@ public class FloorPanelAgent extends Agent {
 				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		         
 				for(String listener : this.liftList) {
-					System.out.println(listener);
 					msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
 				}
 				
@@ -140,17 +139,14 @@ public class FloorPanelAgent extends Agent {
 		     	default:
 		     		break;
 		     }
-		        
-		        System.out.println("oi: " + msg.getContent());
-         
-		       
+		           
 		     addBehaviour(new AchieveREInitiator(this, msg) {
 		    	 
 				protected void handleInform(ACLMessage inform) {
-					System.out.println("Agent " + inform.getSender().getName()+ " successfully performed the requested action");
+					System.out.println("Agent " + inform.getSender().getName() + " successfully performed the requested action");
 				}
 				protected void handleRefuse(ACLMessage refuse) {
-					System.out.println("Agent " + refuse.getSender().getName()+ " refused to perform the requested action");
+					System.out.println("Agent " + refuse.getSender().getName() + " refused to perform the requested action");
 					nmrResponders--;
 				}
 				protected void handleFailure(ACLMessage failure) {
@@ -158,13 +154,12 @@ public class FloorPanelAgent extends Agent {
 						System.out.println("Responder does not exist");
 					}
 					else {
-						System.out.println("Agent " + failure.getSender().getName()+" failed to perform the requested action");
+						System.out.println("Agent " + failure.getSender().getName() + " failed to perform the requested action");
 					}
 				}
 				protected void handleAllResultNotifications(Vector notifications) {
 					if (notifications.size() < nmrResponders) {
-						// Some responder didn't reply within the specified timeout
-						System.out.println("PANEL: Timeout expired: missing "+(nmrResponders - notifications.size())+" responses");
+						System.out.println("Timeout expired: missing " + (nmrResponders - notifications.size()) + " responses");
 					}
 				}
 			} );
