@@ -45,7 +45,5 @@ public class FloorListeningBehaviour extends CyclicBehaviour {
 		else {
 			block();
 		}
-		
 	}
-
 }

@@ -69,6 +69,7 @@ public class BuildingAgent extends Agent{
 		msg.addReceiver(getAMS());
 		msg.setLanguage(codec.getName());
 		msg.setOntology(jmo.getName());
+		
 		try {
 		    getContentManager().fillContent(msg, new Action(getAID(), new ShutdownPlatform()));
 		    send(msg);
@@ -135,7 +136,10 @@ public class BuildingAgent extends Agent{
 		}
 	}
 	
-	private void launchRequestAgent(int nmrFloors) {
+	/* RequestAgent launching functions */
+	
+	protected void launchRequestAgent(int nmrFloors) {
+		
 		AgentController requestAgent;
 		
 		try {

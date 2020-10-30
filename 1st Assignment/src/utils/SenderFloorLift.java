@@ -21,7 +21,7 @@ public class SenderFloorLift {
 
 	}
 	
-	public void sendToLift() {
+	public boolean sendToLift() {
 		
 		for(String listener : this.listeners) {
 			 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -39,5 +39,7 @@ public class SenderFloorLift {
 	         
 	         this.floorPanelAgent.send(msg);
 		}
+		
+		return true;
 	}
 }
