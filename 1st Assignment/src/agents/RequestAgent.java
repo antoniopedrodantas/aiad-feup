@@ -35,7 +35,7 @@ public class RequestAgent extends Agent{
             	public void run() {
             		sendRequest();
             	}
-          	}, 2000, 3000, TimeUnit.MILLISECONDS);
+          	}, 2000, 15000, TimeUnit.MILLISECONDS);
 	}
 	
 	private void sendRequest() {

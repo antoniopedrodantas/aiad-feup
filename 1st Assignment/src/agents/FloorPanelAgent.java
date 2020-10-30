@@ -1,6 +1,10 @@
 package agents;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Vector;
+
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -12,9 +16,8 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
-import utils.SenderFloorLift;
-
 
 
 @SuppressWarnings("serial")
@@ -22,6 +25,8 @@ public class FloorPanelAgent extends Agent {
 	
 	private int floor;
 	private ArrayList<String> liftList;
+	private String type;
+	private int nmrResponders;
 	
 	// for JADE testing purposes
 	public FloorPanelAgent() {
@@ -33,6 +38,7 @@ public class FloorPanelAgent extends Agent {
 	public FloorPanelAgent(int floor) {
 		this.floor = floor;
 		this.liftList  = new ArrayList<>();
+		this.type = "Down"; //TODO: change this
 	} 
 	 
 	public void setup() {
@@ -71,6 +77,8 @@ public class FloorPanelAgent extends Agent {
   		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
   		MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
   		
+	  	
+	  	//TODO: after receiving message from RequestAgent fiel type var
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
@@ -109,18 +117,58 @@ public class FloorPanelAgent extends Agent {
 	protected boolean sendRequestToLifts() {
 		
 		if(this.liftList.size() != 0) {
-			SenderFloorLift senderFloorLift = new SenderFloorLift(this.liftList, this, "Down", this.floor);
-			if(senderFloorLift.sendToLift()) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			
+				this.nmrResponders = this.liftList.size();
+				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		         
+				for(String listener : this.liftList) {
+					msg.addReceiver(new AID(listener,AID.ISLOCALNAME));
+				}
+				
+				msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+		        msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+		        
+		        switch(this.type) {
+		     	case "Down":
+		     		msg.setContent(Integer.toString(-1 * this.floor));
+		     		break;
+		     	case "Up":
+		     		msg.setContent(Integer.toString(this.floor));
+		     		break;
+		     	default:
+		     		break;
+		     }
+         
+		     addBehaviour(new AchieveREInitiator(this, msg) {
+				protected void handleInform(ACLMessage inform) {
+					System.out.println("Agent " + inform.getSender().getName()+ " successfully performed the requested action");
+				}
+				protected void handleRefuse(ACLMessage refuse) {
+					System.out.println("Agent " + refuse.getSender().getName()+ " refused to perform the requested action");
+					nmrResponders--;
+				}
+				protected void handleFailure(ACLMessage failure) {
+					if (failure.getSender().equals(myAgent.getAMS())) {
+						System.out.println("Responder does not exist");
+					}
+					else {
+						System.out.println("Agent " + failure.getSender().getName()+" failed to perform the requested action");
+					}
+				}
+				protected void handleAllResultNotifications(Vector notifications) {
+					if (notifications.size() < nmrResponders) {
+						// Some responder didn't reply within the specified timeout
+						System.out.println("Timeout expired: missing "+(nmrResponders - notifications.size())+" responses");
+					}
+				}
+			} );
+		     
+		     return true;
 		}
-		
-		return false;
+		else {
+			return false;
+		}
 	}
-	
 	
 	protected boolean checkSender(String name) {
 		return name.contains("requestAgent") ? true : false;
