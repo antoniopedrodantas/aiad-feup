@@ -105,7 +105,7 @@ public class LiftAgent extends Agent{
 		addBehaviour(new AchieveREResponder(this, template) {
 			
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
-				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getName() + ". Action is "+ request.getContent());
+				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getLocalName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
 					

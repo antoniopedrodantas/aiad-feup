@@ -61,10 +61,10 @@ public class RequestAgent extends Agent{
       
 		addBehaviour(new AchieveREInitiator(this, msg) {
 			protected void handleInform(ACLMessage inform) {
-				System.out.println("Agent " + inform.getSender().getName() + " successfully performed the requested action");
+				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
 			}
 			protected void handleRefuse(ACLMessage refuse) {
-				System.out.println("Agent " + refuse.getSender().getName() + " refused to perform the requested action");
+				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
 				
 			}
 			protected void handleFailure(ACLMessage failure) {
@@ -72,7 +72,7 @@ public class RequestAgent extends Agent{
 					System.out.println("Responder does not exist");
 				}
 				else {
-					System.out.println("Agent " + failure.getSender().getName() + " failed to perform the requested action");
+					System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
 				}
 			}
 		} );
