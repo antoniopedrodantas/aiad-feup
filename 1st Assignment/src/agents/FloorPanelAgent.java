@@ -78,11 +78,11 @@ public class FloorPanelAgent extends Agent {
   		MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
   		
 	  	
-	  	//TODO: after receiving message from RequestAgent fiel type var
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
 				System.out.println("Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				type = request.getContent();
 				
 				if (checkSender(request.getSender().getName())) {
 					

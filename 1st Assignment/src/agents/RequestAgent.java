@@ -50,6 +50,8 @@ public class RequestAgent extends Agent{
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000)); //we want to receive a reply in 10 seconds at most
         
         String content;
+        
+        //TODO: se por alguma razão o randomInteger for '0' o typo tem de Down
         if (randomBoolean) {
 			content = "Up";
 		} else {
@@ -57,7 +59,7 @@ public class RequestAgent extends Agent{
 		}
         
         msg.setContent(content);
-        System.out.println("Floor: "+ randomInteger + "  Message: " + content);
+        System.out.println("\nFloor: "+ randomInteger + "  Message: " + content);
       
 		addBehaviour(new AchieveREInitiator(this, msg) {
 			protected void handleInform(ACLMessage inform) {
