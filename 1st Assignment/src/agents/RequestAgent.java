@@ -2,8 +2,11 @@ package agents;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.proto.AchieveREInitiator;
 
+import java.sql.Date;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,6 +47,8 @@ public class RequestAgent extends Agent{
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
+        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000)); //we want to receive a reply in 10 seconds at most
         
         String content;
         if (randomBoolean) {
@@ -55,6 +60,26 @@ public class RequestAgent extends Agent{
         msg.setContent(content);
         System.out.println("Floor: "+ randomInteger + "  Message: " + content);
         this.send(msg);
+        
+    	
+		
+		addBehaviour(new AchieveREInitiator(this, msg) {
+			protected void handleInform(ACLMessage inform) {
+				System.out.println("Agent " + inform.getSender().getName()+ " successfully performed the requested action");
+			}
+			protected void handleRefuse(ACLMessage refuse) {
+				System.out.println("Agent " + refuse.getSender().getName()+ " refused to perform the requested action");
+				
+			}
+			protected void handleFailure(ACLMessage failure) {
+				if (failure.getSender().equals(myAgent.getAMS())) {
+					System.out.println("Responder does not exist");
+				}
+				else {
+					System.out.println("Agent "+failure.getSender().getName()+" failed to perform the requested action");
+				}
+			}
+		} );
 	}
 }
 
