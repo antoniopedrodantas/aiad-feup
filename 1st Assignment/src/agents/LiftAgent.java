@@ -2,6 +2,7 @@ package agents;
 
 import utils.HandleRequest;
 
+import java.util.ArrayList;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -22,16 +23,20 @@ public class LiftAgent extends Agent{
 	private int id;
 	private float maxWeight;
 	private float speed;
+	private int totalLifts;
 	
 	private int currentFloor;
 	private float currentWeight;
 	private int[] taskList;
 	
+	private ArrayList<String> liftContacts;
+	
 	public LiftAgent() {
       	
 		this.id = 1;
 		this.maxWeight = 600;
-		this.speed = 25; 
+		this.speed = 25;
+		this.totalLifts = 6;
 		
         
         this.currentFloor = 0;
@@ -45,10 +50,13 @@ public class LiftAgent extends Agent{
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
         this.speed = Float.parseFloat(args[2]);
+        this.totalLifts = Integer.parseInt(args[3]);
         
         this.currentFloor = 0;
         this.currentWeight = 0;
         this.taskList = new int[5];
+        
+        this.liftContacts = new ArrayList<>();
           
 	}
 	
@@ -122,6 +130,7 @@ public class LiftAgent extends Agent{
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
 				
 					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+					
 					HandleRequest handleRequest = new HandleRequest(myAgent, request.getContent());
 					handleRequest.processRequest();
 					
@@ -172,7 +181,7 @@ public class LiftAgent extends Agent{
         return "Lift ID: " + this.id + "\n" +  "Max weight: " + this.maxWeight + "\n" + "Max speed: " + this.speed + "\n";
     }
     
-    /*getters*/
+    /* getters */
     public int getId() {
     	return this.id;
     }
@@ -197,5 +206,17 @@ public class LiftAgent extends Agent{
     	return this.taskList;
     }
     
+    public int getTotalLifts() {
+    	return this.totalLifts;
+    }
+    
+    public ArrayList<String> getContacts(){
+    	return this.liftContacts;
+    }
+    
+    /* setters */
+    public void setContacts(ArrayList<String> contacts) {
+    	this.liftContacts = contacts;
+    }
     
 }

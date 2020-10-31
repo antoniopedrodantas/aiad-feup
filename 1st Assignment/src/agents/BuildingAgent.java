@@ -107,7 +107,7 @@ public class BuildingAgent extends Agent{
 	}
 	
 	protected String[] buildArgs(Integer lift) {
-		String[] args = {String.valueOf(lift), "600.0", "2.5"};
+		String[] args = {String.valueOf(lift), "600.0", "2.5", String.valueOf(this.nmrLifts)};
 		return args;
 	}
 	
