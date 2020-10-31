@@ -1,6 +1,6 @@
 package agents;
 
-import behaviours.LiftListeningBehaviour;
+import utils.HandleRequest;
 
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -27,7 +27,6 @@ public class LiftAgent extends Agent{
 	private float currentWeight;
 	private int[] taskList;
 	
-	// for JADE testing purposes
 	public LiftAgent() {
       	
 		this.id = 1;
@@ -41,7 +40,6 @@ public class LiftAgent extends Agent{
         
 	}
 	
-	// for the REAL deal
 	public LiftAgent(String[] args) {
 		
 		this.id = Integer.parseInt(args[0]);
@@ -122,7 +120,11 @@ public class LiftAgent extends Agent{
 			}
 			
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
+				
 					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+					HandleRequest handleRequest = new HandleRequest(myAgent, request.getContent());
+					handleRequest.processRequest();
+					
 					ACLMessage inform = request.createReply();
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
@@ -134,8 +136,10 @@ public class LiftAgent extends Agent{
 		return name.contains("floorPanelAgent") ? true : false;
 	}
     
-    // Calculates Lift's direction
-    // 0 -> static || -1 -> down || 1 -> up 
+    // Lift's direction
+    // 0 -> static
+	// -1 -> down 
+	// 1 -> up 
     public int calculateMyDirection() {
 		if(this.taskList.length == 0) {
 			return 0;
