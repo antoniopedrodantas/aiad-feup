@@ -5,8 +5,15 @@ import behaviours.LiftListeningBehaviour;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.FailureException;
+import jade.domain.FIPAAgentManagement.NotUnderstoodException;
+import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREResponder;
 
 
 @SuppressWarnings("serial")
@@ -50,7 +57,7 @@ public class LiftAgent extends Agent{
 	public void setup() { 
 		
 		System.out.println(this.toString());
-		addBehaviour(new LiftListeningBehaviour(this));
+		
 		
 		/* DF service register */
 		
@@ -69,6 +76,8 @@ public class LiftAgent extends Agent{
 		} catch(FIPAException fe) {
 			fe.printStackTrace();
 		}
+		
+		addLiftListener();
 	}
 	
     public void takeDown() {
@@ -81,6 +90,49 @@ public class LiftAgent extends Agent{
 			fe.printStackTrace();
 		}
     }
+    
+    
+    /* AchieveREResponder */
+	protected void addLiftListener() {
+		
+		System.out.println("Agent "+ getLocalName()+ " waiting for requests...");
+		
+	  	MessageTemplate template = MessageTemplate.and(
+  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+  		MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
+  		
+	  	
+		addBehaviour(new AchieveREResponder(this, template) {
+			
+			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				
+				if (checkSender(request.getSender().getName())) {
+					
+					System.out.println("Agent " + getLocalName() + ": Agree");
+					ACLMessage agree = request.createReply();
+					agree.setPerformative(ACLMessage.AGREE);
+					return agree;
+					
+				}
+				else {
+					System.out.println("Agent "+ getLocalName()+ ": Refuse");
+					throw new RefuseException("check-failed");
+				}
+			}
+			
+			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
+					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+					ACLMessage inform = request.createReply();
+					inform.setPerformative(ACLMessage.INFORM);
+					return inform;
+			}
+		} );
+	 }
+	
+	protected boolean checkSender(String name) {
+		return name.contains("floorPanelAgent") ? true : false;
+	}
     
     // Calculates Lift's direction
     // 0 -> static || -1 -> down || 1 -> up 

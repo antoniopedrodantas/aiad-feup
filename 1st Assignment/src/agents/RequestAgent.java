@@ -2,8 +2,11 @@ package agents;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.proto.AchieveREInitiator;
 
+import java.sql.Date;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,28 +32,52 @@ public class RequestAgent extends Agent{
 	private void sendRequests() {
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                sendRequest();
-            }
-          	}, 1000, 1500, TimeUnit.MILLISECONDS);
+            	public void run() {
+            		sendRequest();
+            	}
+          	}, 2000, 7500, TimeUnit.MILLISECONDS);
 	}
 	
 	private void sendRequest() {
+		
 		Random rand = new Random();
 		int randomInteger = rand.nextInt(floors);
 		Boolean randomBoolean = rand.nextBoolean();
 		
-		System.out.println(randomBoolean);
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
+        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000)); //we want to receive a reply in 10 seconds at most
+        
         String content;
+        
+        //TODO: se por alguma razão o randomInteger for '0' o typo tem de Down
         if (randomBoolean) {
 			content = "Up";
 		} else {
 			content = "Down";
 		}
+        
         msg.setContent(content);
-        System.out.println("Floor: "+ randomInteger + "  Message: " + content);
-        this.send(msg);
+        System.out.println("\nFloor: "+ randomInteger + "  Message: " + content);
+      
+		addBehaviour(new AchieveREInitiator(this, msg) {
+			protected void handleInform(ACLMessage inform) {
+				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+			}
+			protected void handleRefuse(ACLMessage refuse) {
+				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
+				
+			}
+			protected void handleFailure(ACLMessage failure) {
+				if (failure.getSender().equals(myAgent.getAMS())) {
+					System.out.println("Responder does not exist");
+				}
+				else {
+					System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
+				}
+			}
+		} );
 	}
 }
+
