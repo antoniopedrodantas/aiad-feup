@@ -1,6 +1,7 @@
 package agents;
 
 import utils.HandleRequest;
+import utils.LiftTaskListEntry;
 
 import java.util.ArrayList;
 import jade.core.Agent;
@@ -27,8 +28,7 @@ public class LiftAgent extends Agent{
 	
 	private int currentFloor;
 	private float currentWeight;
-	private int[] taskList;
-	
+	private ArrayList<LiftTaskListEntry> taskList = new ArrayList<>();
 	private ArrayList<String> liftContacts;
 	
 	public LiftAgent() {
@@ -41,7 +41,6 @@ public class LiftAgent extends Agent{
         
         this.currentFloor = 0;
         this.currentWeight = 0;
-        this.taskList = new int[5];
         
 	}
 	
@@ -54,7 +53,6 @@ public class LiftAgent extends Agent{
         
         this.currentFloor = 0;
         this.currentWeight = 0;
-        this.taskList = new int[5];
         
         this.liftContacts = new ArrayList<>();
           
@@ -150,23 +148,23 @@ public class LiftAgent extends Agent{
 	// -1 -> down 
 	// 1 -> up 
     public int calculateMyDirection() {
-		if(this.taskList.length == 0) {
+		if(this.taskList.size() == 0) {
 			return 0;
 		}
-		else if(this.currentFloor > this.taskList[0]) {
+		else if(this.currentFloor > this.taskList.get(0).getFloor()) {
     		return -1;
     	}
-		else if (this.currentFloor < this.taskList[0]){
+		else if (this.currentFloor < this.taskList.get(0).getFloor()){
 			return 1;
 		}
 		else {
 			
 			// [ATTENTION] May be lacking if cases
 			
-			if(this.taskList.length == 1) {
+			if(this.taskList.size() == 1) {
 				return 0;
 			}
-			else if(this.taskList[0] < this.taskList[1]) {
+			else if(this.taskList.get(0).getFloor() < this.taskList.get(1).getFloor()) {
 				return 1;
 			}
 			else {
@@ -202,11 +200,12 @@ public class LiftAgent extends Agent{
     	return this.currentWeight;
     }
     
-    public int[] getTaskList() {
-    	return this.taskList;
-    }
     
-    public int getTotalLifts() {
+    public ArrayList<LiftTaskListEntry> getTaskList() {
+		return taskList;
+	}
+
+	public int getTotalLifts() {
     	return this.totalLifts;
     }
     
@@ -218,5 +217,10 @@ public class LiftAgent extends Agent{
     public void setContacts(ArrayList<String> contacts) {
     	this.liftContacts = contacts;
     }
+    
+    
+	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
+		this.taskList = taskList;
+	}
     
 }

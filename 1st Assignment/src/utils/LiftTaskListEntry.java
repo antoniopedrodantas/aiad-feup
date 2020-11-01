@@ -2,7 +2,7 @@ package utils;
 
 public class LiftTaskListEntry {
 	
-	enum Type {
+	public enum Type {
 		  Up, //floor Agent
 		  Down, //floor Agent
 		  End //inside lift
@@ -39,4 +39,9 @@ public class LiftTaskListEntry {
 	public int getFloor() {
 		return floor;
 	}
+	
+	public Type getType() {
+		return type;
+	}
+
 }

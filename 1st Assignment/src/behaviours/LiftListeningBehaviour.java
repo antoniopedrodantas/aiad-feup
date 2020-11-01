@@ -4,6 +4,7 @@ import jade.core.behaviours.CyclicBehaviour;
 
 import jade.lang.acl.ACLMessage;
 import utils.LiftTaskListEntry;
+import utils.liftProposal;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,6 @@ import agents.LiftAgent;
 public class LiftListeningBehaviour extends CyclicBehaviour {
 	
 	private LiftAgent myAgent;
-	private ArrayList<LiftTaskListEntry> taskList = new ArrayList<>();
 	
 	public LiftListeningBehaviour(LiftAgent liftAgent) {
 		this.myAgent = liftAgent;
@@ -65,25 +65,53 @@ public class LiftListeningBehaviour extends CyclicBehaviour {
 	//Calculates time for a new request
 	// lift @ 5 taks[4,3,2,1] 
 	// calc time calculates 5-4, 4-3, 3-2,2-1 => returns sum
-	protected float calcTime(int request) {
+	protected liftProposal calcProposal(int request) {
 		
-		float liftSpeed = this.myAgent.getSpeed();
+		float liftSpeed = this.myAgent.getSpeed(Math.abs(request), );
+
+		LiftTaskListEntry entry = new LiftTaskListEntry(Math.abs(request), request > 0 ? 1 : -1);
+		float time;
 		
-		if(this.taskList.isEmpty())
-			return Math.abs(this.myAgent.getFloor() - Math.abs(request)) * liftSpeed;
+		int optimalPosition = getListPos(entry);
+		
+		
+		if(this.myAgent.getTaskList().isEmpty())
+			time = Math.abs(this.myAgent.getFloor() - Math.abs(request)) * liftSpeed;
 		else {
-			float time = Math.abs(this.myAgent.getFloor() - taskList.get(0).getFloor()) * liftSpeed;
-			for (int i = 0; i < taskList.size() - 1; i++) {
-				time += taskList.get(i).timeTo(taskList.get(i+1), liftSpeed);
+			getListPos(entry);
+			time = Math.abs(this.myAgent.getFloor() - myAgent.getTaskList().get(0).getFloor()) * liftSpeed;
+			for (int i = 0; i < myAgent.getTaskList().size() - 1; i++) {
+				time += myAgent.getTaskList().get(i).timeTo(myAgent.getTaskList().get(i+1), liftSpeed);
 			}
-			return time;	
 		}
+		return new liftProposal(this.myAgent.getTaskList(), entry, optimalPosition, time);	
 	}
 	
 	//Gets the list position for a new request
-	protected int getListPos(LiftTaskListEntry entry) {
+	protected int getListPos(LiftTaskListEntry entry) {	
 		
-		return 0;
+		//For all list pairs
+		for (int i = 0; i < myAgent.getTaskList().size()-1; i++) {
+			
+			//If request is between
+			if(between(myAgent.getTaskList().get(i).getFloor(), 
+						myAgent.getTaskList().get(i+1).getFloor(), 
+						entry.getFloor())) {
+				if(entry.getType() == LiftTaskListEntry.Type.Up) return i;
+			}
+			
+			if(between(myAgent.getTaskList().get(i+1).getFloor(), 
+					myAgent.getTaskList().get(i).getFloor(), 
+					entry.getFloor())) {
+				if(entry.getType() == LiftTaskListEntry.Type.Down) return i;
+			}
+		}
+		return myAgent.getTaskList().size();
+	}
+	
+	//is X between a and b
+	private boolean between(int a, int b, int x) {
+		return ((a < x && x < b));
 	}
 }
 
