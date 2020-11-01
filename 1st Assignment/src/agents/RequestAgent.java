@@ -63,7 +63,7 @@ public class RequestAgent extends Agent{
       
 		addBehaviour(new AchieveREInitiator(this, msg) {
 			protected void handleInform(ACLMessage inform) {
-				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+				// System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
 			}
 			protected void handleRefuse(ACLMessage refuse) {
 				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");

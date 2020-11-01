@@ -4,6 +4,10 @@ import utils.HandleRequest;
 import utils.LiftTaskListEntry;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -82,6 +86,9 @@ public class LiftAgent extends Agent{
 		}
 		
 		addLiftListener();
+		
+		// displays Lift info
+		displayLiftInfo();
 	}
 	
     public void takeDown() {
@@ -109,7 +116,7 @@ public class LiftAgent extends Agent{
 		addBehaviour(new AchieveREResponder(this, template) {
 			
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
-				System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				// System.out.println("Agent "+ getLocalName() + ": REQUEST received from "+ request.getSender().getLocalName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
 					
@@ -127,7 +134,7 @@ public class LiftAgent extends Agent{
 			
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
 				
-					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+					// System.out.println("Agent " + getLocalName() + ": Action successfully performed");
 					
 					HandleRequest handleRequest = new HandleRequest(myAgent, request.getContent());
 					handleRequest.processRequest();
@@ -173,6 +180,22 @@ public class LiftAgent extends Agent{
 
 		}
     }
+    
+    // Displays Lift's info
+    private void displayLiftInfo() {
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            	public void run() {
+            		displayLift();
+            	}
+          	}, 2000, 1500, TimeUnit.MILLISECONDS);
+	}
+    
+    private void displayLift() {
+    	System.out.println("Lift " + this.getId() + ": CurrentFloor [" + this.getFloor() + "]; TaskList = {" + this.getTaskList() + "}");
+    }
+    
+    
     
     @Override
     public String toString() {

@@ -81,19 +81,20 @@ public class FloorPanelAgent extends Agent {
 		addBehaviour(new AchieveREResponder(this, template) {
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
-				System.out.println("Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				// System.out.println("Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				// System.out.println(getLocalName() + ": REQUEST received! Action is "+ request.getContent());
 				type = request.getContent();
 				
 				if (checkSender(request.getSender().getName())) {
 					
-					System.out.println("Agent " + getLocalName() + ": Agree");
+					// System.out.println("Agent " + getLocalName() + ": Agree");
 					ACLMessage agree = request.createReply();
 					agree.setPerformative(ACLMessage.AGREE);
 					return agree;
 					
 				}
 				else {
-					System.out.println("Agent " + getLocalName()+ ": Refuse");
+					// System.out.println("Agent " + getLocalName()+ ": Refuse");
 					throw new RefuseException("check-failed");
 				}
 			}
@@ -101,13 +102,13 @@ public class FloorPanelAgent extends Agent {
 			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
 				
 				if(sendRequestToLifts()) {
-					System.out.println("Agent " + getLocalName() + ": Action successfully performed");
+					// System.out.println("Agent " + getLocalName() + ": Action successfully performed");
 					ACLMessage inform = request.createReply();
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
 				else {
-					System.out.println("Agent " + getLocalName() + ": Action failed");
+					// System.out.println("Agent " + getLocalName() + ": Action failed");
 					throw new FailureException("unexpected-error");
 				}
 			}
@@ -143,23 +144,23 @@ public class FloorPanelAgent extends Agent {
 		     addBehaviour(new AchieveREInitiator(this, msg) {
 		    	 
 				protected void handleInform(ACLMessage inform) {
-					System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+					// System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
 				}
 				protected void handleRefuse(ACLMessage refuse) {
-					System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
+					// System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
 					nmrResponders--;
 				}
 				protected void handleFailure(ACLMessage failure) {
 					if (failure.getSender().equals(myAgent.getAMS())) {
-						System.out.println("Responder does not exist");
+						// System.out.println("Responder does not exist");
 					}
 					else {
-						System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
+						// System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
 					}
 				}
 				protected void handleAllResultNotifications(Vector notifications) {
 					if (notifications.size() < nmrResponders) {
-						System.out.println("Timeout expired: missing " + (nmrResponders - notifications.size()) + " responses");
+						// System.out.println("Timeout expired: missing " + (nmrResponders - notifications.size()) + " responses");
 					}
 				}
 			} );
