@@ -51,12 +51,13 @@ public class RequestAgent extends Agent{
         
         String content;
         
-        //TODO: se por alguma razão o randomInteger for '0' o typo tem de Down
         if (randomBoolean) {
 			content = "Up";
 		} else {
 			content = "Down";
 		}
+        
+        if(randomInteger == 0) content = "Up";
         
         msg.setContent(content);
         System.out.println("\nFloor: "+ randomInteger + "  Message: " + content);

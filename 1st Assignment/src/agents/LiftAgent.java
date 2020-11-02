@@ -25,6 +25,8 @@ public class LiftAgent extends Agent{
 	private float maxWeight;
 	private float speed;
 	private int totalLifts;
+	private float floorDistance;
+	private float timeAtFloors;
 	
 	private int currentFloor;
 	private float currentWeight;
@@ -35,10 +37,11 @@ public class LiftAgent extends Agent{
       	
 		this.id = 1;
 		this.maxWeight = 600;
-		this.speed = 25;
+		this.speed = 2;
 		this.totalLifts = 6;
+		this.floorDistance = 5;
+        this.setTimeAtFloors(1);
 		
-        
         this.currentFloor = 0;
         this.currentWeight = 0;
         
@@ -50,6 +53,8 @@ public class LiftAgent extends Agent{
         this.maxWeight = Float.parseFloat(args[1]);
         this.speed = Float.parseFloat(args[2]);
         this.totalLifts = Integer.parseInt(args[3]);
+        this.floorDistance = Float.parseFloat(args[4]);
+        this.setTimeAtFloors(Float.parseFloat(args[5]));
         
         this.currentFloor = 0;
         this.currentWeight = 0;
@@ -221,6 +226,22 @@ public class LiftAgent extends Agent{
     
 	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
 		this.taskList = taskList;
+	}
+
+	public float getFloorDistance() {
+		return floorDistance;
+	}
+
+	public void setFloorDistance(float floorDistance) {
+		this.floorDistance = floorDistance;
+	}
+
+	public float getTimeAtFloors() {
+		return timeAtFloors;
+	}
+
+	public void setTimeAtFloors(float timeAtFloors) {
+		this.timeAtFloors = timeAtFloors;
 	}
     
 }
