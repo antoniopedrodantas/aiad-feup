@@ -22,11 +22,13 @@ public class SwingDisplay implements Runnable {
 	
 	
 	public SwingDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floorPanels) {
+		
 		this.lifts = lifts;
 		this.floorPanels = floorPanels;
 		
 		this.frame = new JFrame("LiftManagementSystem");
         this.panel = new JPanel();
+        this.frame.setSize(500, 750);
 	}
 
 	@Override
@@ -37,8 +39,8 @@ public class SwingDisplay implements Runnable {
 		while(true) {
 			
 			// this will get the display along the y axis for the FloorPanels
-			int offsetY = 400 / this.floorPanels.size();
-			int offsetX = 400 / this.lifts.size();
+			int offsetY = 650 / this.floorPanels.size();
+			int offsetX = 350 / this.lifts.size();
 			
 			this.frame.getContentPane();
 		    JLabel label;
@@ -46,22 +48,37 @@ public class SwingDisplay implements Runnable {
 		    this.panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		    
 		    for(FloorPanelAgent fp: this.floorPanels) {
-		    	label = new JLabel(fp.getFloor() + "FP");
+		    	
+		    	// Draws FloorPanel
+		    	
+		    	label = new JLabel("FP" + fp.getFloor());
+		    	label.setPreferredSize(new Dimension(50, 20));
 		    	Dimension size = label.getPreferredSize();
-		    	label.setBounds(50, 400 - (offsetY * fp.getFloor()), size.width, size.height);
+		    	label.setBounds(50, 650 - (offsetY * fp.getFloor()), size.width, size.height);
 		    	this.panel.add(label);
+		    	
+		    	// Draws intersection
+		    	if(fp.getFloor() != 0) {
+		    		label = new JLabel("------------------------------------------------------------------------------------------------------");
+			    	label.setPreferredSize(new Dimension(500, 20));
+			    	size = label.getPreferredSize();
+			    	label.setBounds(50, 660 - (offsetY * fp.getFloor()), size.width, size.height);
+			    	this.panel.add(label);
+		    	}
+		    	
 		    }
 		    
 		    for(LiftAgent l : this.lifts) {
-		    	label = new JLabel("L" + l.getId());
+		    	label = new JLabel("Lift" + l.getId());
+		    	label.setPreferredSize(new Dimension(200, 20));
 		    	Dimension size = label.getPreferredSize();
-		    	label.setBounds(offsetX * l.getId(), 400 - (offsetY * l.getFloor()), size.width, size.height);
+		    	label.setBounds(50 + (offsetX * l.getId()), 650 - (offsetY * l.getFloor()), size.width, size.height);
 		    	this.panel.add(label);
 		    }
 		    
 		    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		    this.frame.add(this.panel);
-		    this.frame.setSize(500, 500);
+		    
 		    this.frame.setVisible(true);
 		}
 		

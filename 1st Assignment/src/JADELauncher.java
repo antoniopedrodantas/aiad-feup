@@ -24,7 +24,7 @@ public class JADELauncher {
 	protected void launchBuilding(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
 		
 		AgentController agentController;
-		String[] args = {"8", "4", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
+		String[] args = {"8", "2", "600.0", "2.5", "5.0"}; //maybe we could do this via console or txt file 
 		
 		try {
 			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer));
