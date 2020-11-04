@@ -37,7 +37,8 @@ public class SwingDisplay implements Runnable {
 		while(true) {
 			
 			// this will get the display along the y axis for the FloorPanels
-			int margin = 400 / this.floorPanels.size();
+			int offsetY = 400 / this.floorPanels.size();
+			int offsetX = 400 / this.lifts.size();
 			
 			this.frame.getContentPane();
 		    JLabel label;
@@ -47,14 +48,14 @@ public class SwingDisplay implements Runnable {
 		    for(FloorPanelAgent fp: this.floorPanels) {
 		    	label = new JLabel(fp.getFloor() + "FP");
 		    	Dimension size = label.getPreferredSize();
-		    	label.setBounds(50, 400 - (margin * fp.getFloor()), size.width, size.height);
+		    	label.setBounds(50, 400 - (offsetY * fp.getFloor()), size.width, size.height);
 		    	this.panel.add(label);
 		    }
 		    
 		    for(LiftAgent l : this.lifts) {
 		    	label = new JLabel("L" + l.getId());
 		    	Dimension size = label.getPreferredSize();
-		    	label.setBounds(100 * l.getId(), 400, size.width, size.height);
+		    	label.setBounds(offsetX * l.getId(), 400 - (offsetY * l.getFloor()), size.width, size.height);
 		    	this.panel.add(label);
 		    }
 		    
