@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 import agents.FloorPanelAgent;
 import agents.RequestAgent;
 
+import display.SwingDisplay;
+
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
@@ -36,11 +38,8 @@ public class BuildingAgent extends Agent{
 	private float floorDistance;
 	private ContainerController mainContainer;
 	
-	
-	private JFrame frame;
-	private JPanel panel;
-	
 	private ArrayList<LiftAgent> lifts = new ArrayList<>();
+	private ArrayList<FloorPanelAgent> floorPanels = new ArrayList<>();
 	
 	public BuildingAgent(String[] args, ContainerController mainContainer){
         this.nmrFloors = Integer.parseInt(args[0]);
@@ -49,9 +48,6 @@ public class BuildingAgent extends Agent{
         this.maxSpeed = Float.parseFloat(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
         this.mainContainer = mainContainer;
-        
-        this.frame = new JFrame("LiftManagementSystem");
-        this.panel = new JPanel();
         
     }
 	
@@ -77,27 +73,9 @@ public class BuildingAgent extends Agent{
 		}
 		
 		launchRequestAgent(this.nmrFloors);
-		
-		// -------------------------- Displays Swing --------------------------
-		// will then probably need to be put into a loop of some sort
-		// then arrange Floor's display
-		this.frame.getContentPane();
-	    JLabel label;
-	    this.panel.setLayout(null);
-	    this.panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-	    
-	    for(LiftAgent l : this.lifts) {
-	    	label = new JLabel("L" + l.getId());
-	    	Dimension size = label.getPreferredSize();
-	    	label.setBounds(100 * l.getId(), 400, size.width, size.height);
-	    	this.panel.add(label);
-	    }
-	    
-	    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	    this.frame.add(this.panel);
-	    this.frame.setSize(500, 500);
-	    this.frame.setVisible(true);
-	    //  ---------------------------------------------------------------------
+
+		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
+		swing.run();
 		
 	}
 
@@ -170,10 +148,12 @@ public class BuildingAgent extends Agent{
 		
 		AgentController floorPanelAgent;
 		
+		FloorPanelAgent newFloorPanelAgent = new FloorPanelAgent(floor);
 		
 		try {
-			floorPanelAgent = this.mainContainer.acceptNewAgent("floorPanelAgent" + floor, new FloorPanelAgent(floor));
+			floorPanelAgent = this.mainContainer.acceptNewAgent("floorPanelAgent" + floor, newFloorPanelAgent);
 			floorPanelAgent.start();
+			floorPanels.add(newFloorPanelAgent);
 		} catch(StaleProxyException e) {
 			System.err.println("Error launching floorPanelAgent");
 			e.printStackTrace();
