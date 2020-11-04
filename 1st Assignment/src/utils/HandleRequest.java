@@ -34,7 +34,7 @@ public class HandleRequest {
 		System.out.println("LIFT PROPOSED TIME: " + this.liftProposal.getTime());
 		System.out.println("LIFT PROPOSED TaskList: ");
 		for (LiftTaskListEntry task : this.liftProposal.getTaskList()) {
-			System.out.println("\t" + task.getFloor());
+			System.out.println("\t" + task.getFloor() + ", " + task.getType().toString());
 		}
 		this.myAgent.setTaskList(this.liftProposal.getTaskList());
 		// 3) implement a consensus algorithm to know who fulfills the request

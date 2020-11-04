@@ -1,5 +1,6 @@
 package agents;
 
+import behaviours.LiftTickerBehaviour;
 import utils.HandleRequest;
 import utils.LiftTaskListEntry;
 
@@ -87,6 +88,7 @@ public class LiftAgent extends Agent{
 		}
 		
 		addLiftListener();
+		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
 	}
 	
     public void takeDown() {
@@ -218,7 +220,14 @@ public class LiftAgent extends Agent{
     	return this.liftContacts;
     }
     
+    public float getTimeAtFloors() {
+    	return timeAtFloors;
+    }
+    
     /* setters */
+    public void setFloor(int floor) {
+    	this.currentFloor = floor;
+    }
     public void setContacts(ArrayList<String> contacts) {
     	this.liftContacts = contacts;
     }
@@ -236,9 +245,6 @@ public class LiftAgent extends Agent{
 		this.floorDistance = floorDistance;
 	}
 
-	public float getTimeAtFloors() {
-		return timeAtFloors;
-	}
 
 	public void setTimeAtFloors(float timeAtFloors) {
 		this.timeAtFloors = timeAtFloors;
