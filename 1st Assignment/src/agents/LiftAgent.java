@@ -189,15 +189,15 @@ public class LiftAgent extends Agent{
 		String[] actionsToBePerformed = msg.split(",", 2);
 		
 		if(actionsToBePerformed.length == 2) { //entering and exiting
-			parseEntering(actionsToBePerformed[0]);
 			parseExiting(actionsToBePerformed[1]);
+			parseEntering(actionsToBePerformed[0]);
 		}
 		else if(actionsToBePerformed.length == 1) { //entering or exiting
 			
-			if(actionsToBePerformed[0].substring(0,1) == "E") {
+			if(actionsToBePerformed[0].substring(0,1).equals("E")) {
 				parseEntering(actionsToBePerformed[0]);
 			}
-			else if(actionsToBePerformed[0].substring(0,1) == "S") {
+			else if(actionsToBePerformed[0].substring(0,1).equals("S")) {
 				parseExiting(actionsToBePerformed[0]);
 			}
 			else {
@@ -211,10 +211,67 @@ public class LiftAgent extends Agent{
 	
 	protected void parseEntering(String msg) {
 		
+		String[] entering = msg.split(":", 2);
+		
+		if(entering.length == 2) {
+			String enter = entering[1];
+			
+			if(!enter.contains("[")) {
+				int people = Integer.parseInt(enter);
+				System.out.println("entering: " + people);
+				//only update current weight
+			}
+			else {
+				if(enter.contains("[") && enter.contains("]")) {
+					int initIndex = enter.indexOf('[');
+					int finalIndex = enter.indexOf(']');
+					int i = 0;
+					String nmr = "";
+					String floorsToAttend ="";
+					
+					if(i == initIndex || initIndex== finalIndex - 1) {
+						System.out.println("No valide format for message: " + msg);
+					}
+					else {
+						while(i < initIndex) {
+							nmr += enter.charAt(i);
+							i = i+1;
+						}
+						while(initIndex < finalIndex - 1) {
+							initIndex = initIndex + 1;
+							floorsToAttend += enter.charAt(initIndex);
+						}
+					}
+					
+					int people = Integer.parseInt(nmr);
+					String[] floors = floorsToAttend.split("-");
+					//update current weight and add End Entrys
+					System.out.println("entering: " + people);
+                    for(int j = 0; j < floors.length; j++){
+                        System.out.println(floors[j]);
+                    }
+				}
+				else {
+					System.out.println("No valide format for message: " + msg);
+				}
+			}
+			
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
 	}
 	
 	protected void parseExiting(String msg) {
+		String[] exiting = msg.split(":", 2);
 		
+		if(exiting.length == 2) {
+			int people = Integer.parseInt(exiting[1]);
+			System.out.println("exiting: " + people);
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
 	}
 	
 	protected boolean checkSender(String name) {

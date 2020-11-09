@@ -121,7 +121,7 @@ public class RequestAgent extends Agent{
 				if(request.getContent() != null) {
 					ACLMessage inform = request.createReply();
 					//inform.setContent(createResponse(request.getContent()));
-					inform.setContent("ola");
+					inform.setContent("E:3[4-5-6],S:2");
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
