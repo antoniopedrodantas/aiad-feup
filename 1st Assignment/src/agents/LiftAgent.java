@@ -146,6 +146,10 @@ public class LiftAgent extends Agent{
 		} );
 	 }
 	
+	public void askRequestAgent() {
+		
+	}
+	
 	protected boolean checkSender(String name) {
 		return name.contains("floorPanelAgent") ? true : false;
 	}
@@ -249,5 +253,16 @@ public class LiftAgent extends Agent{
 	public void setTimeAtFloors(float timeAtFloors) {
 		this.timeAtFloors = timeAtFloors;
 	}
-    
+	
+	public void addWeight(float weight) {
+		this.currentWeight = this.currentWeight + weight;
+	}
+	
+	public void subWeight(float weight) {
+		this.currentWeight = this.currentWeight - weight;
+	}
+	
+	public void removeEntry() {
+		this.taskList.remove(0);
+	}
 }

@@ -26,7 +26,7 @@ public class RequestAgent extends Agent{
 	}
 	
 	public void takeDown() {
-		
+		System.out.println("RequestAgent done working...");
 	}
 	
 	private void sendRequests() {
@@ -47,7 +47,7 @@ public class RequestAgent extends Agent{
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(new AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000)); //we want to receive a reply in 10 seconds at most
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000)); //we want to receive a reply in 5 seconds at most
         
         String content;
         
