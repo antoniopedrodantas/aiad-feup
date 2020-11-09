@@ -5,6 +5,10 @@ import utils.HandleRequest;
 import utils.LiftTaskListEntry;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Vector;
+
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -16,6 +20,7 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
 
 
@@ -147,7 +152,31 @@ public class LiftAgent extends Agent{
 	 }
 	
 	public void askRequestAgent() {
-		
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(new AID("requestAgent",AID.ISLOCALNAME));
+		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
+        msg.setContent(this.getTaskList().get(0).getFloor() + ". " + this.getTaskList().get(0).getFloor()); //msg = 4:END
+        
+        addBehaviour(new AchieveREInitiator(this, msg) {
+	    	 
+			protected void handleInform(ACLMessage inform) {
+				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+				System.out.println("RECEIVED MESSAGE FROM REQUESTAGENT: " + inform.getContent());
+			}
+			protected void handleRefuse(ACLMessage refuse) {
+				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
+				
+			}
+			protected void handleFailure(ACLMessage failure) {
+				if (failure.getSender().equals(myAgent.getAMS())) {
+					System.out.println("Responder does not exist");
+				}
+				else {
+					System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
+				}
+			}
+		} );
 	}
 	
 	protected boolean checkSender(String name) {

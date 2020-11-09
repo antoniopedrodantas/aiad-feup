@@ -10,17 +10,25 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	
 	private LiftAgent myAgent;
 	private float realAgentPosition;
+	private int i;
 	
 	public LiftTickerBehaviour(Agent agent, long period) {
 		super(agent, period);
 		this.myAgent = (LiftAgent) agent;
 		this.realAgentPosition = (float) this.myAgent.getFloor();
+		i = 0;
 	}
 
 	@Override
 	protected void onTick() {
 		
-		if(!this.myAgent.getTaskList().isEmpty()) {
+		System.out.println("ticking");
+		
+		if (i > 4)
+			this.processRequest();
+		else
+			i++;
+		/*if(!this.myAgent.getTaskList().isEmpty()) {
 			if(this.myAgent.getTaskList().get(0).getFloor() == this.myAgent.getFloor()) {
 				processRequest();
 			}
@@ -33,7 +41,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 			
 			updatePosition();
 		}
-		
+		*/
 	}
 	
 	protected void updatePosition(){
@@ -73,7 +81,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 			 entrar (pode entrar e nao carregar no botao OU carregar e tocar em um ou varios) EXEMPLO : "E:3" ou "E:1[1]"
 			 */
 		//eliminar 1º elemento da queue
-		removeEntry();
+		//removeEntry();
 	}
 	
 	

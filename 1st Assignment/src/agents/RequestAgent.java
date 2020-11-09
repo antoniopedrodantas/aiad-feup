@@ -3,8 +3,13 @@ package agents;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPANames;
+import jade.domain.FIPAAgentManagement.FailureException;
+import jade.domain.FIPAAgentManagement.NotUnderstoodException;
+import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
+import jade.proto.AchieveREResponder;
 
 import java.sql.Date;
 import java.util.Random;
@@ -23,6 +28,7 @@ public class RequestAgent extends Agent{
 	
 	public void setup() {
 		sendRequests();
+		addListener();
 	}
 	
 	public void takeDown() {
@@ -79,6 +85,56 @@ public class RequestAgent extends Agent{
 				}
 			}
 		} );
+	}
+	
+	private void addListener() {
+		System.out.println("Agent "+ getLocalName()+ " waiting for requests...");
+
+	  	MessageTemplate template = MessageTemplate.and(
+  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+  		MessageTemplate.MatchPerformative(ACLMessage.REQUEST) );
+	  	
+	  	addBehaviour(new AchieveREResponder(this, template) {
+	  		
+			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+				
+				System.out.println("Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getLocalName() + ". Action is "+ request.getContent());
+				
+				if (checkSender(request.getSender().getName())) {
+					
+					ACLMessage agree = request.createReply();
+					agree.setPerformative(ACLMessage.AGREE);
+					return agree;
+					
+				}
+				else {
+					System.out.println("Agent " + getLocalName()+ ": Refuse");
+					throw new RefuseException("check-failed");
+				}
+			}
+			
+			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
+				
+				if(request.getContent() != null) {
+					ACLMessage inform = request.createReply();
+					inform.setContent(createResponse(request.getContent()));
+					inform.setPerformative(ACLMessage.INFORM);
+					return inform;
+				}
+				else {
+					System.out.println("Agent " + getLocalName() + ": Action failed");
+					throw new FailureException("unexpected-error");
+				}
+			}
+		} );
+	}
+	
+	protected boolean checkSender(String name) {
+		return name.contains("liftAgent") ? true : false;
+	}
+	
+	protected String createResponse(String request) {
+		return "esta shit é assim";
 	}
 }
 
