@@ -153,15 +153,15 @@ public class RequestAgent extends Agent{
 		return response;
 	}
 	
-	protected String generateResponse(int floor, String action) {
+	protected String generateResponse(int floor, String action) { 
 		String response = "";
 		
 		switch(action){
-			case "Up":
+			case "Up": //lift is attending someone who called the lift and wants to go up
 				break;
-			case "Down":
+			case "Down": //lift is attending someone who called the lift and wants to go Down
 				break;
-			case "End":
+			case "End": //lift is leaving someone on a certain floor(exiting is mandatory)
 				break;
 			default:
 				break;
@@ -180,4 +180,14 @@ public class RequestAgent extends Agent{
  * O que fazer nos casos em que requestAgent diz que saiem 4 pessoas mas so estam 3 la dentro?
  *
  */
+
+/*
+ * 
+ * Function to generate numbers between 4 and 10
+ * 	Random r = new Random();
+	int floors = 10;
+	int fl = 4;
+	int result = r.nextInt((floors + 1) -fl) + fl;
+ * 
+ * */
 

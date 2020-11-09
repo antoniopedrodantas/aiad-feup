@@ -26,6 +26,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 			this.processRequest();
 		else
 			i++;
+		
 		/*if(!this.myAgent.getTaskList().isEmpty()) {
 			if(this.myAgent.getTaskList().get(0).getFloor() == this.myAgent.getFloor()) {
 				processRequest();
@@ -40,6 +41,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 			updatePosition();
 		}
 		*/
+		
 	}
 	
 	protected void updatePosition(){
@@ -70,16 +72,8 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	}
 	
 	protected void processRequest() {
-		// mandar mensagem ao requestAgent com o pedido que estamos a atender(1º da lista)
 		this.myAgent.askRequestAgent();
-		//processar mensagem
-			/*
-			 entrar e sair( notar que entrada pode ser carregar num botao ou mais, ou em nenhum) EXEMPLO: "E:2[5-6],S:1"
-			 sair EXEMPLO "S:1"
-			 entrar (pode entrar e nao carregar no botao OU carregar e tocar em um ou varios) EXEMPLO : "E:3" ou "E:1[1]"
-			 */
-		//eliminar 1º elemento da queue
-		//removeEntry();
+		removeEntry();
 	}
 	
 	
