@@ -44,6 +44,9 @@ public class RequestAgent extends Agent{
           	}, 2000, 7500, TimeUnit.MILLISECONDS);
 	}
 	
+	
+	//TODO: nao pode gerar pedido Up no ultimo piso do Building
+	//TODO: so pode gerar 0 Up, nunca 0 Down
 	private void sendRequest() {
 		
 		Random rand = new Random();
@@ -117,7 +120,8 @@ public class RequestAgent extends Agent{
 				
 				if(request.getContent() != null) {
 					ACLMessage inform = request.createReply();
-					inform.setContent(createResponse(request.getContent()));
+					//inform.setContent(createResponse(request.getContent()));
+					inform.setContent("ola");
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
@@ -133,8 +137,47 @@ public class RequestAgent extends Agent{
 		return name.contains("liftAgent") ? true : false;
 	}
 	
+	//create response to send to liftAgent
 	protected String createResponse(String request) {
-		return "esta shit é assim";
+		
+		String response;
+		
+		if(request != null) {
+			String[] content = request.split(":", 2);
+			response = generateResponse(Integer.parseInt(content[0]),content[1]);
+		}
+		else {
+			response = "[WARNING] Request is empty";
+		}
+		
+		return response;
+	}
+	
+	protected String generateResponse(int floor, String action) {
+		String response = "";
+		
+		switch(action){
+			case "Up":
+				break;
+			case "Down":
+				break;
+			case "End":
+				break;
+			default:
+				break;
+		}
+		
+		return response;
 	}
 }
+
+//TODO
+
+/*
+ * O que é que vai acontecer quando o elevador tem espaço apenas para mais uma pessoa e o request Agent gera mais que uma pessoa a entrar?
+ * (será recusado quando recebe o pedido ou o requestAgent vai ter informação de quantas pessoas pode gerar no maximo?
+ * 
+ * O que fazer nos casos em que requestAgent diz que saiem 4 pessoas mas so estam 3 la dentro?
+ *
+ */
 

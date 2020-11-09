@@ -21,9 +21,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 
 	@Override
 	protected void onTick() {
-		
-		System.out.println("ticking");
-		
+	
 		if (i > 4)
 			this.processRequest();
 		else

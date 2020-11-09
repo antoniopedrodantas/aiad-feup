@@ -156,13 +156,15 @@ public class LiftAgent extends Agent{
 		msg.addReceiver(new AID("requestAgent",AID.ISLOCALNAME));
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
-        msg.setContent(this.getTaskList().get(0).getFloor() + ". " + this.getTaskList().get(0).getFloor()); //msg = 4:END
+        msg.setContent(this.getTaskList().get(0).getFloor() + ":" + this.getTaskList().get(0).getType()); //msg = 4:Up
         
         addBehaviour(new AchieveREInitiator(this, msg) {
 	    	 
 			protected void handleInform(ACLMessage inform) {
 				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
 				System.out.println("RECEIVED MESSAGE FROM REQUESTAGENT: " + inform.getContent());
+				//TODO: parse message received
+				parseReceivedMessage(inform.getContent());
 			}
 			protected void handleRefuse(ACLMessage refuse) {
 				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
@@ -177,6 +179,42 @@ public class LiftAgent extends Agent{
 				}
 			}
 		} );
+	}
+	
+	/* Parsing functions */
+	//TODO: quando saiem todas as pessoas retirar todos as entry do tipo END
+	//TODO: acrescentar entrys do tipo END quando entram pessoas
+	protected void parseReceivedMessage(String msg) {
+		
+		String[] actionsToBePerformed = msg.split(",", 2);
+		
+		if(actionsToBePerformed.length == 2) { //entering and exiting
+			parseEntering(actionsToBePerformed[0]);
+			parseExiting(actionsToBePerformed[1]);
+		}
+		else if(actionsToBePerformed.length == 1) { //entering or exiting
+			
+			if(actionsToBePerformed[0].substring(0,1) == "E") {
+				parseEntering(actionsToBePerformed[0]);
+			}
+			else if(actionsToBePerformed[0].substring(0,1) == "S") {
+				parseExiting(actionsToBePerformed[0]);
+			}
+			else {
+				System.out.println("No valide format for message: " + msg);
+			}
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
+	}
+	
+	protected void parseEntering(String msg) {
+		
+	}
+	
+	protected void parseExiting(String msg) {
+		
 	}
 	
 	protected boolean checkSender(String name) {
