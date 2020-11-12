@@ -37,6 +37,7 @@ public class BuildingAgent extends Agent{
 	private float maxSpeed;
 	private float floorDistance;
 	private ContainerController mainContainer;
+	private float timeAtFloors;
 	
 	private ArrayList<LiftAgent> lifts = new ArrayList<>();
 	private ArrayList<FloorPanelAgent> floorPanels = new ArrayList<>();
@@ -47,6 +48,7 @@ public class BuildingAgent extends Agent{
         this.maxWeight = Float.parseFloat(args[2]); 
         this.maxSpeed = Float.parseFloat(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
+        this.timeAtFloors = Float.parseFloat(args[5]);
         this.mainContainer = mainContainer;
         
     }
@@ -129,7 +131,9 @@ public class BuildingAgent extends Agent{
 	}
 	
 	protected String[] buildArgs(Integer lift) {
-		String[] args = {String.valueOf(lift), "600.0", "2.5", String.valueOf(this.nmrLifts)};
+		String[] args = {String.valueOf(lift), String.valueOf(this.maxWeight), 
+				String.valueOf(this.maxSpeed), String.valueOf(this.nmrLifts),
+				String.valueOf(this.floorDistance), String.valueOf(this.timeAtFloors)};
 		return args;
 	}
 	

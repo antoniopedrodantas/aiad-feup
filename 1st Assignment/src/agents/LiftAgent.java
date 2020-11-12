@@ -1,5 +1,6 @@
 package agents;
 
+import behaviours.LiftTickerBehaviour;
 import utils.HandleRequest;
 import utils.LiftTaskListEntry;
 
@@ -8,6 +9,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import java.util.Date;
+import java.util.Vector;
+
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -19,6 +24,7 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
 
 
@@ -29,6 +35,8 @@ public class LiftAgent extends Agent{
 	private float maxWeight;
 	private float speed;
 	private int totalLifts;
+	private float floorDistance;
+	private float timeAtFloors;
 	
 	private int currentFloor;
 	private float currentWeight;
@@ -39,10 +47,11 @@ public class LiftAgent extends Agent{
       	
 		this.id = 1;
 		this.maxWeight = 600;
-		this.speed = 25;
+		this.speed = 2;
 		this.totalLifts = 6;
+		this.floorDistance = 5;
+        this.setTimeAtFloors(1);
 		
-        
         this.currentFloor = 0;
         this.currentWeight = 0;
         
@@ -54,6 +63,8 @@ public class LiftAgent extends Agent{
         this.maxWeight = Float.parseFloat(args[1]);
         this.speed = Float.parseFloat(args[2]);
         this.totalLifts = Integer.parseInt(args[3]);
+        this.floorDistance = Float.parseFloat(args[4]);
+        this.setTimeAtFloors(Float.parseFloat(args[5]));
         
         this.currentFloor = 0;
         this.currentWeight = 0;
@@ -89,6 +100,7 @@ public class LiftAgent extends Agent{
 		
 		// displays Lift info
 		displayLiftInfo();
+		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
 	}
 	
     public void takeDown() {
@@ -145,6 +157,129 @@ public class LiftAgent extends Agent{
 			}
 		} );
 	 }
+	
+	public void askRequestAgent() {
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(new AID("requestAgent",AID.ISLOCALNAME));
+		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
+        msg.setContent(this.getTaskList().get(0).getFloor() + ":" + this.getTaskList().get(0).getType()); //msg = 4:Up
+        
+        addBehaviour(new AchieveREInitiator(this, msg) {
+	    	 
+			protected void handleInform(ACLMessage inform) {
+				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+				System.out.println("RECEIVED MESSAGE FROM REQUESTAGENT: " + inform.getContent());
+				//TODO: parse message received
+				parseReceivedMessage(inform.getContent());
+			}
+			protected void handleRefuse(ACLMessage refuse) {
+				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
+				
+			}
+			protected void handleFailure(ACLMessage failure) {
+				if (failure.getSender().equals(myAgent.getAMS())) {
+					System.out.println("Responder does not exist");
+				}
+				else {
+					System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
+				}
+			}
+		} );
+	}
+	
+	/* Parsing functions */
+	//TODO: quando saiem todas as pessoas retirar todos as entry do tipo END
+	//TODO: acrescentar entrys do tipo END quando entram pessoas
+	protected void parseReceivedMessage(String msg) {
+		
+		String[] actionsToBePerformed = msg.split(",", 2);
+		
+		if(actionsToBePerformed.length == 2) { //entering and exiting
+			parseExiting(actionsToBePerformed[1]);
+			parseEntering(actionsToBePerformed[0]);
+		}
+		else if(actionsToBePerformed.length == 1) { //entering or exiting
+			
+			if(actionsToBePerformed[0].substring(0,1).equals("E")) {
+				parseEntering(actionsToBePerformed[0]);
+			}
+			else if(actionsToBePerformed[0].substring(0,1).equals("S")) {
+				parseExiting(actionsToBePerformed[0]);
+			}
+			else {
+				System.out.println("No valide format for message: " + msg);
+			}
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
+	}
+	
+	protected void parseEntering(String msg) {
+		
+		String[] entering = msg.split(":", 2);
+		
+		if(entering.length == 2) {
+			String enter = entering[1];
+			
+			if(!enter.contains("[")) {
+				int people = Integer.parseInt(enter);
+				System.out.println("entering: " + people);
+				//only update current weight
+			}
+			else {
+				if(enter.contains("[") && enter.contains("]")) {
+					int initIndex = enter.indexOf('[');
+					int finalIndex = enter.indexOf(']');
+					int i = 0;
+					String nmr = "";
+					String floorsToAttend ="";
+					
+					if(i == initIndex || initIndex== finalIndex - 1) {
+						System.out.println("No valide format for message: " + msg);
+					}
+					else {
+						while(i < initIndex) {
+							nmr += enter.charAt(i);
+							i = i+1;
+						}
+						while(initIndex < finalIndex - 1) {
+							initIndex = initIndex + 1;
+							floorsToAttend += enter.charAt(initIndex);
+						}
+					}
+					
+					int people = Integer.parseInt(nmr);
+					String[] floors = floorsToAttend.split("-");
+					//update current weight and add End Entrys
+					System.out.println("entering: " + people);
+                    for(int j = 0; j < floors.length; j++){
+                        System.out.println(floors[j]);
+                    }
+				}
+				else {
+					System.out.println("No valide format for message: " + msg);
+				}
+			}
+			
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
+	}
+	
+	protected void parseExiting(String msg) {
+		String[] exiting = msg.split(":", 2);
+		
+		if(exiting.length == 2) {
+			int people = Integer.parseInt(exiting[1]);
+			System.out.println("exiting: " + people);
+		}
+		else {
+			System.out.println("No valide format for message: " + msg);
+		}
+	}
 	
 	protected boolean checkSender(String name) {
 		return name.contains("floorPanelAgent") ? true : false;
@@ -236,7 +371,14 @@ public class LiftAgent extends Agent{
     	return this.liftContacts;
     }
     
+    public float getTimeAtFloors() {
+    	return timeAtFloors;
+    }
+    
     /* setters */
+    public void setFloor(int floor) {
+    	this.currentFloor = floor;
+    }
     public void setContacts(ArrayList<String> contacts) {
     	this.liftContacts = contacts;
     }
@@ -245,5 +387,29 @@ public class LiftAgent extends Agent{
 	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
 		this.taskList = taskList;
 	}
-    
+
+	public float getFloorDistance() {
+		return floorDistance;
+	}
+
+	public void setFloorDistance(float floorDistance) {
+		this.floorDistance = floorDistance;
+	}
+
+
+	public void setTimeAtFloors(float timeAtFloors) {
+		this.timeAtFloors = timeAtFloors;
+	}
+	
+	public void addWeight(float weight) {
+		this.currentWeight = this.currentWeight + weight;
+	}
+	
+	public void subWeight(float weight) {
+		this.currentWeight = this.currentWeight - weight;
+	}
+	
+	public void removeEntry() {
+		this.taskList.remove(0);
+	}
 }

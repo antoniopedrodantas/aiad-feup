@@ -10,3 +10,4 @@ MTPs-Main-Container.txt
 
 # JDT-specific (Eclipse Java Development Tools)     
 .classpath
+/.metadata/
