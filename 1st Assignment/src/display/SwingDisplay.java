@@ -54,7 +54,7 @@ public class SwingDisplay {
     	label = new JLabel("Lift's Info:");
     	label.setPreferredSize(new Dimension(500, 20));
     	Dimension size = label.getPreferredSize();
-    	label.setBounds(750, 50, size.width, size.height);
+    	label.setBounds(500, 50, size.width, size.height);
     	this.panel.add(label);
 	    
 	    // iterates through floor panels
@@ -97,10 +97,9 @@ public class SwingDisplay {
 	    		taskList = taskList + l.getTaskList().get(j).getFloor() + ":" + l.getTaskList().get(j).getType() + ";";
 	    	}
 	    	label = new JLabel("--> Lift" + l.getId() + " CurrentWeight: " + l.getCurrentWeight() + ": CurrentFloor [" + l.getFloor() + "]; TaskList = {" + taskList + "}");
-	    	// label = new JLabel("--> Lift" + l.getId() + ": CurrentFloor [" + l.getFloor() + "]; TaskList = {");
-	    	label.setPreferredSize(new Dimension(500, 20));
+	    	label.setPreferredSize(new Dimension(1000, 20));
 	    	size = label.getPreferredSize();
-	    	label.setBounds(750, 75 + (25 * i), size.width, size.height);
+	    	label.setBounds(500, 75 + (25 * i), size.width, size.height);
 	    	this.panel.add(label);
 	    	
 	    	i++;
