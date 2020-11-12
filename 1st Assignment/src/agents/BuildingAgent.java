@@ -58,7 +58,9 @@ public class BuildingAgent extends Agent{
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
 		
-		launchLiftAgents(this.nmrLifts);
+		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
+		
+		launchLiftAgents(this.nmrLifts, swing);
 		
 		try {
 			Thread.sleep(1200);
@@ -76,8 +78,8 @@ public class BuildingAgent extends Agent{
 		
 		launchRequestAgent(this.nmrFloors);
 
-		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
-		swing.run();
+		swing.update(lifts, floorPanels);
+		swing.draw();
 		
 	}
 
@@ -106,19 +108,19 @@ public class BuildingAgent extends Agent{
 	
 	/*LiftAgents launching functions */
 	
-	protected void launchLiftAgents(Integer nmrLifts) {
+	protected void launchLiftAgents(Integer nmrLifts, SwingDisplay swing) {
 		
 		int lift;
 		for(lift = 1; lift <= nmrLifts; lift++) {
-			createLiftAgent(lift);
+			createLiftAgent(lift, swing);
 		}
 	}
 	
-	protected void createLiftAgent(Integer lift) {
+	protected void createLiftAgent(Integer lift, SwingDisplay swing) {
 		
 		AgentController liftAgent;
 		
-		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift));
+		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), swing);
 		
 		try {
 			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, newLiftAgent);

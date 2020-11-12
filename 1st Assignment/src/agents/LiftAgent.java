@@ -1,6 +1,7 @@
 package agents;
 
 import behaviours.LiftTickerBehaviour;
+import display.SwingDisplay;
 import utils.HandleRequest;
 import utils.LiftTaskListEntry;
 
@@ -43,6 +44,8 @@ public class LiftAgent extends Agent{
 	private ArrayList<LiftTaskListEntry> taskList = new ArrayList<>();
 	private ArrayList<String> liftContacts;
 	
+	private SwingDisplay swing;
+	
 	public LiftAgent() {
       	
 		this.id = 1;
@@ -57,7 +60,7 @@ public class LiftAgent extends Agent{
         
 	}
 	
-	public LiftAgent(String[] args) {
+	public LiftAgent(String[] args, SwingDisplay swing) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
@@ -70,6 +73,8 @@ public class LiftAgent extends Agent{
         this.currentWeight = 0;
         
         this.liftContacts = new ArrayList<>();
+        
+        this.swing = swing;
           
 	}
 	
@@ -99,7 +104,7 @@ public class LiftAgent extends Agent{
 		addLiftListener();
 		
 		// displays Lift info
-		displayLiftInfo();
+		// displayLiftInfo();
 		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
 	}
 	
@@ -385,6 +390,7 @@ public class LiftAgent extends Agent{
     
     
 	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
+		swing.draw();
 		this.taskList = taskList;
 	}
 

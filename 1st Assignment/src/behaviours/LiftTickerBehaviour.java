@@ -73,7 +73,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	
 	protected void processRequest() {
 		this.myAgent.askRequestAgent();
-		removeEntry();
+		// removeEntry();
 	}
 	
 	
