@@ -109,5 +109,16 @@ public class SwingDisplay implements Runnable {
 	    //  ---------------------------------------------------------------------
 		
 	}
+	
+	/*
+	public void updateLifts(int liftID, int newFloor) {
+		// iterates through lifts
+	    for(LiftAgent l : this.lifts) {
+	    	if(l.getId() == liftID) {
+	    		l.setFloor(newFloor);
+	    	}
+	    }
+	}
+	*/
 
 }
