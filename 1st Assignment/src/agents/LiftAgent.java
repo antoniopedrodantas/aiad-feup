@@ -402,6 +402,7 @@ public class LiftAgent extends Agent{
     /* setters */
     public void setFloor(int floor) {
     	this.currentFloor = floor;
+    	swing.draw();
     }
     public void setContacts(ArrayList<String> contacts) {
     	this.liftContacts = contacts;

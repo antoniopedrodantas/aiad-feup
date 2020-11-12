@@ -10,37 +10,30 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	
 	private LiftAgent myAgent;
 	private float realAgentPosition;
-	private int i;
 	
 	public LiftTickerBehaviour(Agent agent, long period) {
 		super(agent, period);
 		this.myAgent = (LiftAgent) agent;
 		this.realAgentPosition = (float) this.myAgent.getFloor();
-		i = 0;
 	}
 
 	@Override
 	protected void onTick() {
-	
-		if (i > 4)
-			this.processRequest();
-		else
-			i++;
 		
-		/*if(!this.myAgent.getTaskList().isEmpty()) {
+		if(!this.myAgent.getTaskList().isEmpty()) {
 			if(this.myAgent.getTaskList().get(0).getFloor() == this.myAgent.getFloor()) {
 				processRequest();
 			}
 			else if(this.myAgent.getTaskList().get(0).getFloor() > this.myAgent.getFloor()) {
-				this.realAgentPosition += (float) this.getPeriod() / this.myAgent.getSpeed();
+				this.realAgentPosition += (float) (this.getPeriod() / 1000) / this.myAgent.getSpeed();
 			}
 			else {
-				this.realAgentPosition -= (float) this.getPeriod() / this.myAgent.getSpeed();
+				this.realAgentPosition -= (float) (this.getPeriod() / 1000) / this.myAgent.getSpeed();
 			}
 			
 			updatePosition();
 		}
-		*/
+		
 		
 	}
 	
