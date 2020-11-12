@@ -67,29 +67,55 @@ public class HandleRequest {
 	
 	//Gets the list position for a new request
 	protected int getListPos(LiftTaskListEntry entry) {	
+
+		if (myAgent.getTaskList().size() == 0) return 0;
 		
-		//For all list pairs
-		for (int i = 0; i < myAgent.getTaskList().size()-1; i++) {
-			
-			//If request is between
-			if(between(myAgent.getTaskList().get(i).getFloor(), 
-						myAgent.getTaskList().get(i+1).getFloor(), 
-						entry.getFloor())) {
-				if(entry.getType() == LiftTaskListEntry.Type.Up) return i;
-			}
-			
-			if(between(myAgent.getTaskList().get(i+1).getFloor(), 
-					myAgent.getTaskList().get(i).getFloor(), 
-					entry.getFloor())) {
-				if(entry.getType() == LiftTaskListEntry.Type.Down) return i;
-			}
+		int lastPos = myAgent.getFloor();
+		int pos = 0;
+		
+		switch (entry.getType()) {
+			case End:
+				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {	
+					if(between(lastPos, taskListEntry.getFloor(), entry.getFloor()) 
+							|| between(taskListEntry.getFloor(), lastPos, entry.getFloor()))
+						return pos; 
+					lastPos = taskListEntry.getFloor();
+					pos++;
+				}
+				return pos;
+			case Down:			
+				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {
+					if(between(taskListEntry.getFloor(), lastPos, entry.getFloor()))
+						return pos;
+					lastPos = taskListEntry.getFloor();
+					pos++;
+				}
+				return pos;
+			case Up:
+				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {
+					if(between(lastPos, taskListEntry.getFloor(), entry.getFloor()))
+						return pos;
+					lastPos = taskListEntry.getFloor();
+					pos++;
+				}
+				return pos;
+			default:
+				return myAgent.getTaskList().size();
 		}
-		return myAgent.getTaskList().size();
 	}
 	
 	//is X between a and b
 	private boolean between(int a, int b, int x) {
-		return ((a < x && x < b));
+		return ((a <= x && x <= b));
+	}
+	
+	private boolean turningPoint(int i) {
+		var tasks = myAgent.getTaskList();
+		if (tasks.size() < i+1 || i < 1 ) return false;
+		boolean goingUp = tasks.get(i-1).getFloor() < tasks.get(i).getFloor();
+		boolean goingDown = tasks.get(i-1).getFloor() > tasks.get(i).getFloor();
+		//COMPLETAR
+		return false;
 	}
 	
 	protected ArrayList<String> buildContactList(){
