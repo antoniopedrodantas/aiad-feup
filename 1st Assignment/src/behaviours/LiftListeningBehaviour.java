@@ -63,8 +63,8 @@ public class LiftListeningBehaviour extends CyclicBehaviour {
 	}
 	
 	//Calculates time for a new request
-	// lift @ 5 taks[4,3,2,1] 
-	// calc time calculates 5-4, 4-3, 3-2,2-1 => returns sum
+	// lift @ 5 tasks[4,3,2,1] 
+	// calculate time calculates 5-4, 4-3, 3-2,2-1 => returns sum
 	protected liftProposal calcProposal(int request) {
 		
 		float liftSpeed = this.myAgent.getSpeed(Math.abs(request), );
