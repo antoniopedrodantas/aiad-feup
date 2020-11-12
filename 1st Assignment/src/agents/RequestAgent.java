@@ -50,7 +50,7 @@ public class RequestAgent extends Agent{
 	private void sendRequest() {
 		
 		Random rand = new Random();
-		int randomInteger = rand.nextInt(floors + 1);
+		int randomInteger = rand.nextInt(floors) + 1; //not generating floor 0
 		Boolean randomBoolean = rand.nextBoolean();
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -120,8 +120,8 @@ public class RequestAgent extends Agent{
 				
 				if(request.getContent() != null) {
 					ACLMessage inform = request.createReply();
-					//inform.setContent(createResponse(request.getContent()));
-					inform.setContent("E:3[4-5-6],S:2");
+					inform.setContent(createResponse(request.getContent()));
+					//inform.setContent("E:3[4-5-6],S:2");
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
@@ -157,13 +157,13 @@ public class RequestAgent extends Agent{
 		String response = "";
 		
 		switch(action){
-			case "Up": //lift is attending someone who called the lift and wants to go up
+			case "Up": 
 				response = generateUpDown(floor, 1);
 				break;
-			case "Down": //lift is attending someone who called the lift and wants to go Down
+			case "Down": 
 				response = generateUpDown(floor, -1);
 				break;
-			case "End": //lift is leaving someone on a certain floor(exiting is mandatory)
+			case "End": 
 				response = generateEnd(floor);
 				break;
 			default:
@@ -202,6 +202,7 @@ public class RequestAgent extends Agent{
 		if(generateBoolean()) {
 			exiting = generatePeopleNumber();
 		}
+		
 		//build message
 		response = response + "E:" + enteringPeople + "[";
 		for(int j = 0; j < floorList.size(); j++) {
@@ -224,6 +225,40 @@ public class RequestAgent extends Agent{
 	
 	protected String generateEnd(int floor) {
 		String response = "";
+		
+		//entering optional
+		if(generateBoolean()) {
+			ArrayList<Integer> floorList = new ArrayList<>();
+			int enteringPeople = generatePeopleNumber();
+			for(int i = 0; i < enteringPeople; i++) {
+				int value;
+				if(generateBoolean()) {
+					value = generateFloorBetweenValuesUp(floor);
+				}
+				else {
+					value = generateFloorBetweenValuesDown(floor);
+				}
+				
+				if(!floorList.contains(value)) {
+					floorList.add(value);
+				}
+			}
+			
+			response = response + "E:" + enteringPeople + "[";
+			
+			for(int j = 0; j < floorList.size(); j++) {
+				if(j == floorList.size() - 1) {
+					response = response + floorList.get(j);
+				}
+				else {
+					response = response + floorList.get(j) + "-";
+				}
+			}
+			response = response + "],";
+		}
+		
+		//exiting mandatory
+		response = response + "S:" + generatePeopleNumber();
 		return response;
 	}
 	
@@ -248,14 +283,6 @@ public class RequestAgent extends Agent{
 	}
 }
 
-//TODO
 
-/*
- * O que é que vai acontecer quando o elevador tem espaço apenas para mais uma pessoa e o request Agent gera mais que uma pessoa a entrar?
- * (será recusado quando recebe o pedido ou o requestAgent vai ter informação de quantas pessoas pode gerar no maximo?
- * 
- * O que fazer nos casos em que requestAgent diz que saiem 4 pessoas mas so estam 3 la dentro?
- *
- */
 
 
