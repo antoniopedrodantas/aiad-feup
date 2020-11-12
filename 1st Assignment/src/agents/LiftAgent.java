@@ -27,6 +27,7 @@ import jade.proto.AchieveREResponder;
 @SuppressWarnings("serial")
 public class LiftAgent extends Agent{
 	
+	final float personWeight = 75;
 	private int id;
 	private float maxWeight;
 	private float speed;
@@ -220,6 +221,14 @@ public class LiftAgent extends Agent{
 				int people = Integer.parseInt(enter);
 				System.out.println("entering: " + people);
 				//only update current weight
+				if(this.maxWeight < (currentWeight + (people * personWeight))) {
+					float maxAvailable = this.maxWeight - this.currentWeight;
+					float peopleToEnter = maxAvailable / personWeight;
+					addWeight((int) peopleToEnter * personWeight);
+				}
+				else {
+					addWeight(people * personWeight);
+				}
 			}
 			else {
 				if(enter.contains("[") && enter.contains("]")) {
@@ -268,9 +277,19 @@ public class LiftAgent extends Agent{
 		if(exiting.length == 2) {
 			int people = Integer.parseInt(exiting[1]);
 			System.out.println("exiting: " + people);
+			dealExiting(people);
 		}
 		else {
 			System.out.println("No valide format for message: " + msg);
+		}
+	}
+	
+	protected void dealExiting(int people) {
+		if(this.currentWeight < (people * personWeight)) {
+			this.currentWeight = 0;
+		}
+		else {
+			this.subWeight(people * personWeight);
 		}
 	}
 	

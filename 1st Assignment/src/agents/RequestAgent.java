@@ -45,12 +45,10 @@ public class RequestAgent extends Agent{
 	}
 	
 	
-	//TODO: nao pode gerar pedido Up no ultimo piso do Building
-	//TODO: so pode gerar 0 Up, nunca 0 Down
 	private void sendRequest() {
 		
 		Random rand = new Random();
-		int randomInteger = rand.nextInt(floors) + 1; //not generating floor 0
+		int randomInteger = rand.nextInt(floors) + 1; //TODO: this is not generating floor 0
 		Boolean randomBoolean = rand.nextBoolean();
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -67,6 +65,7 @@ public class RequestAgent extends Agent{
 		}
         
         if(randomInteger == 0) content = "Up";
+        if(randomInteger == floors) content = "Down";
         
         msg.setContent(content);
         System.out.println("\nFloor: "+ randomInteger + "  Message: " + content);
