@@ -14,7 +14,6 @@ public class TaskList extends ArrayList<LiftTaskListEntry>{
 
 	@Override
 	public boolean add(LiftTaskListEntry e) {
-		System.out.println("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 		if(this.size() != 0)
 			if(e.getFloor() == this.get(this.size()).getFloor()) return true;
 		return super.add(e);

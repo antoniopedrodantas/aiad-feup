@@ -4,7 +4,7 @@ import behaviours.LiftBullyBehaviour;
 import behaviours.LiftTickerBehaviour;
 import display.SwingDisplay;
 import utils.HandleRequest;
-import utils.LiftBullyConsensus;
+import utils.LiftProposal;
 import utils.LiftTaskListEntry;
 import utils.TaskList;
 
@@ -49,10 +49,10 @@ public class LiftAgent extends Agent{
 	private TaskList taskList = new TaskList();
 	private ArrayList<String> liftContacts;
 	
+	private LiftProposal currentLiftProposal = null;
+	
 	private SwingDisplay swing;
 	
-	// TODO: call class method when needed
-	private LiftBullyConsensus bully;
 	
 	public LiftAgent() {
       	
@@ -114,7 +114,7 @@ public class LiftAgent extends Agent{
 		// displays Lift info
 		// displayLiftInfo();
 		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
-		this.bully = new LiftBullyConsensus(this); // adds bully behavior to see if he is the chosen one
+		this.addBehaviour(new LiftBullyBehaviour(this)); // adds bully behavior to see if he is the chosen one
 	}
 	
     public void takeDown() {
@@ -456,5 +456,13 @@ public class LiftAgent extends Agent{
 	
 	public void removeEntry() {
 		this.taskList.remove(0);
+	}
+
+	public LiftProposal getCurrentLiftProposal() {
+		return currentLiftProposal;
+	}
+
+	public void setCurrentLiftProposal(LiftProposal currentLiftProposal) {
+		this.currentLiftProposal = currentLiftProposal;
 	}
 }
