@@ -2,6 +2,9 @@ package display;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -34,7 +37,7 @@ public class SwingDisplay {
 	}
 
 	
-	public void draw() {
+	public void drawState() {
 		
 		// -------------------------- Displays Swing --------------------------
 		// arrange Floor's display
@@ -129,6 +132,16 @@ public class SwingDisplay {
 		this.floorPanels = floorPanels;
 		
 	}
+	
+	public void draw() {
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+	    scheduler.scheduleAtFixedRate(new Runnable() {
+	        	public void run() {
+					drawState();
+	        	}
+	      	}, 2000, 250, TimeUnit.MILLISECONDS);
+	}
+	
 	
 	
 	/*
