@@ -41,10 +41,14 @@ public class SwingDisplay {
 		
 		this.panel.removeAll();
 		
-		// this will get the display along the y axis for the FloorPanels
-		int offsetY = 650 / this.floorPanels.size();
-		int offsetX = 350 / this.lifts.size();
+		int offsetY = 0;
+		int offsetX = 0;
 		
+		// this will get the display along the y axis for the FloorPanels
+		if (this.floorPanels.size() > 0 && this.lifts.size() > 0) {
+			offsetY = 650 / this.floorPanels.size();
+			offsetX = 350 / this.lifts.size();
+		}
 		this.frame.getContentPane();
 	    JLabel label;
 	    this.panel.setLayout(null);
