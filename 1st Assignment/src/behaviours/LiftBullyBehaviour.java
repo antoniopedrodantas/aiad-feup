@@ -15,14 +15,16 @@ import jade.proto.AchieveREResponder;
 import utils.HandleRequest;
 import utils.LiftProposal;
 
+@SuppressWarnings("serial")
 public class LiftBullyBehaviour extends CyclicBehaviour {
 
 	MessageTemplate templatePropose = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
-	MessageTemplate templateHalt = MessageTemplate.and(
-			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-			MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL) );
 	
-	ArrayList<Float> proposalsList = new ArrayList<Float>();
+	MessageTemplate templateHalt = MessageTemplate.and(
+	MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+	MessageTemplate.MatchPerformative(ACLMessage.CANCEL) );
+	
+	ArrayList<Float> proposalsList = new ArrayList<Float>(); //TODO: change ArrayList to HashMap
 	
 	private LiftAgent lift;
 	  	
@@ -33,31 +35,57 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 
 
 	public void action() {
-		//Receiving Halt Messages
-		ACLMessage msgHalt = myAgent.receive(templateHalt);
-		if(msgHalt != null) {
-			proposalsList.clear();
-			//TODO: Answer to this message
-		} 
-		//Receiving Proposal Messages
-		ACLMessage msg = myAgent.receive(templatePropose);
-		if(msg != null) {
-
-			System.out.println("Recieved PROPOSALLLLL : " +msg.getContent());
-			proposalsList.add(Float.parseFloat(msg.getContent()));
-		} 
-		//Processing Proposal Messages
-
-		var myProposal = lift.getCurrentLiftProposal();
-		//Only if I have proposal and received all other proposals
-		if(proposalsList.size() >= lift.getContacts().size() && myProposal != null) {
-			boolean betterProposal = true;
-			for (Float proposal : proposalsList) {
-				if(myProposal.getTime() > proposal) betterProposal = false;
-			}
-			if(betterProposal) acceptProposal();
-		}
+		processProposalMessage();
+		//processHaltMessage();
+	}
 	
+	private void processHaltMessage() {
+		
+		this.lift.addBehaviour(new AchieveREResponder(this.lift, this.templateHalt) {	
+			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+				if (request.getSender().getName().contains("liftAgent")) {
+					ACLMessage agree = request.createReply();
+					agree.setPerformative(ACLMessage.AGREE);
+					return agree;
+				}
+				else {
+					throw new RefuseException("check-failed");
+				}
+			}
+			
+			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
+					proposalsList.clear(); 
+					
+					ACLMessage inform = request.createReply();
+					inform.setPerformative(ACLMessage.INFORM);
+					return inform;
+			}
+		} );
+	}
+	
+	private void processProposalMessage() {
+		//Receiving Proposal Messages
+				ACLMessage msg = myAgent.receive(templatePropose);
+				if(msg != null) {
+
+					System.out.println("Recieved PROPOSALLLLL : " + msg.getContent());
+					proposalsList.add(Float.parseFloat(msg.getContent()));
+				} 
+				//Processing Proposal Messages
+
+				var myProposal = lift.getCurrentLiftProposal();
+				//Only if I have proposal and received all other proposals
+				if(proposalsList.size() >= lift.getContacts().size() && myProposal != null) {
+					boolean betterProposal = true;
+					for (Float proposal : proposalsList) {
+						if(myProposal.getTime() > proposal) betterProposal = false;
+					}
+					if(betterProposal) acceptProposal();
+				}
+	}
+	
+	private void handleSameProposal() {
+		System.out.println("ok :D");
 	}
 
 
@@ -66,7 +94,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 		 
 		if(lift.getContacts().size() != 0) {
 			
-			ACLMessage msg = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
 	         
 			for(String listener : lift.getContacts()) {
 				msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));

@@ -48,7 +48,6 @@ public class LiftAgent extends Agent{
 	private float currentWeight;
 	private TaskList taskList = new TaskList();
 	private ArrayList<String> liftContacts;
-	
 	private LiftProposal currentLiftProposal = null;
 	
 	private SwingDisplay swing;
@@ -114,7 +113,7 @@ public class LiftAgent extends Agent{
 		// displays Lift info
 		// displayLiftInfo();
 		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
-		this.addBehaviour(new LiftBullyBehaviour(this)); // adds bully behavior to see if he is the chosen one
+		this.addBehaviour(new LiftBullyBehaviour(this)); // adds bully behaviour to see if he is the chosen one
 	}
 	
     public void takeDown() {

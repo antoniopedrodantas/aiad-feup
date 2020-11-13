@@ -33,7 +33,7 @@ public class HandleRequest {
 
 		myAgent.setCurrentLiftProposal(this.liftProposal);
 
-		var bullyStart = new LiftBullyStart(myAgent);
+		var bullyStart = new LiftBullyStart(myAgent); /*initializes LiftBullyStart, and sends to all lift on contacts list the proposed time*/
 		bullyStart.sendBullyProposal(liftProposal);
 		
 		// 3) implement a consensus algorithm to know who fulfills the request
