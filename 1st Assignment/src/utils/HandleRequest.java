@@ -66,7 +66,7 @@ public class HandleRequest {
 	}
 	
 	//Gets the list position for a new request
-	protected int getListPos(LiftTaskListEntry entry) {	
+	public int getListPos(LiftTaskListEntry entry) {	
 
 		if (myAgent.getTaskList().size() == 0) return 0;
 		

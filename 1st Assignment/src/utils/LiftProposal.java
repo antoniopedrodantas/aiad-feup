@@ -3,18 +3,18 @@ package utils;
 import java.util.ArrayList;
 
 public final class LiftProposal {
-	private ArrayList<LiftTaskListEntry> taskList;
+	private TaskList taskList;
 	private float time;
 	
-	public LiftProposal(ArrayList<LiftTaskListEntry> taskList, LiftTaskListEntry newEntry, int newEntryPos, float time) {
-		this.taskList = new ArrayList<>(taskList);;
+	public LiftProposal(TaskList taskList, LiftTaskListEntry newEntry, int newEntryPos, float time) {
+		this.taskList = new TaskList(taskList);;
 		this.taskList.add(newEntryPos, newEntry);
 		this.time = time;
 	}
-	public ArrayList<LiftTaskListEntry> getTaskList() {
+	public TaskList getTaskList() {
 		return taskList;
 	}
-	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
+	public void setTaskList(TaskList taskList) {
 		this.taskList = taskList;
 	}
 	public float getTime() {
