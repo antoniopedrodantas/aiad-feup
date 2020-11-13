@@ -1,8 +1,10 @@
 package agents;
 
+import behaviours.LiftBullyBehaviour;
 import behaviours.LiftTickerBehaviour;
 import display.SwingDisplay;
 import utils.HandleRequest;
+import utils.LiftBullyConsensus;
 import utils.LiftTaskListEntry;
 
 import java.util.ArrayList;
@@ -46,6 +48,9 @@ public class LiftAgent extends Agent{
 	private ArrayList<String> liftContacts;
 	
 	private SwingDisplay swing;
+	
+	// TODO: call class method when needed
+	private LiftBullyConsensus bully;
 	
 	public LiftAgent() {
       	
@@ -107,6 +112,7 @@ public class LiftAgent extends Agent{
 		// displays Lift info
 		// displayLiftInfo();
 		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
+		this.bully = new LiftBullyConsensus(this); // adds bully behavior to see if he is the chosen one
 	}
 	
     public void takeDown() {
