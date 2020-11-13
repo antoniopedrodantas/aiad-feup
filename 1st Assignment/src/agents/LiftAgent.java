@@ -4,6 +4,7 @@ import behaviours.LiftTickerBehaviour;
 import display.SwingDisplay;
 import utils.HandleRequest;
 import utils.LiftTaskListEntry;
+import utils.TaskList;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -27,6 +28,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
+import jade.tools.DummyAgent.DummyAgent;
 
 
 @SuppressWarnings("serial")
@@ -42,7 +44,7 @@ public class LiftAgent extends Agent{
 	
 	private int currentFloor;
 	private float currentWeight;
-	private ArrayList<LiftTaskListEntry> taskList = new ArrayList<>();
+	private TaskList taskList = new TaskList();
 	private ArrayList<String> liftContacts;
 	
 	private SwingDisplay swing;
@@ -266,7 +268,18 @@ public class LiftAgent extends Agent{
 					
 					int people = Integer.parseInt(nmr);
 					String[] floors = floorsToAttend.split("-");
-					//update current weight and add End Entrys
+					for (int j = 0; j < floors.length ; j++) {
+					
+						float maxAvailable = this.maxWeight - this.currentWeight;
+						if (maxAvailable < personWeight) break;
+						
+						HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+						var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+						int pos = handleRequest.getListPos(entry);
+						this.taskList.add(pos, entry);
+					
+						addWeight(personWeight);
+					}
 					System.out.println("entering: " + people);
                     for(int j = 0; j < floors.length; j++){
                         System.out.println(floors[j]);
@@ -383,7 +396,7 @@ public class LiftAgent extends Agent{
     }
     
     
-    public ArrayList<LiftTaskListEntry> getTaskList() {
+    public TaskList getTaskList() {
 		return taskList;
 	}
 
@@ -409,7 +422,7 @@ public class LiftAgent extends Agent{
     }
     
     
-	public void setTaskList(ArrayList<LiftTaskListEntry> taskList) {
+	public void setTaskList(TaskList taskList) {
 		swing.draw();
 		this.taskList = taskList;
 	}

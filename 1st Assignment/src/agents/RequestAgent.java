@@ -263,12 +263,14 @@ public class RequestAgent extends Agent{
 	
 	protected int generateFloorBetweenValuesUp(int low) {
 		Random r = new Random();
-		return r.nextInt((this.floors) - low) + low + 1;
+		if(low >= this.floors) return generateFloorBetweenValuesDown(this.floors);
+		else return r.nextInt((this.floors) - low) + low + 1;
 	}
 	
 	protected int generateFloorBetweenValuesDown(int max) {
 		Random r = new Random();
-		return r.nextInt(max);
+		if(max <= 0) return  generateFloorBetweenValuesUp(1);
+		else return r.nextInt(max);
 	}
 	
 	protected Boolean generateBoolean() {
