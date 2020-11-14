@@ -10,11 +10,13 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	
 	private LiftAgent myAgent;
 	private float realAgentPosition;
+	private int tick;
 	
 	public LiftTickerBehaviour(Agent agent, long period) {
 		super(agent, period);
 		this.myAgent = (LiftAgent) agent;
 		this.realAgentPosition = (float) this.myAgent.getFloor();
+		this.tick = 0;
 	}
 
 	@Override
@@ -34,7 +36,10 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 			updatePosition();
 		}
 		
-		
+		this.tick = this.tick + 1;
+		if( this.tick % 2 == 0) {
+			this.myAgent.writeToFile(tick, this.myAgent.getFloor());
+		}
 	}
 	
 	protected void updatePosition(){

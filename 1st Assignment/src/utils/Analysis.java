@@ -64,14 +64,9 @@ public class Analysis {
         	
         	averageOccupation.add(info);
        }
-        
-        /* open files that will keep track of lift current floors through time */
-        openLiftFiles();
 	}
 
-	protected void openLiftFiles() {
-		
-	}
+	
 	/* functions that allow changing floor entry and exit values */
 	public void enterAtFloor(int floor, int quantity) {
 		

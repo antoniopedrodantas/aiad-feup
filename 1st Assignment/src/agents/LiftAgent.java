@@ -9,6 +9,11 @@ import utils.LiftTaskListEntry;
 import utils.TaskList;
 import utils.Analysis;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -53,6 +58,7 @@ public class LiftAgent extends Agent{
 	
 	private SwingDisplay swing;
 	private Analysis analysis;
+	private PrintWriter pw;
 	
 	
 	public LiftAgent() {
@@ -85,7 +91,51 @@ public class LiftAgent extends Agent{
         
         this.swing = swing;
         this.analysis = analysis;
+        
+        initiatePrintWriter();
           
+	}
+	
+	public void initiatePrintWriter() {
+		Date date = new Date() ;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+		
+		String path = "./analysis/" + this.id + "-" + dateFormat.format(date) + ".csv";
+		File new_file = new File(path);
+		
+		try{
+            if(!new_file.exists()){
+                new_file.getParentFile().mkdirs();
+                new_file.createNewFile();
+            }
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+        
+        FileWriter fileWriter;
+        try {
+			fileWriter = new FileWriter(new_file);
+			this.pw = new PrintWriter(fileWriter);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Tick");
+			sb.append(",");
+			sb.append("Current Floor");
+		    sb.append("\r\n");
+		    pw.write(sb.toString());
+		    
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeToFile(int tick, int floor) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(tick);
+		sb.append(",");
+		sb.append(floor);
+	    sb.append("\r\n");
+	    pw.write(sb.toString());
 	}
 	
 	public void setup() { 
@@ -121,6 +171,7 @@ public class LiftAgent extends Agent{
     public void takeDown() {
     	
     	try {
+    		this.pw.close();
 			DFService.deregister(this);
 			System.out.println("Deregister done successfully");
 			System.out.println(getLocalName() + ": done working.");
