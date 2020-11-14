@@ -246,10 +246,14 @@ public class LiftAgent extends Agent{
 					float maxAvailable = this.maxWeight - this.currentWeight;
 					float peopleToEnter = maxAvailable / personWeight;
 					addWeight((int) peopleToEnter * personWeight);
+					analysis.enterAtFloor(this.currentFloor, (int) peopleToEnter);
 				}
 				else {
 					addWeight(people * personWeight);
+					analysis.enterAtFloor(this.currentFloor, people);
 				}
+				
+				analysis.recalculateOccupation(this.id, this.currentWeight);
 			}
 			else {
 				if(enter.contains("[") && enter.contains("]")) {
@@ -284,9 +288,12 @@ public class LiftAgent extends Agent{
 						var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
 						int pos = handleRequest.getListPos(entry);
 						this.taskList.add(pos, entry);
+						analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
 					
 						addWeight(personWeight);
 					}
+					
+					analysis.recalculateOccupation(this.id, this.currentWeight);
 					System.out.println("entering: " + people);
                     for(int j = 0; j < floors.length; j++){
                         System.out.println(floors[j]);
@@ -323,6 +330,9 @@ public class LiftAgent extends Agent{
 		else {
 			this.subWeight(people * personWeight);
 		}
+		
+		analysis.recalculateOccupation(this.id, this.currentWeight);
+		analysis.exitAtFloor(this.currentFloor, people);
 	}
 	
 	protected boolean checkSender(String name) {
@@ -463,5 +473,9 @@ public class LiftAgent extends Agent{
 
 	public void setCurrentLiftProposal(LiftProposal currentLiftProposal) {
 		this.currentLiftProposal = currentLiftProposal;
+	}
+	
+	public Analysis getAnalysis() {
+		return this.analysis;
 	}
 }

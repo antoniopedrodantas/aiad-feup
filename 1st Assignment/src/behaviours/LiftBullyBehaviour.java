@@ -112,8 +112,19 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 				        
 	        lift.send(msg);
 	    }
+		
 		// TODO Wait for Halt responses
 		lift.setTaskList(lift.getCurrentLiftProposal().getTaskList());
+		
+		if(lift.getCurrentLiftProposal().getEntry().getType().equals("Up")){
+			lift.getAnalysis().addToLiftTasks(lift.getId(), 0);
+		}
+		else if(lift.getCurrentLiftProposal().getEntry().getType().equals("Down")) {
+			lift.getAnalysis().addToLiftTasks(lift.getId(), 1);
+		}
+		else {
+			lift.getAnalysis().addToLiftTasks(lift.getId(), 2);
+		}
 		
 	}
 
