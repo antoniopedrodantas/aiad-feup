@@ -173,7 +173,7 @@ public class BuildingAgent extends Agent{
 		AgentController requestAgent;
 		
 		try {
-			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", new RequestAgent(nmrFloors));
+			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", new RequestAgent(nmrFloors, nmrLifts));
 			requestAgent.start();
 		} catch(StaleProxyException e) {
 			System.err.println("Error launching requestAgent");

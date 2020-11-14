@@ -20,10 +20,13 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("serial")
 public class RequestAgent extends Agent{
 	
+	private int startRequestsMade = 0;
+	private int nLifts;
 	private int floors;
 	
-	public RequestAgent(int floors) {
+	public RequestAgent(int floors, int lifts) {
 		this.floors = floors;
+		this.nLifts = lifts;
 	}
 	
 	public void setup() {
@@ -48,7 +51,11 @@ public class RequestAgent extends Agent{
 	private void sendRequest() {
 		
 		Random rand = new Random();
-		int randomInteger = rand.nextInt(floors) + 1; //TODO: this is not generating floor 0
+		int randomInteger = rand.nextInt(floors + 1); //TODO: this is not generating floor 0
+		if(startRequestsMade < nLifts) {
+			randomInteger = 0;
+			startRequestsMade++;
+		}
 		Boolean randomBoolean = rand.nextBoolean();
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
