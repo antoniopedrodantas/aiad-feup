@@ -64,8 +64,14 @@ public class Analysis {
         	
         	averageOccupation.add(info);
        }
+        
+        /* open files that will keep track of lift current floors through time */
+        openLiftFiles();
 	}
 
+	protected void openLiftFiles() {
+		
+	}
 	/* functions that allow changing floor entry and exit values */
 	public void enterAtFloor(int floor, int quantity) {
 		
@@ -124,6 +130,34 @@ public class Analysis {
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 		    StringBuilder sb = new StringBuilder();
 		    
+		    sb.append("Number of Floors");
+		    sb.append(",");
+		    sb.append("Number of Lifts");
+		    sb.append(",");
+		    sb.append("Max Weight");
+		    sb.append(",");
+		    sb.append("Max Speed");
+		    sb.append(",");
+		    sb.append("Floor Distance");
+		    sb.append(",");
+		    sb.append("Time at Floors");
+		    sb.append("\r\n");
+		    
+		    sb.append(this.nmrFloors);
+		    sb.append(",");
+		    sb.append(this.nmrLifts);
+		    sb.append(",");
+		    sb.append(this.maxWeight);
+		    sb.append(",");
+		    sb.append(this.maxSpeed);
+		    sb.append(",");
+		    sb.append(this.floorDistance);
+		    sb.append(",");
+		    sb.append(this.timeAtFloors);
+		    
+		    sb.append("\r\n");
+		    sb.append("\r\n");
+		    
 		    sb.append("Floor");
 		    sb.append(",");
 		    sb.append("People entering");
@@ -141,6 +175,33 @@ public class Analysis {
 		    	sb.append("\r\n");
 		    }
 		    
+		    sb.append("\r\n");
+		    sb.append("Lift");
+		    sb.append(",");
+		    sb.append("Up");
+		    sb.append(",");
+		    sb.append("Down");
+		    sb.append(",");
+		    sb.append("End");
+		    sb.append(",");
+		    sb.append("Average Occupation");
+		    sb.append("\r\n");
+		    
+		    
+		    for(int k = 0; k < this.nmrLifts; k++) {
+		    	sb.append(k + 1);
+			    sb.append(",");
+			    sb.append(this.liftTasks.get(k).get(0));
+			    sb.append(",");
+			    sb.append(this.liftTasks.get(k).get(1));
+			    sb.append(",");
+			    sb.append(this.liftTasks.get(k).get(2));
+			    sb.append(",");
+			    sb.append(this.averageOccupation.get(k).get(1));
+			    sb.append("\r\n");
+		    }
+		    
+		    sb.append("\r\n");
 		    printWriter.write(sb.toString());
 		    printWriter.close();
 		    

@@ -16,6 +16,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import utils.HandleRequest;
 import utils.LiftProposal;
+import utils.LiftTaskListEntry.Type;
 
 @SuppressWarnings("serial")
 public class LiftBullyBehaviour extends CyclicBehaviour {
@@ -116,10 +117,10 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 		// TODO Wait for Halt responses
 		lift.setTaskList(lift.getCurrentLiftProposal().getTaskList());
 		
-		if(lift.getCurrentLiftProposal().getEntry().getType().equals("Up")){
+		if(lift.getCurrentLiftProposal().getEntry().getType().equals(Type.Up)){
 			lift.getAnalysis().addToLiftTasks(lift.getId(), 0);
 		}
-		else if(lift.getCurrentLiftProposal().getEntry().getType().equals("Down")) {
+		else if(lift.getCurrentLiftProposal().getEntry().getType().equals(Type.Down)) {
 			lift.getAnalysis().addToLiftTasks(lift.getId(), 1);
 		}
 		else {
