@@ -112,9 +112,6 @@ public class SwingDisplay {
 	    	i++;
 	    }
 	    
-	    // this.panel.revalidate();
-	    // this.panel.repaint();
-	    
 	    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	    this.frame.add(this.panel);
 	    
@@ -144,19 +141,5 @@ public class SwingDisplay {
 	        	}
 	      	}, 2000, 250, TimeUnit.MILLISECONDS);
 	}
-	
-	
-	
-	/*
-	public void updateTaskLists(int liftID, ArrayList<LiftTaskListEntry> taskList) {
-		// iterates through lifts
-	    for(LiftAgent l : this.lifts) {
-	    	if(l.getId() == liftID) {
-	    		l.setTaskList(taskList);
-	    	}
-	    }
-	}
-	*/
-	
 
 }
