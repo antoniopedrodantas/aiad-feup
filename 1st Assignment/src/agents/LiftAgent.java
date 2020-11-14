@@ -213,14 +213,17 @@ public class LiftAgent extends Agent{
 		if(actionsToBePerformed.length == 2) { //entering and exiting
 			parseExiting(actionsToBePerformed[1]);
 			parseEntering(actionsToBePerformed[0]);
+			analysis.recalculateOccupation(this.id, this.currentWeight);
 		}
 		else if(actionsToBePerformed.length == 1) { //entering or exiting
 			
 			if(actionsToBePerformed[0].substring(0,1).equals("E")) {
 				parseEntering(actionsToBePerformed[0]);
+				analysis.recalculateOccupation(this.id, this.currentWeight);
 			}
 			else if(actionsToBePerformed[0].substring(0,1).equals("S")) {
 				parseExiting(actionsToBePerformed[0]);
+				analysis.recalculateOccupation(this.id, this.currentWeight);
 			}
 			else {
 				System.out.println("No valide format for message: " + msg);
@@ -253,7 +256,7 @@ public class LiftAgent extends Agent{
 					analysis.enterAtFloor(this.currentFloor, people);
 				}
 				
-				analysis.recalculateOccupation(this.id, this.currentWeight);
+				
 			}
 			else {
 				if(enter.contains("[") && enter.contains("]")) {
@@ -279,6 +282,48 @@ public class LiftAgent extends Agent{
 					
 					int people = Integer.parseInt(nmr);
 					String[] floors = floorsToAttend.split("-");
+					
+					if(this.maxWeight < (currentWeight + (people * personWeight))) { //when there's no space for more people
+						
+						float maxAvailable = this.maxWeight - this.currentWeight;
+						float peopleToEnter = maxAvailable / personWeight;
+						
+						addWeight((int) peopleToEnter * personWeight);
+						analysis.enterAtFloor(this.currentFloor, (int) peopleToEnter);
+						
+						if(floors.length <= (int) peopleToEnter) {
+							for (int j = 0; j < floors.length ; j++) {
+								HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+								var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+								int pos = handleRequest.getListPos(entry);
+								this.taskList.add(pos, entry);
+								analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+							}
+						}
+						else { //in case all people can enter
+							for (int j = 0; j < peopleToEnter ; j++) {
+								HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+								var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+								int pos = handleRequest.getListPos(entry);
+								this.taskList.add(pos, entry);
+								analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+							}
+						}
+					}
+					else { //when all can enter
+						addWeight(people * personWeight);
+						analysis.enterAtFloor(this.currentFloor, people);
+						
+						for (int j = 0; j < floors.length ; j++) {
+							HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+							var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+							int pos = handleRequest.getListPos(entry);
+							this.taskList.add(pos, entry);
+							analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+						}
+					}
+					
+					/*
 					for (int j = 0; j < floors.length ; j++) {
 					
 						float maxAvailable = this.maxWeight - this.currentWeight;
@@ -291,9 +336,10 @@ public class LiftAgent extends Agent{
 						analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
 					
 						addWeight(personWeight);
-					}
+						analysis.enterAtFloor(this.currentFloor, 1);
+					}*/
 					
-					analysis.recalculateOccupation(this.id, this.currentWeight);
+					
 					System.out.println("entering: " + people);
                     for(int j = 0; j < floors.length; j++){
                         System.out.println(floors[j]);
@@ -331,7 +377,6 @@ public class LiftAgent extends Agent{
 			this.subWeight(people * personWeight);
 		}
 		
-		analysis.recalculateOccupation(this.id, this.currentWeight);
 		analysis.exitAtFloor(this.currentFloor, people);
 	}
 	

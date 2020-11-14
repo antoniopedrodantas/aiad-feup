@@ -1,6 +1,12 @@
 package utils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Analysis {
 	
@@ -97,7 +103,51 @@ public class Analysis {
 	}
 	
 	protected void writeToFile() {
+		Date date = new Date() ;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
 		
+		String path = "./analysis/analysis-" + dateFormat.format(date) + ".csv";
+		File new_file = new File(path);
+
+        try{
+            if(!new_file.exists()){
+                new_file.getParentFile().mkdirs();
+                new_file.createNewFile();
+            }
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+        
+        FileWriter fileWriter;
+		try {
+			fileWriter = new FileWriter(new_file);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+		    StringBuilder sb = new StringBuilder();
+		    
+		    sb.append("Floor");
+		    sb.append(",");
+		    sb.append("People entering");
+		    sb.append(",");
+		    sb.append("People exiting");
+		    sb.append(",");
+		    sb.append("\r\n");
+		    
+		    for(int i = 0; i <= this.nmrFloors; i++) {
+		    	sb.append(i);
+		    	sb.append(",");
+		    	sb.append(this.enteringAtFloor.get(i));
+		    	sb.append(",");
+		    	sb.append(this.exitingAtFloor.get(i));
+		    	sb.append("\r\n");
+		    }
+		    
+		    printWriter.write(sb.toString());
+		    printWriter.close();
+		    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
 	}
 	
 	/* getters and setters */
