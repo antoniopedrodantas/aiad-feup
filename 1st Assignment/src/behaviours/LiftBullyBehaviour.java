@@ -1,6 +1,8 @@
 package behaviours;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import agents.LiftAgent;
 import jade.core.AID;
@@ -24,7 +26,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 	MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
 	MessageTemplate.MatchPerformative(ACLMessage.CANCEL) );
 	
-	ArrayList<Float> proposalsList = new ArrayList<Float>(); //TODO: change ArrayList to HashMap
+	private HashMap<Integer,Float> proposalsList = new HashMap<>(); //TODO: change ArrayList to HashMap
 	
 	private LiftAgent lift;
 	  	
@@ -66,10 +68,16 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 	private void processProposalMessage() {
 		//Receiving Proposal Messages
 				ACLMessage msg = myAgent.receive(templatePropose);
+				int liftId = 0;
+				float proposedTime = 0;
 				if(msg != null) {
 
-					System.out.println("Recieved PROPOSALLLLL : " + msg.getContent());
-					proposalsList.add(Float.parseFloat(msg.getContent()));
+					String[] content = msg.getContent().split(":", 2);
+					
+					proposedTime = Float.parseFloat(content[0]);
+					liftId = Integer.parseInt(content[1]);
+
+					proposalsList.put(liftId, proposedTime);
 				} 
 				//Processing Proposal Messages
 
@@ -77,9 +85,16 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 				//Only if I have proposal and received all other proposals
 				if(proposalsList.size() >= lift.getContacts().size() && myProposal != null) {
 					boolean betterProposal = true;
-					for (Float proposal : proposalsList) {
-						if(myProposal.getTime() > proposal) betterProposal = false;
-					}
+	
+					Iterator it = proposalsList.entrySet().iterator();
+				    while (it.hasNext()) {
+				        HashMap.Entry pair = (HashMap.Entry)it.next();
+				        float time = (float)pair.getValue();
+				        int id = (int)pair.getKey();
+				        if(myProposal.getTime() > time) betterProposal = false;
+						else if(myProposal.getTime() == time && id < lift.getId()) betterProposal = false;     
+				        it.remove();
+				    }
 					if(betterProposal) acceptProposal();
 				}
 	}

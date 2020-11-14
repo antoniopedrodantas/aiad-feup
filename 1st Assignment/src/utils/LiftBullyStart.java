@@ -28,7 +28,7 @@ public class LiftBullyStart {
 				msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
 			}
 				        
-	        msg.setContent(Float.toString(liftProposal.getTime()));
+	        msg.setContent(Float.toString(liftProposal.getTime()) + ":" + lift.getId());
 	        lift.send(msg);
 	    }
 	}
