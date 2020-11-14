@@ -15,7 +15,10 @@ public class TaskList extends ArrayList<LiftTaskListEntry>{
 	@Override
 	public boolean add(LiftTaskListEntry e) {
 		if(this.size() != 0)
-			if(e.getFloor() == this.get(this.size()).getFloor()) return true;
+			if(e.getFloor() == this.get(this.size()).getFloor()) { 
+				prioritizeUpDown(this.size(), e);
+				return true;
+			}
 		return super.add(e);
 	}
 
@@ -37,7 +40,7 @@ public class TaskList extends ArrayList<LiftTaskListEntry>{
 			if(index > 0)
 				if(element.getFloor() == this.get(index - 1).getFloor()) {
 					canAdd = false;
-					prioritizeUpDown(index, element);
+					prioritizeUpDown(index - 1, element);
 				}
 			
 			if(canAdd) super.add(index, element);
@@ -45,7 +48,7 @@ public class TaskList extends ArrayList<LiftTaskListEntry>{
 	}
 	
 	private void prioritizeUpDown(int index, LiftTaskListEntry element) {
-		
+		System.out.println("HEREEEEE MY DUDE!!!!");
 		if(this.get(index).getType() == LiftTaskListEntry.Type.End) {
 			if(element.getType() == LiftTaskListEntry.Type.Up ||
 					element.getType() == LiftTaskListEntry.Type.Down) {

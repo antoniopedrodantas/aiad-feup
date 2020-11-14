@@ -4,6 +4,7 @@ import agents.LiftAgent;
 
 import java.util.ArrayList;
 import jade.core.Agent;
+import utils.LiftTaskListEntry.Type;
 
 public class HandleRequest {
 	
@@ -76,7 +77,8 @@ public class HandleRequest {
 			case End:
 				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {	
 					if(between(lastPos, taskListEntry.getFloor(), entry.getFloor()) 
-							|| between(taskListEntry.getFloor(), lastPos, entry.getFloor()))
+							|| between(taskListEntry.getFloor(), lastPos, entry.getFloor())
+							|| shouldPlace(pos, entry))
 						return pos; 
 					lastPos = taskListEntry.getFloor();
 					pos++;
@@ -84,7 +86,8 @@ public class HandleRequest {
 				return pos;
 			case Down:			
 				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {
-					if(between(taskListEntry.getFloor(), lastPos, entry.getFloor()))
+					if(between(taskListEntry.getFloor(), lastPos, entry.getFloor())
+							|| shouldPlace(pos, entry))
 						return pos;
 					lastPos = taskListEntry.getFloor();
 					pos++;
@@ -92,7 +95,8 @@ public class HandleRequest {
 				return pos;
 			case Up:
 				for(LiftTaskListEntry taskListEntry : myAgent.getTaskList()) {
-					if(between(lastPos, taskListEntry.getFloor(), entry.getFloor()))
+					if(between(lastPos, taskListEntry.getFloor(), entry.getFloor()) 
+							|| shouldPlace(pos, entry))
 						return pos;
 					lastPos = taskListEntry.getFloor();
 					pos++;
@@ -108,14 +112,43 @@ public class HandleRequest {
 		return ((a <= x && x <= b));
 	}
 	
-	private boolean turningPoint(int i) {
+	//Returns true if should place Proposed Task for catching turning points
+	private boolean shouldPlace(int i, LiftTaskListEntry entry) {
 		var tasks = myAgent.getTaskList();
-		if (tasks.size() < i+1 || i < 1 ) return false;
-		boolean goingUp = tasks.get(i-1).getFloor() < tasks.get(i).getFloor();
-		boolean goingDown = tasks.get(i-1).getFloor() > tasks.get(i).getFloor();
-		//COMPLETAR
+		if (i > 2) {
+			if (turningPoint(i)) {
+				if (entry.getFloor() > tasks.get(i).getFloor() 
+						&& entry.getFloor() > tasks.get(i-1).getFloor() 
+						&& entry.getType() != Type.Up)
+					return true;
+
+				if (entry.getFloor() < tasks.get(i).getFloor() 
+						&& entry.getFloor() < tasks.get(i-1).getFloor() 
+						&& entry.getType() != Type.Down)
+					return true;
+			}
+		}
 		return false;
 	}
+	
+	
+	//Returns true if is turning point
+	private boolean turningPoint(int i) {
+		var tasks = myAgent.getTaskList();
+		if ( i < 2 ) return false;
+		boolean goingUp = tasks.get(i-2).getFloor() < tasks.get(i-1).getFloor();
+		boolean goingDown = tasks.get(i-2).getFloor() > tasks.get(i-1).getFloor();
+		if(goingUp && tasks.get(i).getType() == Type.Down) return true;
+		if(goingDown && tasks.get(i).getType() == Type.Up) return true;
+		if(tasks.size() > i+1) {	
+			if(goingUp && tasks.get(i).getType() == Type.End)
+				if(tasks.get(i).getFloor() > tasks.get(i+1).getFloor()) return true;
+			if(goingDown && tasks.get(i).getType() == Type.End)
+				if(tasks.get(i).getFloor() < tasks.get(i+1).getFloor()) return true;
+		}
+		return false;
+	}
+	
 	
 	protected ArrayList<String> buildContactList(){
 		

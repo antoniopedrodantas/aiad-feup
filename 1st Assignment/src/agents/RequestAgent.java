@@ -141,8 +141,8 @@ public class RequestAgent extends Agent{
 		
 		String response;
 		
-		if(request != null) {
-			String[] content = request.split(":", 2);
+			if(request != null) {
+				String[] content = request.split(":", 2);
 			response = generateResponse(Integer.parseInt(content[0]),content[1]);
 		}
 		else {
@@ -224,37 +224,42 @@ public class RequestAgent extends Agent{
 	
 	protected String generateEnd(int floor) {
 		String response = "";
+
 		
-		//entering optional
-		if(generateBoolean()) {
-			ArrayList<Integer> floorList = new ArrayList<>();
-			int enteringPeople = generatePeopleNumber();
-			for(int i = 0; i < enteringPeople; i++) {
-				int value;
-				if(generateBoolean()) {
-					value = generateFloorBetweenValuesUp(floor);
-				}
-				else {
-					value = generateFloorBetweenValuesDown(floor);
-				}
-				
-				if(!floorList.contains(value)) {
-					floorList.add(value);
-				}
-			}
-			
-			response = response + "E:" + enteringPeople + "[";
-			
-			for(int j = 0; j < floorList.size(); j++) {
-				if(j == floorList.size() - 1) {
-					response = response + floorList.get(j);
-				}
-				else {
-					response = response + floorList.get(j) + "-";
-				}
-			}
-			response = response + "],";
-		}
+		//REDACTED entering optional. Because tasklist prioritizes ups and downs over ends,
+		//if its end no one has called a lift so its safe to assume no one enters	
+		
+		
+//		//entering optional
+//		if(generateBoolean()) {
+//			ArrayList<Integer> floorList = new ArrayList<>();
+//			int enteringPeople = generatePeopleNumber();
+//			for(int i = 0; i < enteringPeople; i++) {
+//				int value;
+//				if(generateBoolean()) {
+//					value = generateFloorBetweenValuesUp(floor);
+//				}
+//				else {
+//					value = generateFloorBetweenValuesDown(floor);
+//				}
+//				
+//				if(!floorList.contains(value)) {
+//					floorList.add(value);
+//				}
+//			}
+//			
+//			response = response + "E:" + enteringPeople + "[";
+//			
+//			for(int j = 0; j < floorList.size(); j++) {
+//				if(j == floorList.size() - 1) {
+//					response = response + floorList.get(j);
+//				}
+//				else {
+//					response = response + floorList.get(j) + "-";
+//				}
+//			}
+//			response = response + "],";
+//		}
 		
 		//exiting mandatory
 		response = response + "S:" + generatePeopleNumber();
@@ -280,7 +285,11 @@ public class RequestAgent extends Agent{
 	
 	protected int generatePeopleNumber() {
 		Random rand = new Random(); //generates random number of people (to be used in Enter and Exit)
-		return rand.nextInt(5) + 1;
+		final int n = rand.nextInt(10);
+		if (n > 5) { return 4; }
+		else if (n > 3) { return 3; }
+		else if (n > 1) { return 2; } 
+		else { return 1; }
 	}
 }
 
