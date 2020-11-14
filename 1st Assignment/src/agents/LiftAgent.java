@@ -7,6 +7,7 @@ import utils.HandleRequest;
 import utils.LiftProposal;
 import utils.LiftTaskListEntry;
 import utils.TaskList;
+import utils.Analysis;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -14,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import java.util.Date;
-import java.util.Vector;
+
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -30,7 +31,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
-import jade.tools.DummyAgent.DummyAgent;
+
 
 
 @SuppressWarnings("serial")
@@ -51,6 +52,7 @@ public class LiftAgent extends Agent{
 	private LiftProposal currentLiftProposal = null;
 	
 	private SwingDisplay swing;
+	private Analysis analysis;
 	
 	
 	public LiftAgent() {
@@ -67,7 +69,7 @@ public class LiftAgent extends Agent{
         
 	}
 	
-	public LiftAgent(String[] args, SwingDisplay swing) {
+	public LiftAgent(String[] args, SwingDisplay swing, Analysis analysis) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
@@ -82,13 +84,13 @@ public class LiftAgent extends Agent{
         this.liftContacts = new ArrayList<>();
         
         this.swing = swing;
+        this.analysis = analysis;
           
 	}
 	
 	public void setup() { 
 		
 		System.out.println(this.toString());
-		
 		
 		/* DF service register */
 		
@@ -112,8 +114,8 @@ public class LiftAgent extends Agent{
 		
 		// displays Lift info
 		// displayLiftInfo();
-		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
-		this.addBehaviour(new LiftBullyBehaviour(this)); // adds bully behaviour to see if he is the chosen one
+		this.addBehaviour(new LiftTickerBehaviour(this, 1000));
+		this.addBehaviour(new LiftBullyBehaviour(this)); 
 	}
 	
     public void takeDown() {
