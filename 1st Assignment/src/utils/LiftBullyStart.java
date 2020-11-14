@@ -2,7 +2,6 @@ package utils;
 
 import agents.LiftAgent;
 import jade.core.AID;
-import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 
 public class LiftBullyStart {
@@ -13,9 +12,6 @@ public class LiftBullyStart {
 		this.lift = lift;
 	}
 
-	/*
-	 * Sends proposed time to all lifts in contacts list.
-	 */
 	public void sendBullyProposal(LiftProposal liftProposal) {
 		
 		System.out.println("SENT PROPOSAL: " + liftProposal.getTime());

@@ -99,13 +99,8 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 				}
 	}
 	
-	private void handleSameProposal() {
-		System.out.println("ok :D");
-	}
-
-
 	private void acceptProposal() {
-		//Send halt to all lifts
+		
 		 
 		if(lift.getContacts().size() != 0) {
 			

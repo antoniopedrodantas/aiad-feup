@@ -43,21 +43,7 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 		}
 	}
 	
-	protected void updateWeight(int op, int quantity) {
-		float totalWeight = quantity * 75; //75 is the average weight that we will assume for each person entering and exiting the elevator
-		
-		switch(op) {
-			case 1:
-				this.myAgent.addWeight(totalWeight);
-				break;
-			case -1:
-				this.myAgent.subWeight(totalWeight);
-				break;
-			default:
-				break;
-		}
-	}
-	
+
 	protected void removeEntry() {
 		if(!this.myAgent.getTaskList().isEmpty()) {
 			this.myAgent.removeEntry();

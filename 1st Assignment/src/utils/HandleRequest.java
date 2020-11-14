@@ -19,29 +19,21 @@ public class HandleRequest {
 	
 	public void processRequest() {
 
-		/* steps */
-		
-		// 1) calculate time to attend request
-		
 		this.liftProposal = timeToAttendRequest(Integer.parseInt(this.request));
-		// 2) obtain list of all lifts available
-		//  	2.1) We can obtain the name of all the lifts with which we have to communicate through the variable totalLifts that each LiftAgent has
-		//			e.g totalLifts = 4 and my Lift has the id = 1, so i know that i have to change messages with liftAgent2/3/4
-		
+	
 		if(this.myAgent.getContacts().isEmpty()) {
 			this.myAgent.setContacts(buildContactList());
 		}
 
 		myAgent.setCurrentLiftProposal(this.liftProposal);
 
-		var bullyStart = new LiftBullyStart(myAgent); /*initializes LiftBullyStart, and sends to all lift on contacts list the proposed time*/
+		var bullyStart = new LiftBullyStart(myAgent); 
 		bullyStart.sendBullyProposal(liftProposal);
 		
-		// 3) implement a consensus algorithm to know who fulfills the request
-		//		3.1) if it is me, add the request to the taskList
 	}
 	
 	protected LiftProposal timeToAttendRequest(int request) {
+		
 		float timeBetweenFloors = this.myAgent.getFloorDistance() / this.myAgent.getSpeed();
 		float timeAtFloors = this.myAgent.getTimeAtFloors();
 		
@@ -62,6 +54,7 @@ public class HandleRequest {
 			}
 			time += myAgent.getTaskList().get(optimalPosition-1).timeTo(entry, timeBetweenFloors);
 		}
+		
 		return new LiftProposal(this.myAgent.getTaskList(), entry, optimalPosition, time);	
 	}
 	
@@ -134,18 +127,24 @@ public class HandleRequest {
 	
 	//Returns true if is turning point
 	private boolean turningPoint(int i) {
+		
 		var tasks = myAgent.getTaskList();
+		
 		if ( i < 2 ) return false;
+		
 		boolean goingUp = tasks.get(i-2).getFloor() < tasks.get(i-1).getFloor();
 		boolean goingDown = tasks.get(i-2).getFloor() > tasks.get(i-1).getFloor();
+		
 		if(goingUp && tasks.get(i).getType() == Type.Down) return true;
 		if(goingDown && tasks.get(i).getType() == Type.Up) return true;
+		
 		if(tasks.size() > i+1) {	
 			if(goingUp && tasks.get(i).getType() == Type.End)
 				if(tasks.get(i).getFloor() > tasks.get(i+1).getFloor()) return true;
 			if(goingDown && tasks.get(i).getType() == Type.End)
 				if(tasks.get(i).getFloor() < tasks.get(i+1).getFloor()) return true;
 		}
+		
 		return false;
 	}
 	
@@ -162,6 +161,4 @@ public class HandleRequest {
 		
 		return lifts;
 	}
-	
-	
 }
