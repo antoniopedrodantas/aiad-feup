@@ -21,12 +21,11 @@ import utils.LiftProposal;
 public class LiftBullyBehaviour extends CyclicBehaviour {
 
 	MessageTemplate templatePropose = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
-	
-	MessageTemplate templateHalt = MessageTemplate.and(
-	MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-	MessageTemplate.MatchPerformative(ACLMessage.CANCEL) );
+	MessageTemplate templateHalt = MessageTemplate.MatchPerformative(ACLMessage.CANCEL);
 	
 	private HashMap<Integer,Float> proposalsList = new HashMap<>(); //TODO: change ArrayList to HashMap
+	
+	private ArrayList<String> haltReceivers = new ArrayList<String>();
 	
 	private LiftAgent lift;
 	  	
@@ -38,75 +37,71 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 
 	public void action() {
 		processProposalMessage();
-		//processHaltMessage();
+		processHaltMessage();
 	}
 	
 	private void processHaltMessage() {
 		
-		this.lift.addBehaviour(new AchieveREResponder(this.lift, this.templateHalt) {	
-			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
-				if (request.getSender().getName().contains("liftAgent")) {
-					ACLMessage agree = request.createReply();
-					agree.setPerformative(ACLMessage.AGREE);
-					return agree;
-				}
-				else {
-					throw new RefuseException("check-failed");
+		// Receives HALT Message
+		ACLMessage msg = myAgent.receive(templateHalt);
+		if(msg != null) {
+			
+			ACLMessage response = new ACLMessage(ACLMessage.AGREE);
+			
+			String bully = "liftAgent" + msg.getContent();
+			
+			// looks for the bully
+			for(String listener : lift.getContacts()) {
+				if(listener.equals(bully)) {
+					response.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
 				}
 			}
 			
-			protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
-					proposalsList.clear(); 
-					
-					ACLMessage inform = request.createReply();
-					inform.setPerformative(ACLMessage.INFORM);
-					return inform;
-			}
-		} );
+			// sends agreement
+			response.setContent(Integer.toString(lift.getId()));
+	        lift.send(response);
+			proposalsList.clear();
+		}
+		
 	}
 	
 	private void processProposalMessage() {
 		//Receiving Proposal Messages
-				ACLMessage msg = myAgent.receive(templatePropose);
-				int liftId = 0;
-				float proposedTime = 0;
-				if(msg != null) {
+		ACLMessage msg = myAgent.receive(templatePropose);
+		int liftId = 0;
+		float proposedTime = 0;
+		if(msg != null) {
 
-					String[] content = msg.getContent().split(":", 2);
-					
-					proposedTime = Float.parseFloat(content[0]);
-					liftId = Integer.parseInt(content[1]);
+			String[] content = msg.getContent().split(":", 2);
+			
+			proposedTime = Float.parseFloat(content[0]);
+			liftId = Integer.parseInt(content[1]);
 
-					proposalsList.put(liftId, proposedTime);
-				} 
-				//Processing Proposal Messages
+			proposalsList.put(liftId, proposedTime);
+		} 
+		//Processing Proposal Messages
 
-				var myProposal = lift.getCurrentLiftProposal();
-				//Only if I have proposal and received all other proposals
-				if(proposalsList.size() >= lift.getContacts().size() && myProposal != null) {
-					boolean betterProposal = true;
-	
-					Iterator it = proposalsList.entrySet().iterator();
-				    while (it.hasNext()) {
-				        HashMap.Entry pair = (HashMap.Entry)it.next();
-				        float time = (float)pair.getValue();
-				        int id = (int)pair.getKey();
-				        if(myProposal.getTime() > time) betterProposal = false;
-						else if(myProposal.getTime() == time && id < lift.getId()) betterProposal = false;     
-				        it.remove();
-				    }
-					if(betterProposal) acceptProposal();
-				}
+		var myProposal = lift.getCurrentLiftProposal();
+		//Only if I have proposal and received all other proposals
+		if(proposalsList.size() >= lift.getContacts().size() && myProposal != null) {
+			boolean betterProposal = true;
+
+			Iterator it = proposalsList.entrySet().iterator();
+		    while (it.hasNext()) {
+		        HashMap.Entry pair = (HashMap.Entry)it.next();
+		        float time = (float)pair.getValue();
+		        int id = (int)pair.getKey();
+		        if(myProposal.getTime() > time) betterProposal = false;
+				else if(myProposal.getTime() == time && id < lift.getId()) betterProposal = false;     
+		        it.remove();
+		    }
+			if(betterProposal) acceptProposal();
+		}
 	}
 	
-	private void handleSameProposal() {
-		System.out.println("ok :D");
-	}
-
-
 	private void acceptProposal() {
-		//Send halt to all lifts
-		 
+		
+		//Sends halt to all lifts
 		if(lift.getContacts().size() != 0) {
 			
 			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
@@ -114,10 +109,23 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 			for(String listener : lift.getContacts()) {
 				msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
 			}
-				        
+			
+			msg.setContent(Integer.toString(lift.getId()));
+			
 	        lift.send(msg);
 	    }
-		// TODO Wait for Halt responses
+		
+		// Waits for all HALT responses
+		while(haltReceivers.size() < lift.getContacts().size()) {
+			ACLMessage response = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.AGREE));
+			if(response != null) {
+				haltReceivers.add(response.getContent());
+			}
+		}
+		
+		// clears halt and proposals list and assigns new task
+		haltReceivers.clear();
+		proposalsList.clear();
 		lift.setTaskList(lift.getCurrentLiftProposal().getTaskList());
 		
 	}
