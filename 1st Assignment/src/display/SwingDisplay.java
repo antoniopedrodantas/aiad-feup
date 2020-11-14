@@ -112,11 +112,14 @@ public class SwingDisplay {
 	    	i++;
 	    }
 	    
-	    this.panel.revalidate();
-	    this.panel.repaint();
+	    // this.panel.revalidate();
+	    // this.panel.repaint();
 	    
 	    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	    this.frame.add(this.panel);
+	    
+	    this.panel.revalidate();
+	    this.panel.repaint();
 	    
 	    this.frame.setVisible(true);
 		
