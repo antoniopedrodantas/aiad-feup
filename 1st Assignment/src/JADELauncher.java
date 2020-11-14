@@ -1,4 +1,5 @@
 import agents.BuildingAgent;
+import utils.Analysis;
 
 import java.io.IOException;
 import jade.core.Profile;
@@ -24,10 +25,10 @@ public class JADELauncher {
 	protected void launchBuilding(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
 		
 		AgentController agentController;
-		String[] args = {"20", "4", "600.0", "2.5", "5.0", "1"}; //maybe we could do this via console or txt file 
+		String[] args = {"8", "3", "600.0", "2.5", "5.0", "1"}; //maybe we could do this via console or txt file 
 		
 		try {
-			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer));
+			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer, new Analysis(args)));
 			agentController.start();
 			
 		} catch(StaleProxyException e) {

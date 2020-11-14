@@ -1,0 +1,19 @@
+Number of Floors,Number of Lifts,Max Weight,Max Speed,Floor Distance,Time at Floors
+8,3,600.0,2.5,5.0,1.0
+
+Floor,People entering,People exiting,
+0,12,15
+1,0,10
+2,0,8
+3,3,7
+4,2,7
+5,3,7
+6,0,9
+7,4,5
+8,0,4
+
+Lift,Up,Down,End,Average Occupation
+1,2,4,8,0.13392857
+2,1,2,10,0.18055555
+3,0,1,4,0.175
+

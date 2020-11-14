@@ -1,6 +1,7 @@
 package agents;
 
 import agents.LiftAgent;
+import utils.Analysis;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+
  
 @SuppressWarnings("serial")
 public class BuildingAgent extends Agent{
@@ -36,13 +38,14 @@ public class BuildingAgent extends Agent{
 	private float maxWeight;
 	private float maxSpeed;
 	private float floorDistance;
-	private ContainerController mainContainer;
 	private float timeAtFloors;
+	private ContainerController mainContainer;
+	private Analysis analysis;
 	
 	private ArrayList<LiftAgent> lifts = new ArrayList<>();
 	private ArrayList<FloorPanelAgent> floorPanels = new ArrayList<>();
 	
-	public BuildingAgent(String[] args, ContainerController mainContainer){
+	public BuildingAgent(String[] args, ContainerController mainContainer, Analysis analysis){
         this.nmrFloors = Integer.parseInt(args[0]);
         this.nmrLifts = Integer.parseInt(args[1]);
         this.maxWeight = Float.parseFloat(args[2]); 
@@ -50,7 +53,7 @@ public class BuildingAgent extends Agent{
         this.floorDistance = Float.parseFloat(args[4]);
         this.timeAtFloors = Float.parseFloat(args[5]);
         this.mainContainer = mainContainer;
-        
+        this.analysis = analysis;
     }
 	
 	public void setup() {
@@ -60,7 +63,7 @@ public class BuildingAgent extends Agent{
 		
 		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
 		
-		launchLiftAgents(this.nmrLifts, swing);
+		launchLiftAgents(this.nmrLifts, swing, analysis);
 		
 		try {
 			Thread.sleep(1200);
@@ -103,24 +106,27 @@ public class BuildingAgent extends Agent{
 		}
 		
 		System.out.println(getLocalName() + ": done working."); 
+		
+		//calls the analysis function that aims to write the information collected to a file
+		this.analysis.shutDown(); 
 	}
 	
 	
 	/*LiftAgents launching functions */
 	
-	protected void launchLiftAgents(Integer nmrLifts, SwingDisplay swing) {
+	protected void launchLiftAgents(Integer nmrLifts, SwingDisplay swing, Analysis analysis) {
 		
 		int lift;
 		for(lift = 1; lift <= nmrLifts; lift++) {
-			createLiftAgent(lift, swing);
+			createLiftAgent(lift, swing, analysis);
 		}
 	}
 	
-	protected void createLiftAgent(Integer lift, SwingDisplay swing) {
+	protected void createLiftAgent(Integer lift, SwingDisplay swing, Analysis analysis) {
 		
 		AgentController liftAgent;
 		
-		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), swing);
+		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), swing, analysis);
 		
 		try {
 			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, newLiftAgent);

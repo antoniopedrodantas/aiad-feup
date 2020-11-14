@@ -7,14 +7,20 @@ import utils.HandleRequest;
 import utils.LiftProposal;
 import utils.LiftTaskListEntry;
 import utils.TaskList;
+import utils.Analysis;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import java.util.Date;
-import java.util.Vector;
+
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -30,7 +36,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
-import jade.tools.DummyAgent.DummyAgent;
+
 
 
 @SuppressWarnings("serial")
@@ -51,6 +57,8 @@ public class LiftAgent extends Agent{
 	private LiftProposal currentLiftProposal = null;
 	
 	private SwingDisplay swing;
+	private Analysis analysis;
+	private PrintWriter pw;
 	
 	
 	public LiftAgent() {
@@ -67,7 +75,7 @@ public class LiftAgent extends Agent{
         
 	}
 	
-	public LiftAgent(String[] args, SwingDisplay swing) {
+	public LiftAgent(String[] args, SwingDisplay swing, Analysis analysis) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
@@ -82,13 +90,57 @@ public class LiftAgent extends Agent{
         this.liftContacts = new ArrayList<>();
         
         this.swing = swing;
+        this.analysis = analysis;
+        
+        initiatePrintWriter();
           
+	}
+	
+	public void initiatePrintWriter() {
+		Date date = new Date() ;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+		
+		String path = "./analysis/" + this.id + "-" + dateFormat.format(date) + ".csv";
+		File new_file = new File(path);
+		
+		try{
+            if(!new_file.exists()){
+                new_file.getParentFile().mkdirs();
+                new_file.createNewFile();
+            }
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+        
+        FileWriter fileWriter;
+        try {
+			fileWriter = new FileWriter(new_file);
+			this.pw = new PrintWriter(fileWriter);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Tick");
+			sb.append(",");
+			sb.append("Current Floor");
+		    sb.append("\r\n");
+		    pw.write(sb.toString());
+		    
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeToFile(int tick, int floor) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(tick);
+		sb.append(",");
+		sb.append(floor);
+	    sb.append("\r\n");
+	    pw.write(sb.toString());
 	}
 	
 	public void setup() { 
 		
 		System.out.println(this.toString());
-		
 		
 		/* DF service register */
 		
@@ -112,13 +164,14 @@ public class LiftAgent extends Agent{
 		
 		// displays Lift info
 		// displayLiftInfo();
-		this.addBehaviour(new LiftTickerBehaviour(this, 1000)); //add TickerBehaviour to update Lift's position
-		this.addBehaviour(new LiftBullyBehaviour(this)); // adds bully behaviour to see if he is the chosen one
+		this.addBehaviour(new LiftTickerBehaviour(this, 1000));
+		this.addBehaviour(new LiftBullyBehaviour(this)); 
 	}
 	
     public void takeDown() {
     	
     	try {
+    		this.pw.close();
 			DFService.deregister(this);
 			System.out.println("Deregister done successfully");
 			System.out.println(getLocalName() + ": done working.");
@@ -211,14 +264,17 @@ public class LiftAgent extends Agent{
 		if(actionsToBePerformed.length == 2) { //entering and exiting
 			parseExiting(actionsToBePerformed[1]);
 			parseEntering(actionsToBePerformed[0]);
+			analysis.recalculateOccupation(this.id, this.currentWeight);
 		}
 		else if(actionsToBePerformed.length == 1) { //entering or exiting
 			
 			if(actionsToBePerformed[0].substring(0,1).equals("E")) {
 				parseEntering(actionsToBePerformed[0]);
+				analysis.recalculateOccupation(this.id, this.currentWeight);
 			}
 			else if(actionsToBePerformed[0].substring(0,1).equals("S")) {
 				parseExiting(actionsToBePerformed[0]);
+				analysis.recalculateOccupation(this.id, this.currentWeight);
 			}
 			else {
 				System.out.println("No valide format for message: " + msg);
@@ -244,10 +300,14 @@ public class LiftAgent extends Agent{
 					float maxAvailable = this.maxWeight - this.currentWeight;
 					float peopleToEnter = maxAvailable / personWeight;
 					addWeight((int) peopleToEnter * personWeight);
+					analysis.enterAtFloor(this.currentFloor, (int) peopleToEnter);
 				}
 				else {
 					addWeight(people * personWeight);
+					analysis.enterAtFloor(this.currentFloor, people);
 				}
+				
+				
 			}
 			else {
 				if(enter.contains("[") && enter.contains("]")) {
@@ -273,6 +333,48 @@ public class LiftAgent extends Agent{
 					
 					int people = Integer.parseInt(nmr);
 					String[] floors = floorsToAttend.split("-");
+					
+					if(this.maxWeight < (currentWeight + (people * personWeight))) { //when there's no space for more people
+						
+						float maxAvailable = this.maxWeight - this.currentWeight;
+						float peopleToEnter = maxAvailable / personWeight;
+						
+						addWeight((int) peopleToEnter * personWeight);
+						analysis.enterAtFloor(this.currentFloor, (int) peopleToEnter);
+						
+						if(floors.length <= (int) peopleToEnter) {
+							for (int j = 0; j < floors.length ; j++) {
+								HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+								var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+								int pos = handleRequest.getListPos(entry);
+								this.taskList.add(pos, entry);
+								analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+							}
+						}
+						else { //in case all people can enter
+							for (int j = 0; j < peopleToEnter ; j++) {
+								HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+								var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+								int pos = handleRequest.getListPos(entry);
+								this.taskList.add(pos, entry);
+								analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+							}
+						}
+					}
+					else { //when all can enter
+						addWeight(people * personWeight);
+						analysis.enterAtFloor(this.currentFloor, people);
+						
+						for (int j = 0; j < floors.length ; j++) {
+							HandleRequest handleRequest = new HandleRequest(this, floors[j]);
+							var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
+							int pos = handleRequest.getListPos(entry);
+							this.taskList.add(pos, entry);
+							analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
+						}
+					}
+					
+					/*
 					for (int j = 0; j < floors.length ; j++) {
 					
 						float maxAvailable = this.maxWeight - this.currentWeight;
@@ -282,9 +384,13 @@ public class LiftAgent extends Agent{
 						var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
 						int pos = handleRequest.getListPos(entry);
 						this.taskList.add(pos, entry);
+						analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
 					
 						addWeight(personWeight);
-					}
+						analysis.enterAtFloor(this.currentFloor, 1);
+					}*/
+					
+					
 					System.out.println("entering: " + people);
                     for(int j = 0; j < floors.length; j++){
                         System.out.println(floors[j]);
@@ -321,6 +427,8 @@ public class LiftAgent extends Agent{
 		else {
 			this.subWeight(people * personWeight);
 		}
+		
+		analysis.exitAtFloor(this.currentFloor, people);
 	}
 	
 	protected boolean checkSender(String name) {
@@ -461,5 +569,9 @@ public class LiftAgent extends Agent{
 
 	public void setCurrentLiftProposal(LiftProposal currentLiftProposal) {
 		this.currentLiftProposal = currentLiftProposal;
+	}
+	
+	public Analysis getAnalysis() {
+		return this.analysis;
 	}
 }
