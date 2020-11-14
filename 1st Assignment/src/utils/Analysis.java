@@ -14,6 +14,7 @@ public class Analysis {
 	private ArrayList<Integer> enteringAtFloor;
 	private ArrayList<Integer> exitingAtFloor;
 	private ArrayList<ArrayList<Integer>> liftTasks;
+	private ArrayList<ArrayList<Float>> averageOccupation;
 
 	public Analysis(String[] args) {
 		this.nmrFloors = Integer.parseInt(args[0]);
@@ -44,6 +45,19 @@ public class Analysis {
         	
         	liftTasks.add(list);
        }
+        
+        /* initialize arraylist to keep track of lifts occupation */
+        averageOccupation = new ArrayList<ArrayList<Float>>();
+        
+        for(int j = 0; j < this.nmrLifts; j++) {
+        	
+        	ArrayList<Float> info = new ArrayList<Float>();
+        	
+        	info.add(Float.valueOf(0));
+        	info.add(Float.valueOf(0));
+        	
+        	averageOccupation.add(info);
+       }
 	}
 
 	/* functions that allow changing floor entry and exit values */
@@ -64,6 +78,17 @@ public class Analysis {
 		int value = 1 + this.liftTasks.get(lift - 1).get(op);
 		
 		this.liftTasks.get(lift - 1).set(op, value);
+	}
+	
+	/* calculate new occupation */
+	public void recalculateOccupation(int lift, float weight) { //this weight needs to be the total, after entering/exiting people
+		
+		float avg = weight / this.maxWeight;
+		float times = this.averageOccupation.get(lift - 1).get(0) + 1;
+		float newOccupation = ((this.averageOccupation.get(lift - 1).get(0) * this.averageOccupation.get(lift - 1).get(1)) + avg) / (this.averageOccupation.get(lift - 1).get(0) + 1);
+		
+		this.averageOccupation.get(lift-1).set(0, times);
+		this.averageOccupation.get(lift-1).set(1, newOccupation);
 	}
 	
 	/* functions for writing to a file at shutdown */
