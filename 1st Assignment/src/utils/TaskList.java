@@ -48,7 +48,6 @@ public class TaskList extends ArrayList<LiftTaskListEntry>{
 	}
 	
 	private void prioritizeUpDown(int index, LiftTaskListEntry element) {
-		System.out.println("HEREEEEE MY DUDE!!!!");
 		if(this.get(index).getType() == LiftTaskListEntry.Type.End) {
 			if(element.getType() == LiftTaskListEntry.Type.Up ||
 					element.getType() == LiftTaskListEntry.Type.Down) {

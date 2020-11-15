@@ -160,7 +160,7 @@ public class FloorPanelAgent extends Agent {
 				}
 				protected void handleAllResultNotifications(Vector notifications) {
 					if (notifications.size() < nmrResponders) {
-						// System.out.println("Timeout expired: missing " + (nmrResponders - notifications.size()) + " responses");
+						//System.out.println("Timeout expired: missing " + (nmrResponders - notifications.size()) + " responses");
 					}
 				}
 			} );

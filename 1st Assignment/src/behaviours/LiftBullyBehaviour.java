@@ -103,7 +103,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 	private void acceptProposal() {
 		
 		//Sends halt to all lifts
-		 
+		System.out.println("LIFT " + lift.getId() + " is taking care of REQUEST: " + lift.getCurrentLiftProposal().getEntry().getFloor() + ":" + lift.getCurrentLiftProposal().getEntry().getType());
 		if(lift.getContacts().size() != 0) {
 			
 			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);

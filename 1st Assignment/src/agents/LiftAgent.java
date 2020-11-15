@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import java.util.Date;
-
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -234,7 +231,7 @@ public class LiftAgent extends Agent{
         addBehaviour(new AchieveREInitiator(this, msg) {
 	    	 
 			protected void handleInform(ACLMessage inform) {
-				System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
+				//System.out.println("Agent " + inform.getSender().getLocalName() + " successfully performed the requested action");
 				System.out.println("RECEIVED MESSAGE FROM REQUESTAGENT: " + inform.getContent());
 				//TODO: parse message received
 				parseReceivedMessage(inform.getContent());
@@ -254,9 +251,7 @@ public class LiftAgent extends Agent{
 		} );
 	}
 	
-	/* Parsing functions */
-	//TODO: quando saiem todas as pessoas retirar todos as entry do tipo END
-	//TODO: acrescentar entrys do tipo END quando entram pessoas
+	
 	protected void parseReceivedMessage(String msg) {
 		
 		String[] actionsToBePerformed = msg.split(",", 2);
@@ -373,27 +368,10 @@ public class LiftAgent extends Agent{
 							analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
 						}
 					}
-					
-					/*
-					for (int j = 0; j < floors.length ; j++) {
-					
-						float maxAvailable = this.maxWeight - this.currentWeight;
-						if (maxAvailable < personWeight) break;
 						
-						HandleRequest handleRequest = new HandleRequest(this, floors[j]);
-						var entry = new LiftTaskListEntry(Integer.parseInt(floors[j]),0);
-						int pos = handleRequest.getListPos(entry);
-						this.taskList.add(pos, entry);
-						analysis.addToLiftTasks(this.id, 2); //op = 2 means its END
-					
-						addWeight(personWeight);
-						analysis.enterAtFloor(this.currentFloor, 1);
-					}*/
-					
-					
-					System.out.println("entering: " + people);
+					System.out.println("Entering: " + people);
                     for(int j = 0; j < floors.length; j++){
-                        System.out.println(floors[j]);
+                        System.out.println("- floor: " + floors[j]);
                     }
 				}
 				else {
@@ -412,7 +390,7 @@ public class LiftAgent extends Agent{
 		
 		if(exiting.length == 2) {
 			int people = Integer.parseInt(exiting[1]);
-			System.out.println("exiting: " + people);
+			System.out.println("Exiting: " + people);
 			dealExiting(people);
 		}
 		else {

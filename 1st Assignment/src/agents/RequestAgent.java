@@ -44,14 +44,14 @@ public class RequestAgent extends Agent{
             	public void run() {
             		sendRequest();
             	}
-          	}, 2000, 7500, TimeUnit.MILLISECONDS);
+          	}, 5000, 5000, TimeUnit.MILLISECONDS);
 	}
 	
 	
 	private void sendRequest() {
 		
 		Random rand = new Random();
-		int randomInteger = rand.nextInt(floors + 1); //TODO: this is not generating floor 0
+		int randomInteger = rand.nextInt(floors + 1);
 		if(startRequestsMade < nLifts) {
 			randomInteger = 0;
 			startRequestsMade++;
@@ -83,11 +83,11 @@ public class RequestAgent extends Agent{
 			}
 			protected void handleRefuse(ACLMessage refuse) {
 				System.out.println("Agent " + refuse.getSender().getLocalName() + " refused to perform the requested action");
-				
 			}
+			
 			protected void handleFailure(ACLMessage failure) {
 				if (failure.getSender().equals(myAgent.getAMS())) {
-					System.out.println("Responder does not exist");
+					System.out.println("Responder does not exist.");
 				}
 				else {
 					System.out.println("Agent " + failure.getSender().getLocalName() + " failed to perform the requested action");
@@ -107,7 +107,6 @@ public class RequestAgent extends Agent{
 	  		
 			protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 				
-				System.out.println("Agent " + getLocalName() + ": REQUEST received from " + request.getSender().getLocalName() + ". Action is "+ request.getContent());
 				
 				if (checkSender(request.getSender().getName())) {
 					
@@ -127,7 +126,6 @@ public class RequestAgent extends Agent{
 				if(request.getContent() != null) {
 					ACLMessage inform = request.createReply();
 					inform.setContent(createResponse(request.getContent()));
-					//inform.setContent("E:3[4-5-6],S:2");
 					inform.setPerformative(ACLMessage.INFORM);
 					return inform;
 				}
