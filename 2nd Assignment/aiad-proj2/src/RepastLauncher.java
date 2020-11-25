@@ -23,19 +23,12 @@ public class RepastLauncher extends Repast3Launcher {
 
 	@Override
 	public String getName() {
-		return "SAJaS Project";
+		return "AIAD - 2nd Assignment";
 	}
 
 	@Override
 	protected void launchJADE() {
-		
-		// Runtime rt = Runtime.instance();
-		// Profile p1 = new ProfileImpl();
-		// mainContainer = rt.createMainContainer(p1);
-		
-		// launchAgents();
-		
-		
+	
 		Runtime runTime = Runtime.instance();
 		Profile profile = new ProfileImpl();
 		ContainerController mainContainer = runTime.createMainContainer(profile);
@@ -43,27 +36,12 @@ public class RepastLauncher extends Repast3Launcher {
 			System.out.println("About to launch Building!");
 			launchBuilding(mainContainer);
 		} catch (StaleProxyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private void launchAgents() {
-		
-		try {
-			
-			// TODO
-			mainContainer.acceptNewAgent("MyAgent", new Agent()).start();
-			// ...
-			
-		} catch (StaleProxyException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
 	protected void launchBuilding(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
 		
@@ -84,7 +62,7 @@ public class RepastLauncher extends Repast3Launcher {
 			e.printStackTrace();
 		}
 	}
-/*
+
 	@Override
 	public void setup() {
 		super.setup();
@@ -100,16 +78,13 @@ public class RepastLauncher extends Repast3Launcher {
 		// display surfaces, spaces, displays, plots, ...
 		// ...
 	}
-*/
+
+	
 	/**
 	 * Launching Repast3
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// boolean BATCH_MODE = true;
-		// SimInit init = new SimInit();
-		// init.setNumRuns(1);   // works only in batch mode
-		// init.loadModel(new RepastLauncher(), null, BATCH_MODE);
 		
 		boolean BATCH_MODE = true;
 		SimInit init = new SimInit();
