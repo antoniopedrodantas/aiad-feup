@@ -1,15 +1,15 @@
 package agents;
 
 import jade.core.AID;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
+import sajas.proto.AchieveREInitiator;
+import sajas.proto.AchieveREResponder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
@@ -59,7 +59,7 @@ public class RequestAgent extends Agent{
 		Boolean randomBoolean = rand.nextBoolean();
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.addReceiver(new AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
+        msg.addReceiver(new sajas.core.AID("floorPanelAgent" + randomInteger ,AID.ISLOCALNAME));
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000)); //we want to receive a reply in 5 seconds at most
         

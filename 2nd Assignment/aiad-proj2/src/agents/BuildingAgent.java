@@ -21,12 +21,12 @@ import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.content.onto.basic.Action;
-import jade.core.Agent;
+import sajas.core.Agent;
 import jade.domain.JADEAgentManagement.JADEManagementOntology;
 import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
+import sajas.wrapper.AgentController;
+import sajas.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
  

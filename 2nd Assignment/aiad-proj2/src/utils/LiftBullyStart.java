@@ -21,7 +21,7 @@ public class LiftBullyStart {
 			ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
 	         
 			for(String listener : lift.getContacts()) {
-				msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
+				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 			}
 				        
 	        msg.setContent(Float.toString(liftProposal.getTime()) + ":" + lift.getId());

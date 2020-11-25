@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Vector;
 
 import jade.core.AID;
-import jade.core.Agent;
-import jade.domain.DFService;
+import sajas.core.Agent;
+import sajas.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -16,8 +16,8 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
+import sajas.proto.AchieveREInitiator;
+import sajas.proto.AchieveREResponder;
 
 
 @SuppressWarnings("serial")
@@ -123,7 +123,7 @@ public class FloorPanelAgent extends Agent {
 				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		         
 				for(String listener : this.liftList) {
-					msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
+					msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 				}
 				
 				

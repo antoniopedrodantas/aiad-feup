@@ -2,8 +2,8 @@ package behaviours;
 
 import agents.LiftAgent;
 
-import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
+import sajas.core.Agent;
+import sajas.core.behaviours.TickerBehaviour;
 
 @SuppressWarnings("serial")
 public class LiftTickerBehaviour extends TickerBehaviour {

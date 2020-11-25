@@ -6,14 +6,14 @@ import java.util.Iterator;
 
 import agents.LiftAgent;
 import jade.core.AID;
-import jade.core.behaviours.CyclicBehaviour;
+import sajas.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREResponder;
+import sajas.proto.AchieveREResponder;
 import utils.HandleRequest;
 import utils.LiftProposal;
 import utils.LiftTaskListEntry.Type;
@@ -54,7 +54,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 			// looks for the bully
 			for(String listener : lift.getContacts()) {
 				if(listener.equals(bully)) {
-					response.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
+					response.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 				}
 			}
 			
@@ -109,7 +109,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
 	         
 			for(String listener : lift.getContacts()) {
-				msg.addReceiver(new AID((String) listener,AID.ISLOCALNAME));
+				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 			}
 			
 			msg.setContent(Integer.toString(lift.getId()));

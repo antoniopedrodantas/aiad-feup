@@ -20,8 +20,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.Date;
 import jade.core.AID;
-import jade.core.Agent;
-import jade.domain.DFService;
+import sajas.core.Agent;
+import sajas.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -31,8 +31,8 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
+import sajas.proto.AchieveREInitiator;
+import sajas.proto.AchieveREResponder;
 
 
 
@@ -223,7 +223,7 @@ public class LiftAgent extends Agent{
 	
 	public void askRequestAgent() {
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		msg.addReceiver(new AID("requestAgent",AID.ISLOCALNAME));
+		msg.addReceiver(new sajas.core.AID("requestAgent",AID.ISLOCALNAME));
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
         msg.setContent(this.getTaskList().get(0).getFloor() + ":" + this.getTaskList().get(0).getType()); //msg = 4:Up

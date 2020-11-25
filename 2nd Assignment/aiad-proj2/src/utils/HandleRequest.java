@@ -3,7 +3,7 @@ package utils;
 import agents.LiftAgent;
 
 import java.util.ArrayList;
-import jade.core.Agent;
+import sajas.core.Agent;
 import utils.LiftTaskListEntry.Type;
 
 public class HandleRequest {
