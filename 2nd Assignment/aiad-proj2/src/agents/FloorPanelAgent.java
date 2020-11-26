@@ -24,6 +24,7 @@ import sajas.proto.AchieveREResponder;
 public class FloorPanelAgent extends Agent {
 	
 	private int floor;
+	private int expectedSize;
 	private ArrayList<String> liftList;
 	private String type;
 	private int nmrResponders;
@@ -35,8 +36,9 @@ public class FloorPanelAgent extends Agent {
 	}
 	
 	// for the REAL DEAL
-	public FloorPanelAgent(int floor) {
+	public FloorPanelAgent(int floor, int nmrLifts) {
 		this.floor = floor;
+		this.expectedSize = nmrLifts;
 		this.liftList  = new ArrayList<>();
 		this.type = "Down"; //TODO: change this
 	} 
@@ -117,7 +119,14 @@ public class FloorPanelAgent extends Agent {
 
 	protected boolean sendRequestToLifts() {
 		
-		if(this.liftList.size() != 0) {
+		System.out.println("Size of liftList: " + this.liftList.size());
+		System.out.println("Expected " + this.expectedSize);
+		if(this.liftList.size() != this.expectedSize) {
+			updateLiftList();
+			System.out.println("UPDATE: FloorPanel" + this.floor + "\n" + getLiftsAvailable());
+		}
+		
+		if(this.liftList.size() != 0 && this.liftList.size() == this.expectedSize) {
 			
 				this.nmrResponders = this.liftList.size();
 				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -172,6 +181,26 @@ public class FloorPanelAgent extends Agent {
 		}
 	}
 	
+	protected void updateLiftList() {
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("lift-service");
+		template.addServices(sd);
+		
+		/* Finds all the lifts that have already subscribed to the service and adds them to the liftList */
+		try {
+			
+			DFAgentDescription[] result = DFService.search(this, template);
+			
+			for(int i = 0; i < result.length; ++i) {
+				this.addLiftToList(result[i].getName().getLocalName());
+			}
+			
+		} catch(FIPAException fe) {
+			fe.printStackTrace();
+		}
+		
+	}
 	protected boolean checkSender(String name) {
 		return name.contains("requestAgent") ? true : false;
 	}

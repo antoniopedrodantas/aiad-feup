@@ -5,6 +5,9 @@ import utils.Analysis;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -65,25 +68,28 @@ public class BuildingAgent extends Agent{
 		
 		launchLiftAgents(this.nmrLifts, swing, analysis);
 		
-		try {
-			Thread.sleep(1200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1200); //previous value was 1200
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		
-		launchFloorPanelAgents(this.nmrFloors);
-
-		try {
-			Thread.sleep(1200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while(this.nmrLifts > lifts.size()) {
+			System.out.println(this.lifts.size());
 		}
 		
 		launchRequestAgent(this.nmrFloors);
 
+		try {
+			Thread.sleep(1200); //previous value was 1200
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		launchFloorPanelAgents(this.nmrFloors, this.nmrLifts);
+
 		swing.update(lifts, floorPanels);
 		swing.draw();
-		
 	}
 
 	public void takeDown() {
@@ -125,7 +131,6 @@ public class BuildingAgent extends Agent{
 	protected void createLiftAgent(Integer lift, SwingDisplay swing, Analysis analysis) {
 		
 		AgentController liftAgent;
-		
 		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), swing, analysis);
 		
 		try {
@@ -148,19 +153,19 @@ public class BuildingAgent extends Agent{
 	
 	/* FloorPanelAgents launching functions */
 	
-	protected void launchFloorPanelAgents(Integer nmrFloors) {
+	protected void launchFloorPanelAgents(Integer nmrFloors, Integer nmrLifts) {
 		
 		int floor;
 		for(floor = 0; floor <= nmrFloors; floor++) {
-			createFloorPanelAgent(floor);
+			createFloorPanelAgent(floor, nmrLifts);
 		}
 	}
 	
-	protected void createFloorPanelAgent(Integer floor) {
+	protected void createFloorPanelAgent(Integer floor, Integer nmrLifts) {
 		
 		AgentController floorPanelAgent;
 		
-		FloorPanelAgent newFloorPanelAgent = new FloorPanelAgent(floor);
+		FloorPanelAgent newFloorPanelAgent = new FloorPanelAgent(floor, nmrLifts);
 		
 		try {
 			floorPanelAgent = this.mainContainer.acceptNewAgent("floorPanelAgent" + floor, newFloorPanelAgent);
