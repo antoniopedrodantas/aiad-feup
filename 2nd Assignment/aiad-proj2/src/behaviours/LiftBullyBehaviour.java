@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import agents.LiftAgent;
-import jade.core.AID;
+import sajas.core.AID;
 import sajas.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -46,7 +46,6 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 		// Receives HALT Message
 		ACLMessage msg = myAgent.receive(templateHalt);
 		if(msg != null) {
-			
 			ACLMessage response = new ACLMessage(ACLMessage.AGREE);
 			
 			String bully = "liftAgent" + msg.getContent();
@@ -74,7 +73,6 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 		if(msg != null) {
 
 			String[] content = msg.getContent().split(":", 2);
-			
 			proposedTime = Float.parseFloat(content[0]);
 			liftId = Integer.parseInt(content[1]);
 
@@ -105,24 +103,21 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 		//Sends halt to all lifts
 		System.out.println("LIFT " + lift.getId() + " is taking care of REQUEST: " + lift.getCurrentLiftProposal().getEntry().getFloor() + ":" + lift.getCurrentLiftProposal().getEntry().getType());
 		if(lift.getContacts().size() != 0) {
-			
 			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
-	         
 			for(String listener : lift.getContacts()) {
 				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 			}
-			
-			msg.setContent(Integer.toString(lift.getId()));
-			
 	        lift.send(msg);
 	    }
-		
+		//TODO: Single Threaded, can't let it go into endless loop here Use waker behavior
+		int i = 30;
 		// Waits for all HALT responses
-		while(haltReceivers.size() < lift.getContacts().size()) {
+		while(haltReceivers.size() < lift.getContacts().size() && i>0) {
 			ACLMessage response = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.AGREE));
 			if(response != null) {
 				haltReceivers.add(response.getContent());
 			}
+			i--;
 		}
 		
 		// clears halt and proposals list and assigns new task

@@ -1,6 +1,6 @@
 package agents;
 
-import jade.core.AID;
+import sajas.core.AID;
 import sajas.core.Agent;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;

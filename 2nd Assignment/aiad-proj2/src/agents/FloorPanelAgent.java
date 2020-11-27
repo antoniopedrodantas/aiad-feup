@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
-import jade.core.AID;
+import sajas.core.AID;
 import sajas.core.Agent;
 import sajas.domain.DFService;
 import jade.domain.FIPAException;
