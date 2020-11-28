@@ -23,8 +23,8 @@ public class RepastLauncher extends Repast3Launcher {
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
 	private int nmrLifts = 3;
+	private float maxSpeed = (float) 2.5;
 	private float maxWeight = 600;
-	private float maxSpped = (float) 2.5;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
 	
@@ -65,7 +65,7 @@ public class RepastLauncher extends Repast3Launcher {
 		
 		AgentController agentController;
 		
-		String[] args = {"18", "3", "600.0", "2.5", "5.0", "1"}; 
+		String[] args = {String.valueOf(this.getNmrFLoors()), String.valueOf(this.getNmrLifts()), String.valueOf(this.getMaxWeight()), String.valueOf(this.getMaxSpeed()), String.valueOf(this.getDistanceBetweenFloors()), String.valueOf(this.getTimeAtFloor())}; 
 						//nmrFloors, nmrLifts, maxWeight per lift, lift maxSpeed, distance between floors, timeAtFloor(time the lift stops on floors for people to enter and exit)
 		
 		try {
@@ -143,13 +143,13 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 
 
-	public float getMaxSpped() {
-		return maxSpped;
+	public float getMaxSpeed() {
+		return maxSpeed;
 	}
 
 
-	public void setMaxSpped(float maxSpped) {
-		this.maxSpped = maxSpped;
+	public void setMaxSpped(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
 	}
 
 
