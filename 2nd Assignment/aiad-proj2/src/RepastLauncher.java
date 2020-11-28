@@ -1,3 +1,5 @@
+import uchicago.src.reflector.ListPropertyDescriptor;
+
 import agents.BuildingAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -8,22 +10,38 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.AgentController;
 import sajas.wrapper.ContainerController;
-
 import uchicago.src.sim.engine.SimInit;
 import utils.Analysis;
 
 public class RepastLauncher extends Repast3Launcher {
-
+	
 	private ContainerController mainContainer;
+	private ContainerController agentContainer;
+	private static final boolean BATCH_MODE = true;
+	private boolean runInBatchMode;
+	
+	/* This values can be changed in Model Parameters*/
+	private int nmrFLoors = 18;
+	private int nmrLifts = 3;
+	private float maxWeight = 600;
+	private float maxSpped = (float) 2.5;
+	private float distanceBetweenFloors = 5;
+	private float timeAtFloor = 1;
+	
+	public RepastLauncher(boolean runInBatchMode) {
+		super();
+		this.runInBatchMode = runInBatchMode;
+	}
+	
 	
 	@Override
 	public String[] getInitParam() {
-		return new String[0];
+		return new String[] { "nmrFloors", "nmrLifts", "maxWeight", "maxSpeed", "distanceBetweenFloors", "timeAtFloor"};
 	}
 
 	@Override
 	public String getName() {
-		return "AIAD - 2nd Assignment";
+		return "Lift Management System";
 	}
 
 	@Override
@@ -33,8 +51,8 @@ public class RepastLauncher extends Repast3Launcher {
 		Profile profile = new ProfileImpl();
 		ContainerController mainContainer = runTime.createMainContainer(profile);
 		try {
-			System.out.println("About to launch Building!");
-			launchBuilding(mainContainer);
+			setAgentContainer(mainContainer);
+			launchAgents(mainContainer);
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -43,13 +61,9 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 	
 	
-	protected void launchBuilding(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
-		
-		System.out.println("Entered Building");
+	protected void launchAgents(ContainerController mainContainer) throws InterruptedException, StaleProxyException {
 		
 		AgentController agentController;
-		
-		System.out.println("Created agentController");
 		
 		String[] args = {"18", "3", "600.0", "2.5", "5.0", "1"}; 
 						//nmrFloors, nmrLifts, maxWeight per lift, lift maxSpeed, distance between floors, timeAtFloor(time the lift stops on floors for people to enter and exit)
@@ -74,11 +88,16 @@ public class RepastLauncher extends Repast3Launcher {
 	@Override
 	public void begin() {
 		super.begin();
-		
-		// display surfaces, spaces, displays, plots, ...
-		// ...
+		if(!runInBatchMode) {
+			buildAndScheduleDisplay();
+		}
+	}
+	
+	private void buildAndScheduleDisplay() {
+	
 	}
 
+	
 	
 	/**
 	 * Launching Repast3
@@ -86,11 +105,91 @@ public class RepastLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 		
-		boolean BATCH_MODE = true;
+		boolean runMode = !BATCH_MODE; 
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
-		init.loadModel(new RepastLauncher(), null, BATCH_MODE);
+		init.loadModel(new RepastLauncher(runMode), null, runMode);
 
+	}
+
+
+	public int getNmrFLoors() {
+		return nmrFLoors;
+	}
+
+
+	public void setNmrFLoors(int nmrFLoors) {
+		this.nmrFLoors = nmrFLoors;
+	}
+
+
+	public int getNmrLifts() {
+		return nmrLifts;
+	}
+
+
+	public void setNmrLifts(int nmrLifts) {
+		this.nmrLifts = nmrLifts;
+	}
+
+
+	public float getMaxWeight() {
+		return maxWeight;
+	}
+
+
+	public void setMaxWeight(float maxWeight) {
+		this.maxWeight = maxWeight;
+	}
+
+
+	public float getMaxSpped() {
+		return maxSpped;
+	}
+
+
+	public void setMaxSpped(float maxSpped) {
+		this.maxSpped = maxSpped;
+	}
+
+
+	public float getDistanceBetweenFloors() {
+		return distanceBetweenFloors;
+	}
+
+
+	public void setDistanceBetweenFloors(float distanceBetweenFloors) {
+		this.distanceBetweenFloors = distanceBetweenFloors;
+	}
+
+
+	public float getTimeAtFloor() {
+		return timeAtFloor;
+	}
+
+
+	public void setTimeAtFloor(float timeAtFloor) {
+		this.timeAtFloor = timeAtFloor;
+	}
+
+
+	public ContainerController getMainContainer() {
+		return mainContainer;
+	}
+
+
+	public void setMainContainer(ContainerController mainContainer) {
+		this.mainContainer = mainContainer;
+	}
+
+
+	public ContainerController getAgentContainer() {
+		return agentContainer;
+	}
+
+
+	public void setAgentContainer(ContainerController agentContainer) {
+		this.agentContainer = agentContainer;
 	}
 
 }
