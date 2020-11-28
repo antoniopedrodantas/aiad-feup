@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.Date;
-import sajas.core.AID;
+import jade.core.AID;
 import sajas.core.Agent;
 import sajas.domain.DFService;
 import jade.domain.FIPAException;

@@ -1,7 +1,7 @@
 package utils;
 
 import agents.LiftAgent;
-import sajas.core.AID;
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 public class LiftBullyStart {

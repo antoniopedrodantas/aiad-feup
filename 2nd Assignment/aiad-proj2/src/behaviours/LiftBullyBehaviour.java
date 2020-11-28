@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import agents.LiftAgent;
-import sajas.core.AID;
+import jade.core.AID;
 import sajas.core.behaviours.CyclicBehaviour;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
