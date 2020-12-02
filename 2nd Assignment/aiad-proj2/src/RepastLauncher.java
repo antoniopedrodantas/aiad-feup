@@ -1,6 +1,11 @@
 import uchicago.src.reflector.ListPropertyDescriptor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import agents.BuildingAgent;
+import agents.FloorPanelAgent;
+import agents.LiftAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
@@ -10,7 +15,15 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.AgentController;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
+import uchicago.src.sim.gui.DisplaySurface;
+import uchicago.src.sim.gui.Displayable;
+import uchicago.src.sim.gui.Network2DDisplay;
+import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.gui.Zoomable;
+import uchicago.src.sim.network.DefaultDrawableNode;
+import uchicago.src.sim.space.Object2DGrid;
 import utils.Analysis;
 
 public class RepastLauncher extends Repast3Launcher {
@@ -20,6 +33,10 @@ public class RepastLauncher extends Repast3Launcher {
 	private static final boolean BATCH_MODE = true;
 	private boolean runInBatchMode;
 	
+	/* display */
+	private DisplaySurface dsurf;
+	private int WIDTH = 100, HEIGHT = 100;
+	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
 	private int nmrLifts = 3;
@@ -27,6 +44,10 @@ public class RepastLauncher extends Repast3Launcher {
 	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
+	
+	private ArrayList<LiftAgent> liftAgents;
+	private BuildingAgent buildingAgent;
+	private ArrayList<FloorPanelAgent> floorPanelAgents;
 	
 	public RepastLauncher(boolean runInBatchMode) {
 		super();
@@ -65,11 +86,15 @@ public class RepastLauncher extends Repast3Launcher {
 		
 		AgentController agentController;
 		
+		this.liftAgents = new ArrayList<LiftAgent>();
+		this.floorPanelAgents = new ArrayList<FloorPanelAgent>();
+		
 		String[] args = {String.valueOf(this.getNmrFLoors()), String.valueOf(this.getNmrLifts()), String.valueOf(this.getMaxWeight()), String.valueOf(this.getMaxSpeed()), String.valueOf(this.getDistanceBetweenFloors()), String.valueOf(this.getTimeAtFloor())}; 
 						//nmrFloors, nmrLifts, maxWeight per lift, lift maxSpeed, distance between floors, timeAtFloor(time the lift stops on floors for people to enter and exit)
 		
 		try {
-			agentController = mainContainer.acceptNewAgent("buildingAgent", new BuildingAgent(args, mainContainer, new Analysis(args)));
+			this.buildingAgent = new BuildingAgent(args, mainContainer, new Analysis(args));
+			agentController = mainContainer.acceptNewAgent("buildingAgent", this.buildingAgent);
 			agentController.start();
 			
 		} catch(StaleProxyException e) {
@@ -94,7 +119,34 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 	
 	private void buildAndScheduleDisplay() {
+		this.displayLiftsGrid();
+	}
 	
+	private void displayLiftsGrid() {
+		
+		this.liftAgents = this.buildingAgent.getLiftsAgent();
+		this.floorPanelAgents = this.buildingAgent.getFloorPanels();
+		
+		if (dsurf != null) dsurf.dispose();
+		dsurf = new DisplaySurface(this, "Lift Position Display");
+		registerDisplaySurface("Lift Position Display", dsurf);
+		
+		Object2DGrid space = new Object2DGrid(WIDTH,HEIGHT);
+		addLiftsToDisplay(space);
+		Object2DDisplay disp = new Object2DDisplay(space);
+		dsurf.addDisplayableProbeable(disp, "lifts");
+        
+		dsurf.display();
+		
+		if(this.liftAgents.size() !=0)
+			System.out.println(this.liftAgents.get(0).getFloor());
+		
+		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
+	}
+	
+	private void addLiftsToDisplay(Object2DGrid space) {
+		/*place agents in grid*/
+		/*passar as variaveis para o lift*/
 	}
 
 	
@@ -109,6 +161,7 @@ public class RepastLauncher extends Repast3Launcher {
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
+	
 
 	}
 

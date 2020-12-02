@@ -221,7 +221,15 @@ public class BuildingAgent extends Agent{
 	}
 	
 	public ContainerController getController() {
-		return this.mainContainer;
+		return this.mainContainer; 
+	}
+	
+	public ArrayList<LiftAgent> getLiftsAgent() {
+		return this.lifts;
+	}
+	
+	public ArrayList<FloorPanelAgent> getFloorPanels(){
+		return this.floorPanels;
 	}
 	
 }
