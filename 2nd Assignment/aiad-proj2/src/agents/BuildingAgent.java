@@ -17,7 +17,6 @@ import javax.swing.WindowConstants;
 
 import agents.FloorPanelAgent;
 import agents.RequestAgent;
-
 import display.SwingDisplay;
 
 import jade.content.lang.Codec;
@@ -31,6 +30,7 @@ import jade.lang.acl.ACLMessage;
 import sajas.wrapper.AgentController;
 import sajas.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import launcher.RepastLauncher;
 
  
 @SuppressWarnings("serial")
@@ -44,11 +44,12 @@ public class BuildingAgent extends Agent{
 	private float timeAtFloors;
 	private ContainerController mainContainer;
 	private Analysis analysis;
+	private RepastLauncher repast;
 	
 	private ArrayList<LiftAgent> lifts = new ArrayList<>();
 	private ArrayList<FloorPanelAgent> floorPanels = new ArrayList<>();
 	
-	public BuildingAgent(String[] args, ContainerController mainContainer, Analysis analysis){
+	public BuildingAgent(String[] args, ContainerController mainContainer, Analysis analysis, RepastLauncher repast){
         this.nmrFloors = Integer.parseInt(args[0]);
         this.nmrLifts = Integer.parseInt(args[1]);
         this.maxWeight = Float.parseFloat(args[2]); 
@@ -57,6 +58,7 @@ public class BuildingAgent extends Agent{
         this.timeAtFloors = Float.parseFloat(args[5]);
         this.mainContainer = mainContainer;
         this.analysis = analysis;
+        this.repast = repast;
     }
 	
 	public void setup() {

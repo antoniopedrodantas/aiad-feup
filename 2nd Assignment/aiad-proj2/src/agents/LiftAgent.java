@@ -9,6 +9,7 @@ import utils.LiftTaskListEntry;
 import utils.TaskList;
 import utils.Analysis;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,11 +34,13 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
+import uchicago.src.sim.gui.Drawable;
+import uchicago.src.sim.gui.SimGraphics;
 
 
 
 @SuppressWarnings("serial")
-public class LiftAgent extends Agent{
+public class LiftAgent extends Agent implements Drawable{
 	
 	final float personWeight = 75;
 	private int id;
@@ -551,5 +554,26 @@ public class LiftAgent extends Agent{
 	
 	public Analysis getAnalysis() {
 		return this.analysis;
+	}
+
+	@Override
+	public void draw(SimGraphics g) {
+
+        if (this.taskList.size() == 0)
+        	g.drawFastRect(Color.RED);
+        else
+        	g.drawFastRect(Color.BLUE);
+	}
+
+	@Override
+	public int getX() {
+		// TODO Auto-generated method stub
+		return 2*this.id;
+	}
+
+	@Override
+	public int getY() {
+		// TODO Auto-generated method stub
+		return 2 * this.currentFloor;
 	}
 }

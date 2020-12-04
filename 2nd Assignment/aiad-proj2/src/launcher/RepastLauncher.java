@@ -1,3 +1,4 @@
+package launcher;
 import uchicago.src.reflector.ListPropertyDescriptor;
 
 import java.util.ArrayList;
@@ -6,6 +7,7 @@ import java.util.List;
 import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
+import display.LiftsGridDisplay;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
@@ -19,12 +21,14 @@ import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Displayable;
+import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.Zoomable;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
 import utils.Analysis;
+
 
 public class RepastLauncher extends Repast3Launcher {
 	
@@ -40,7 +44,7 @@ public class RepastLauncher extends Repast3Launcher {
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
 	private int nmrLifts = 3;
-	private float maxSpeed = (float) 2.5;
+	private float maxSpeed = (float)2.5;
 	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
@@ -93,19 +97,21 @@ public class RepastLauncher extends Repast3Launcher {
 						//nmrFloors, nmrLifts, maxWeight per lift, lift maxSpeed, distance between floors, timeAtFloor(time the lift stops on floors for people to enter and exit)
 		
 		try {
-			this.buildingAgent = new BuildingAgent(args, mainContainer, new Analysis(args));
+			this.buildingAgent = new BuildingAgent(args, mainContainer, new Analysis(args), this);
 			agentController = mainContainer.acceptNewAgent("buildingAgent", this.buildingAgent);
 			agentController.start();
-			
+			this.liftAgents = this.buildingAgent.getLiftsAgent();
+			this.floorPanelAgents = this.buildingAgent.getFloorPanels();
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
+		
+		this.buildAndScheduleDisplay();
 	}
 
 	@Override
 	public void setup() {
 		super.setup();
-
 		// property descriptors
 		// ...
 	}
@@ -114,19 +120,19 @@ public class RepastLauncher extends Repast3Launcher {
 	public void begin() {
 		super.begin();
 		if(!runInBatchMode) {
-			buildAndScheduleDisplay();
+			//buildAndScheduleDisplay();
 		}
 	}
 	
 	private void buildAndScheduleDisplay() {
-		this.displayLiftsGrid();
+		//this.displayLiftsGrid();
+		var liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this);
 	}
 	
 	private void displayLiftsGrid() {
-		
+
 		this.liftAgents = this.buildingAgent.getLiftsAgent();
 		this.floorPanelAgents = this.buildingAgent.getFloorPanels();
-		
 		if (dsurf != null) dsurf.dispose();
 		dsurf = new DisplaySurface(this, "Lift Position Display");
 		registerDisplaySurface("Lift Position Display", dsurf);
@@ -145,8 +151,8 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 	
 	private void addLiftsToDisplay(Object2DGrid space) {
-		/*place agents in grid*/
-		/*passar as variaveis para o lift*/
+		
+		space.putObjectAt(10, this.liftAgents.get(0).getY(), this.liftAgents.get(0));
 	}
 
 	
@@ -201,7 +207,7 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 
 
-	public void setMaxSpped(float maxSpeed) {
+	public void setMaxSpeed(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
 
