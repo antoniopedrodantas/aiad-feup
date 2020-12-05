@@ -91,7 +91,7 @@ public class BuildingAgent extends Agent{
 		launchFloorPanelAgents(this.nmrFloors, this.nmrLifts);
 
 		swing.update(lifts, floorPanels);
-		swing.draw();
+		// swing.draw();
 	}
 
 	public void takeDown() {
@@ -133,7 +133,7 @@ public class BuildingAgent extends Agent{
 	protected void createLiftAgent(Integer lift, SwingDisplay swing, Analysis analysis) {
 		
 		AgentController liftAgent;
-		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), swing, analysis);
+		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), this.nmrFloors, swing, analysis);
 		
 		try {
 			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, newLiftAgent);

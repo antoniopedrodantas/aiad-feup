@@ -126,7 +126,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	private void buildAndScheduleDisplay() {
 		//this.displayLiftsGrid();
-		var liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this);
+		var liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this.nmrLifts, this.nmrFLoors, this);
 	}
 	
 	private void displayLiftsGrid() {

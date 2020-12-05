@@ -60,6 +60,8 @@ public class LiftAgent extends Agent implements Drawable{
 	private Analysis analysis;
 	private PrintWriter pw;
 	
+	private int nmrFloors;
+	
 	
 	public LiftAgent() {
       	
@@ -75,7 +77,7 @@ public class LiftAgent extends Agent implements Drawable{
         
 	}
 	
-	public LiftAgent(String[] args, SwingDisplay swing, Analysis analysis) {
+	public LiftAgent(String[] args, int nmrFloors, SwingDisplay swing, Analysis analysis) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
@@ -88,6 +90,8 @@ public class LiftAgent extends Agent implements Drawable{
         this.currentWeight = 0;
         
         this.liftContacts = new ArrayList<>();
+        
+        this.nmrFloors = nmrFloors;
         
         this.swing = swing;
         this.analysis = analysis;
@@ -568,12 +572,12 @@ public class LiftAgent extends Agent implements Drawable{
 	@Override
 	public int getX() {
 		// TODO Auto-generated method stub
-		return 2*this.id;
+		return this.id;
 	}
 
 	@Override
 	public int getY() {
 		// TODO Auto-generated method stub
-		return 2 * this.currentFloor;
+		return this.nmrFloors - this.currentFloor;
 	}
 }
