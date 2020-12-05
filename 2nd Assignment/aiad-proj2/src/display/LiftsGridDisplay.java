@@ -8,7 +8,9 @@ import launcher.RepastLauncher;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.gui.TextDisplay;
 import uchicago.src.sim.space.Object2DGrid;
+import java.awt.Color;
 
 public class LiftsGridDisplay {
 	
@@ -17,17 +19,19 @@ public class LiftsGridDisplay {
 	private DisplaySurface dsurf;
 	private Object2DGrid space;
 	private RepastLauncher repast;
-	// final int WIDTH = 50, HEIGHT = 50;
 	
 	private int WIDTH;
 	private int HEIGHT;
+	
+	final int offset = 1;
 	
 	public LiftsGridDisplay(ArrayList<LiftAgent> liftAgents, ArrayList<FloorPanelAgent> floorPanelAgents, int nmrLifts, int nmrFloors, RepastLauncher repast) {
 		this.liftAgents = liftAgents;
 		this.floorPanelAgents = floorPanelAgents;
 		this.repast = repast;
 		
-		this.WIDTH = nmrLifts + 1;
+		// this.WIDTH = nmrLifts + 1 + (nmrLifts * offset);
+		this.WIDTH = nmrLifts;
 		this.HEIGHT = nmrFloors + 1;
 		
 		if (dsurf != null) 
@@ -47,10 +51,13 @@ public class LiftsGridDisplay {
 		
 		for(LiftAgent lift : liftAgents) {
 			this.space.putObjectAt(lift.getX(), lift.getY(), lift);}
+		
 	}
 	private void buildDisplay() {
 		Object2DDisplay agentDisplay = new Object2DDisplay(this.space);
+		
 		agentDisplay.setObjectList(liftAgents);
+		
 		dsurf.addDisplayableProbeable(
 		agentDisplay, "Agents");
 		this.repast.addSimEventListener(dsurf);

@@ -563,16 +563,29 @@ public class LiftAgent extends Agent implements Drawable{
 	@Override
 	public void draw(SimGraphics g) {
 
-        if (this.taskList.size() == 0)
+		/*
+        if (this.taskList.size() == 0) {
         	g.drawFastRect(Color.RED);
-        else
+        	// g.drawStringInRect(Color.RED, Color.BLUE, String.valueOf(this.currentFloor));
+        	// g.drawString(String.valueOf(this.currentFloor), Color.GREEN);
+        }
+        else {
         	g.drawFastRect(Color.BLUE);
+        	// g.drawStringInRect(Color.RED, Color.BLUE, String.valueOf(this.currentFloor));
+        	// g.drawString(String.valueOf(this.currentFloor), Color.GREEN);
+        }
+        */
+		
+		g.drawRect(Color.white);
+		// g.drawHollowRect(Color.white);
+		g.drawHollowFastRect(Color.green);
+	
 	}
 
 	@Override
 	public int getX() {
 		// TODO Auto-generated method stub
-		return this.id;
+		return this.id - 1;
 	}
 
 	@Override

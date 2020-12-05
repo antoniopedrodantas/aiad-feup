@@ -1,5 +1,7 @@
 package agents;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
@@ -18,10 +20,12 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
+import uchicago.src.sim.gui.Drawable;
+import uchicago.src.sim.gui.SimGraphics;
 
 
 @SuppressWarnings("serial")
-public class FloorPanelAgent extends Agent {
+public class FloorPanelAgent extends Agent implements Drawable {
 	
 	private int floor;
 	private int expectedSize;
@@ -239,6 +243,24 @@ public class FloorPanelAgent extends Agent {
 		if(!this.liftList.contains(liftName)) {
 			this.liftList.add(liftName);
 		}
+	}
+
+	@Override
+	public void draw(SimGraphics g) {
+		// TODO Auto-generated method stub
+		g.drawRectBorder(new BasicStroke(), Color.GREEN);
+	}
+
+	@Override
+	public int getX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getY() {
+		// TODO Auto-generated method stub
+		return this.floor;
 	}
 
 
