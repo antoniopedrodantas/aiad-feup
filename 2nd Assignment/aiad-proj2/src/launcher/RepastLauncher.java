@@ -128,8 +128,6 @@ public class RepastLauncher extends Repast3Launcher {
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
-	
-
 	}
 
 
