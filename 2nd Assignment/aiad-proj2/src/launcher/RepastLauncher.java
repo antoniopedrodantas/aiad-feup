@@ -1,9 +1,6 @@
 package launcher;
-import uchicago.src.reflector.ListPropertyDescriptor;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
@@ -11,22 +8,11 @@ import display.LiftsGridDisplay;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
-
-import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.AgentController;
 import sajas.wrapper.ContainerController;
-import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
-import uchicago.src.sim.gui.DisplaySurface;
-import uchicago.src.sim.gui.Displayable;
-import uchicago.src.sim.gui.Drawable;
-import uchicago.src.sim.gui.Network2DDisplay;
-import uchicago.src.sim.gui.Object2DDisplay;
-import uchicago.src.sim.gui.Zoomable;
-import uchicago.src.sim.network.DefaultDrawableNode;
-import uchicago.src.sim.space.Object2DGrid;
 import utils.Analysis;
 
 
@@ -38,8 +24,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private boolean runInBatchMode;
 	
 	/* display */
-	private DisplaySurface dsurf;
-	private int WIDTH = 100, HEIGHT = 100;
+	private LiftsGridDisplay liftGridDisplay;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -126,36 +111,8 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	private void buildAndScheduleDisplay() {
 		//this.displayLiftsGrid();
-		var liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this.nmrLifts, this.nmrFLoors, this);
+		this.liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this.nmrLifts, this.nmrFLoors, this);
 	}
-	
-	private void displayLiftsGrid() {
-
-		this.liftAgents = this.buildingAgent.getLiftsAgent();
-		this.floorPanelAgents = this.buildingAgent.getFloorPanels();
-		if (dsurf != null) dsurf.dispose();
-		dsurf = new DisplaySurface(this, "Lift Position Display");
-		registerDisplaySurface("Lift Position Display", dsurf);
-		
-		Object2DGrid space = new Object2DGrid(WIDTH,HEIGHT);
-		addLiftsToDisplay(space);
-		Object2DDisplay disp = new Object2DDisplay(space);
-		dsurf.addDisplayableProbeable(disp, "lifts");
-        
-		dsurf.display();
-		
-		if(this.liftAgents.size() !=0)
-			System.out.println(this.liftAgents.get(0).getFloor());
-		
-		getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-	}
-	
-	private void addLiftsToDisplay(Object2DGrid space) {
-		
-		space.putObjectAt(10, this.liftAgents.get(0).getY(), this.liftAgents.get(0));
-	}
-
-	
 	
 	/**
 	 * Launching Repast3
@@ -249,6 +206,16 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setAgentContainer(ContainerController agentContainer) {
 		this.agentContainer = agentContainer;
+	}
+
+
+	public LiftsGridDisplay getLiftGridDisplay() {
+		return liftGridDisplay;
+	}
+
+
+	public void setLiftGridDisplay(LiftsGridDisplay liftGridDisplay) {
+		this.liftGridDisplay = liftGridDisplay;
 	}
 
 }
