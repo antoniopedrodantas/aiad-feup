@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
+import display.AverageOccupationPlot;
 import display.CurrentWeightDisplay;
 import display.LiftCurrentPosition;
 import display.LiftsGridDisplay;
@@ -29,6 +30,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private LiftsGridDisplay liftGridDisplay;
 	private CurrentWeightDisplay currWeight;
 	private LiftCurrentPosition liftCurrentPos;
+	private AverageOccupationPlot avgPlot;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -40,6 +42,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	private ArrayList<LiftAgent> liftAgents;
 	private BuildingAgent buildingAgent;
+	private Analysis analysis;
 	private ArrayList<FloorPanelAgent> floorPanelAgents;
 	
 	public RepastLauncher(boolean runInBatchMode) {
@@ -83,10 +86,10 @@ public class RepastLauncher extends Repast3Launcher {
 		this.floorPanelAgents = new ArrayList<FloorPanelAgent>();
 		
 		String[] args = {String.valueOf(this.getNmrFLoors()), String.valueOf(this.getNmrLifts()), String.valueOf(this.getMaxWeight()), String.valueOf(this.getMaxSpeed()), String.valueOf(this.getDistanceBetweenFloors()), String.valueOf(this.getTimeAtFloor())}; 
-						//nmrFloors, nmrLifts, maxWeight per lift, lift maxSpeed, distance between floors, timeAtFloor(time the lift stops on floors for people to enter and exit)
+		this.analysis = new Analysis(args);
 		
 		try {
-			this.buildingAgent = new BuildingAgent(args, mainContainer, new Analysis(args), this);
+			this.buildingAgent = new BuildingAgent(args, mainContainer, this.analysis, this);
 			agentController = mainContainer.acceptNewAgent("buildingAgent", this.buildingAgent);
 			agentController.start();	
 		} catch(StaleProxyException e) {
@@ -111,6 +114,7 @@ public class RepastLauncher extends Repast3Launcher {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
 			this.currWeight = new CurrentWeightDisplay(lifts, this);
 			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
+			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
 		}
 	}
 	
@@ -255,6 +259,16 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setLiftCurrentPos(LiftCurrentPosition liftCurrentPos) {
 		this.liftCurrentPos = liftCurrentPos;
+	}
+
+
+	public AverageOccupationPlot getAvgPlot() {
+		return avgPlot;
+	}
+
+
+	public void setAvgPlot(AverageOccupationPlot avgPlot) {
+		this.avgPlot = avgPlot;
 	}
 
 }

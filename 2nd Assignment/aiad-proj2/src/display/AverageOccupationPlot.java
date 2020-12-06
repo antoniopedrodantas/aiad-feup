@@ -7,24 +7,26 @@ import launcher.RepastLauncher;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
+import utils.Analysis;
 
-public class CurrentWeightDisplay {
+public class AverageOccupationPlot {
 
 	private RepastLauncher repast;
 	private OpenSequenceGraph plot;
 	private ArrayList<LiftAgent> lifts;
+	Analysis analysis;
 	
-	public CurrentWeightDisplay(ArrayList<LiftAgent> lifts,  RepastLauncher repast) {
+	public AverageOccupationPlot(ArrayList<LiftAgent> lifts, Analysis analysis, RepastLauncher repast) {
 		this.lifts = lifts;
 		this.repast = repast;
-		
+		this.analysis = analysis;
 		
 		if (this.plot != null) plot.dispose();
-			this.plot = new OpenSequenceGraph("Lift's Current Weight", repast);
+			this.plot = new OpenSequenceGraph("Lift's Average Occupation", repast);
 		
-		plot.setAxisTitles("time", "Lift's Current Weight");
+		plot.setAxisTitles("time", "Lift's Average Occupation");
 		this.buildDisplay();
-		this.repast.getSchedule().scheduleActionAtInterval(2, plot, "step", Schedule.LAST);
+		this.repast.getSchedule().scheduleActionAtInterval(5, plot, "step", Schedule.LAST);
 	}
 	
 	
@@ -33,7 +35,7 @@ public class CurrentWeightDisplay {
 			
 			plot.addSequence("Lift"+ liftAgent.getId(), new Sequence() {
 				public double getSValue() {
-					return liftAgent.getCurrentWeight();
+					return analysis.getAverageOccupation().get(liftAgent.getId() - 1).get(1);
 				}
 			});
 			

@@ -166,8 +166,6 @@ public class LiftAgent extends Agent implements Drawable{
 		
 		addLiftListener();
 		
-		// displays Lift info
-		// displayLiftInfo();
 		this.addBehaviour(new LiftTickerBehaviour(this, 1000));
 		this.addBehaviour(new LiftBullyBehaviour(this)); 
 	}
@@ -578,13 +576,11 @@ public class LiftAgent extends Agent implements Drawable{
 
 	@Override
 	public int getX() {
-		// TODO Auto-generated method stub
 		return this.id - 1;
 	}
 
 	@Override
 	public int getY() {
-		// TODO Auto-generated method stub
 		return this.nmrFloors - this.currentFloor;
 	}
 }

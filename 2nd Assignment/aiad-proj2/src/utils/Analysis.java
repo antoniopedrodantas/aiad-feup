@@ -254,4 +254,13 @@ public class Analysis {
 	public void setTimeAtFloors(float timeAtFloors) {
 		this.timeAtFloors = timeAtFloors;
 	}
+	
+	public ArrayList<ArrayList<Float>> getAverageOccupation() {
+		return averageOccupation;
+	}
+
+
+	public void setAverageOccupation(ArrayList<ArrayList<Float>> averageOccupation) {
+		this.averageOccupation = averageOccupation;
+	}
 }
