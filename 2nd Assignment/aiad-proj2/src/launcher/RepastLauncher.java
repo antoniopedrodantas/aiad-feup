@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
-import display.AverageOccupationDisplay;
+import display.CurrentWeightDisplay;
 import display.LiftCurrentPosition;
 import display.LiftsGridDisplay;
 import jade.core.Profile;
@@ -27,7 +27,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	/* display */
 	private LiftsGridDisplay liftGridDisplay;
-	private AverageOccupationDisplay avgOccupation;
+	private CurrentWeightDisplay currWeight;
 	private LiftCurrentPosition liftCurrentPos;
 	
 	/* This values can be changed in Model Parameters*/
@@ -109,8 +109,8 @@ public class RepastLauncher extends Repast3Launcher {
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors) {
 		if(!this.runInBatchMode) {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
-			this.avgOccupation = new AverageOccupationDisplay(lifts, this);
-			this.setLiftCurrentPos(new LiftCurrentPosition(lifts, this));
+			this.currWeight = new CurrentWeightDisplay(lifts, this);
+			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
 		}
 	}
 	
@@ -214,13 +214,13 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 
 
-	public AverageOccupationDisplay getAvgOccupation() {
-		return avgOccupation;
+	public CurrentWeightDisplay getcurrWeight() {
+		return currWeight;
 	}
 
 
-	public void setAvgOccupation(AverageOccupationDisplay avgOccupation) {
-		this.avgOccupation = avgOccupation;
+	public void setcurrWeight(CurrentWeightDisplay currWeight) {
+		this.currWeight = currWeight;
 	}
 
 
