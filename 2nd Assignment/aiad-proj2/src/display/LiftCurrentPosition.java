@@ -8,21 +8,21 @@ import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 
-public class AverageOccupationDisplay {
+public class LiftCurrentPosition {
 
 	private RepastLauncher repast;
 	private OpenSequenceGraph plot;
 	private ArrayList<LiftAgent> lifts;
 	
-	public AverageOccupationDisplay(ArrayList<LiftAgent> lifts,  RepastLauncher repast) {
+	public LiftCurrentPosition(ArrayList<LiftAgent> lifts, RepastLauncher repast) {
 		this.lifts = lifts;
 		this.repast = repast;
 		
 		
 		if (this.plot != null) plot.dispose();
-			this.plot = new OpenSequenceGraph("Avg. Occupation (%)", repast);
+			this.plot = new OpenSequenceGraph("Lift's Current FLoor", repast);
 		
-		plot.setAxisTitles("time", "Average Lift Occupation (%)");
+		plot.setAxisTitles("time", "Lift's Current FLoor");
 		this.buildDisplay();
 		this.repast.getSchedule().scheduleActionAtInterval(2, plot, "step", Schedule.LAST);
 	}
@@ -33,7 +33,7 @@ public class AverageOccupationDisplay {
 			
 			plot.addSequence("Lift"+ liftAgent.getId(), new Sequence() {
 				public double getSValue() {
-					return liftAgent.getCurrentWeight();
+					return liftAgent.getFloor();
 				}
 			});
 			

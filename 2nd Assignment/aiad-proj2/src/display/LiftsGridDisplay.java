@@ -1,8 +1,6 @@
 package display;
 
 import java.util.ArrayList;
-
-import agents.FloorPanelAgent;
 import agents.LiftAgent;
 import launcher.RepastLauncher;
 import uchicago.src.sim.engine.Schedule;
@@ -13,7 +11,6 @@ import uchicago.src.sim.space.Object2DGrid;
 public class LiftsGridDisplay {
 	
 	private ArrayList<LiftAgent> liftAgents;
-	private ArrayList<FloorPanelAgent> floorPanelAgents;
 	private DisplaySurface dsurf;
 	private Object2DGrid space;
 	private RepastLauncher repast;
@@ -23,9 +20,8 @@ public class LiftsGridDisplay {
 	
 	final int offset = 1;
 	
-	public LiftsGridDisplay(ArrayList<LiftAgent> liftAgents, ArrayList<FloorPanelAgent> floorPanelAgents, int nmrLifts, int nmrFloors, RepastLauncher repast) {
+	public LiftsGridDisplay(ArrayList<LiftAgent> liftAgents, int nmrLifts, int nmrFloors, RepastLauncher repast) {
 		this.liftAgents = liftAgents;
-		this.floorPanelAgents = floorPanelAgents;
 		this.repast = repast;
 		
 		this.WIDTH = nmrLifts;
@@ -51,7 +47,6 @@ public class LiftsGridDisplay {
 		
 	}
 	private void buildDisplay() {
-		System.out.println("ola aqio");
 		Object2DDisplay agentDisplay = new Object2DDisplay(this.space);
 		
 		agentDisplay.setObjectList(liftAgents);
@@ -60,6 +55,7 @@ public class LiftsGridDisplay {
 		agentDisplay, "Agents");
 		this.repast.addSimEventListener(dsurf);
 		dsurf.display();
-	}	
+	}
+
 	
 }

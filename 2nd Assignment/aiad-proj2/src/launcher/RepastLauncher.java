@@ -5,6 +5,7 @@ import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
 import display.AverageOccupationDisplay;
+import display.LiftCurrentPosition;
 import display.LiftsGridDisplay;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -27,6 +28,7 @@ public class RepastLauncher extends Repast3Launcher {
 	/* display */
 	private LiftsGridDisplay liftGridDisplay;
 	private AverageOccupationDisplay avgOccupation;
+	private LiftCurrentPosition liftCurrentPos;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -106,8 +108,9 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors) {
 		if(!this.runInBatchMode) {
-			this.liftGridDisplay = new LiftsGridDisplay(lifts,floors, this.nmrLifts, this.nmrFLoors, this);
-			this.avgOccupation = new AverageOccupationDisplay(lifts, floors, this);
+			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
+			this.avgOccupation = new AverageOccupationDisplay(lifts, this);
+			this.setLiftCurrentPos(new LiftCurrentPosition(lifts, this));
 		}
 	}
 	
@@ -242,6 +245,16 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setFloorPanelAgents(ArrayList<FloorPanelAgent> floorPanelAgents) {
 		this.floorPanelAgents = floorPanelAgents;
+	}
+
+
+	public LiftCurrentPosition getLiftCurrentPos() {
+		return liftCurrentPos;
+	}
+
+
+	public void setLiftCurrentPos(LiftCurrentPosition liftCurrentPos) {
+		this.liftCurrentPos = liftCurrentPos;
 	}
 
 }
