@@ -8,9 +8,7 @@ import launcher.RepastLauncher;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
-import uchicago.src.sim.gui.TextDisplay;
 import uchicago.src.sim.space.Object2DGrid;
-import java.awt.Color;
 
 public class LiftsGridDisplay {
 	
@@ -30,7 +28,6 @@ public class LiftsGridDisplay {
 		this.floorPanelAgents = floorPanelAgents;
 		this.repast = repast;
 		
-		// this.WIDTH = nmrLifts + 1 + (nmrLifts * offset);
 		this.WIDTH = nmrLifts;
 		this.HEIGHT = nmrFloors + 1;
 		
@@ -54,6 +51,7 @@ public class LiftsGridDisplay {
 		
 	}
 	private void buildDisplay() {
+		System.out.println("ola aqio");
 		Object2DDisplay agentDisplay = new Object2DDisplay(this.space);
 		
 		agentDisplay.setObjectList(liftAgents);

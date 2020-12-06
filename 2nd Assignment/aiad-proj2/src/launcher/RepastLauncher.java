@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import agents.BuildingAgent;
 import agents.FloorPanelAgent;
 import agents.LiftAgent;
+import display.AverageOccupationDisplay;
 import display.LiftsGridDisplay;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -25,6 +26,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	/* display */
 	private LiftsGridDisplay liftGridDisplay;
+	private AverageOccupationDisplay avgOccupation;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -84,34 +86,29 @@ public class RepastLauncher extends Repast3Launcher {
 		try {
 			this.buildingAgent = new BuildingAgent(args, mainContainer, new Analysis(args), this);
 			agentController = mainContainer.acceptNewAgent("buildingAgent", this.buildingAgent);
-			agentController.start();
-			this.liftAgents = this.buildingAgent.getLiftsAgent();
-			this.floorPanelAgents = this.buildingAgent.getFloorPanels();
+			agentController.start();	
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
-		
-		this.buildAndScheduleDisplay();
 	}
+
+
 
 	@Override
 	public void setup() {
 		super.setup();
-		// property descriptors
-		// ...
 	}
 
 	@Override
 	public void begin() {
 		super.begin();
-		if(!runInBatchMode) {
-			//buildAndScheduleDisplay();
-		}
 	}
 	
-	private void buildAndScheduleDisplay() {
-		//this.displayLiftsGrid();
-		this.liftGridDisplay = new LiftsGridDisplay(this.liftAgents, this.floorPanelAgents, this.nmrLifts, this.nmrFLoors, this);
+	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors) {
+		if(!this.runInBatchMode) {
+			this.liftGridDisplay = new LiftsGridDisplay(lifts,floors, this.nmrLifts, this.nmrFLoors, this);
+			this.avgOccupation = new AverageOccupationDisplay(lifts, floors, this);
+		}
 	}
 	
 	/**
@@ -214,8 +211,37 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 
 
+	public AverageOccupationDisplay getAvgOccupation() {
+		return avgOccupation;
+	}
+
+
+	public void setAvgOccupation(AverageOccupationDisplay avgOccupation) {
+		this.avgOccupation = avgOccupation;
+	}
+
+
 	public void setLiftGridDisplay(LiftsGridDisplay liftGridDisplay) {
 		this.liftGridDisplay = liftGridDisplay;
+	}
+	
+	public ArrayList<LiftAgent> getLiftAgents() {
+		return liftAgents;
+	}
+
+
+	public void setLiftAgents(ArrayList<LiftAgent> liftAgents) {
+		this.liftAgents = liftAgents;
+	}
+
+
+	public ArrayList<FloorPanelAgent> getFloorPanelAgents() {
+		return floorPanelAgents;
+	}
+
+
+	public void setFloorPanelAgents(ArrayList<FloorPanelAgent> floorPanelAgents) {
+		this.floorPanelAgents = floorPanelAgents;
 	}
 
 }

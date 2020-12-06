@@ -69,29 +69,13 @@ public class BuildingAgent extends Agent{
 		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
 		
 		launchLiftAgents(this.nmrLifts, swing, analysis);
-		
-//		try {
-//			Thread.sleep(1200); //previous value was 1200
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
-		while(this.nmrLifts > lifts.size()) {
-			System.out.println(this.lifts.size());
-		}
-		
 		launchRequestAgent(this.nmrFloors);
-
-		try {
-			Thread.sleep(1200); //previous value was 1200
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		launchFloorPanelAgents(this.nmrFloors, this.nmrLifts);
-
+	
+		this.repast.buildAndScheduleDisplay(this.lifts, this.floorPanels);
+		
 		swing.update(lifts, floorPanels);
-		// swing.draw();
+//		swing.draw();
 	}
 
 	public void takeDown() {
