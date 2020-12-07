@@ -90,16 +90,41 @@ public class ConsensusNetworkDisplay {
 		return null;
 	}
 
-	public void addEdge(String label1, String label2) {
+	public void addEdge(String label1, String label2, Color c) {
 		DefaultDrawableNode node1 = getNode(label1);
 		DefaultDrawableNode node2 = getNode(label2);
+		
 		if(node1 != null & node2 != null) {
 			Edge edge = new Edge(node1, node2);
+			edge.setColor(c);
 			edges.add(edge);
-			System.out.println("ADDED EDGE");
 			node1.addOutEdge(edge);
 		}
 		
+	}
+	
+	public void removeEdges(String label) {
+		DefaultDrawableNode node1 = getNode(label);
+		
+		if(node1 != null) {
+			for(Edge e : this.edges) {
+				if(e.getFromNode().getNodeLabel().equals(label)) {
+					//this.edges.remove(e);
+					node1.removeOutEdge(e);
+				}
+			}
+		}
+	}
+	
+	public void sendsHalt(String label) {
+		DefaultDrawableNode node1 = getNode(label);
+		if(node1 != null) {
+			for(Edge e : this.edges) {
+				if(e.getFromNode().getNodeLabel().equals(label)) {
+					e.setColor(Color.YELLOW);
+				}
+			}
+		}
 	}
 	
 	

@@ -8,11 +8,15 @@ import uchicago.src.sim.network.Node;
 public class Edge extends DefaultEdge implements DrawableEdge {
     private Color color = Color.WHITE;
     private static final float DEFAULT_STRENGTH = 1;
+    private Node fromNode;
+    private Node toNode;
 
     public Edge() { }
 
     public Edge(Node from, Node to) {
         super(from, to, "", DEFAULT_STRENGTH);
+        this.fromNode = from;
+        this.toNode = to;
     }
     
     public Edge(Node from, Node to, float strength) {
@@ -30,5 +34,13 @@ public class Edge extends DefaultEdge implements DrawableEdge {
     public void draw(SimGraphics g, int fromX, int toX, int fromY, int toY) {
         g.drawDirectedLink(color, fromX, toX, fromY, toY);
     }
+
+	public Node getFromNode() {
+		return fromNode;
+	}
+
+	public Node getToNode() {
+		return toNode;
+	}
     
 }

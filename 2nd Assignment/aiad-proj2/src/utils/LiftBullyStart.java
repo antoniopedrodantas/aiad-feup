@@ -1,5 +1,7 @@
 package utils;
 
+import java.awt.Color;
+
 import agents.LiftAgent;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
@@ -23,8 +25,7 @@ public class LiftBullyStart {
 			for(String listener : lift.getContacts()) {
 				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 				if(lift.getConsensusNetwork() != null)
-					lift.getConsensusNetwork().addEdge("liftAgent" + Integer.toString(lift.getId()), listener);
-				System.out.println("PRINT LISTENER  " + listener);
+					lift.getConsensusNetwork().addEdge("liftAgent" + Integer.toString(lift.getId()), listener, Color.WHITE);
 			}
 				        
 	        msg.setContent(Float.toString(liftProposal.getTime()) + ":" + lift.getId());

@@ -106,9 +106,11 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 			}
 			
 			// sends agreement
+			lift.getConsensusNetwork().removeEdges("liftAgent"+ lift.getId());
 			response.setContent(Integer.toString(lift.getId()));
 	        lift.send(response);
 			proposalsList.clear();
+			
 		}
 		
 	}
@@ -154,6 +156,7 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
 			}
 			msg.setContent(Integer.toString(this.lift.getId()));
+			lift.getConsensusNetwork().sendsHalt("liftAgent" + this.lift.getId());
 	        lift.send(msg);
 	    }
 		this.accepted_request = true;
