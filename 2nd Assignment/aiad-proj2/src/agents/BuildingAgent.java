@@ -45,6 +45,7 @@ public class BuildingAgent extends Agent{
 	private ContainerController mainContainer;
 	private Analysis analysis;
 	private RepastLauncher repast;
+	private RequestAgent request;
 	
 	private ArrayList<LiftAgent> lifts = new ArrayList<>();
 	private ArrayList<FloorPanelAgent> floorPanels = new ArrayList<>();
@@ -72,7 +73,7 @@ public class BuildingAgent extends Agent{
 		launchRequestAgent(this.nmrFloors);
 		launchFloorPanelAgents(this.nmrFloors, this.nmrLifts);
 	
-		this.repast.buildAndScheduleDisplay(this.lifts, this.floorPanels);
+		this.repast.buildAndScheduleDisplay(this.lifts, this.floorPanels, this.request);
 		
 		swing.update(lifts, floorPanels);
 //		swing.draw();
@@ -168,9 +169,9 @@ public class BuildingAgent extends Agent{
 	protected void launchRequestAgent(int nmrFloors) {
 		
 		AgentController requestAgent;
-		
 		try {
-			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", new RequestAgent(nmrFloors, nmrLifts));
+			this.request = new RequestAgent(nmrFloors, nmrLifts);
+			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", this.request);
 			requestAgent.start();
 		} catch(StaleProxyException e) {
 			System.err.println("Error launching requestAgent");

@@ -20,13 +20,21 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("serial")
 public class RequestAgent extends Agent{
 	
+
+
 	private int startRequestsMade = 0;
 	private int nLifts;
 	private int floors;
+	private ArrayList<Integer> inFlow = new ArrayList<>();
+	private ArrayList<Integer> outFlow = new ArrayList<>();
 	
 	public RequestAgent(int floors, int lifts) {
 		this.floors = floors;
 		this.nLifts = lifts;
+		for (int i = 0; i < floors; i++) {
+			this.inFlow.add(0);
+			this.outFlow.add(0);
+		}
 	}
 	
 	public void setup() {
@@ -185,6 +193,8 @@ public class RequestAgent extends Agent{
 		
 		//entering mandatory
 		int enteringPeople = generatePeopleNumber();
+		this.addToInFlow(floor, enteringPeople);
+		
 		for(int i = 0; i < enteringPeople; i++) {
 			int value;
 			if(op == 1) {
@@ -205,6 +215,7 @@ public class RequestAgent extends Agent{
 		int exiting = 0;
 		if(generateBoolean()) {
 			exiting = generatePeopleNumber();
+			this.addToOutFlow(floor, exiting);
 		}
 		
 		//build message
@@ -267,7 +278,9 @@ public class RequestAgent extends Agent{
 //		}
 		
 		//exiting mandatory
-		response = response + "S:" + generatePeopleNumber();
+		int exiting = generatePeopleNumber();
+		this.addToOutFlow(floor, exiting);
+		response = response + "S:" + exiting;
 		return response;
 	}
 	
@@ -296,6 +309,23 @@ public class RequestAgent extends Agent{
 		else if (n > 1) { return 2; } 
 		else { return 1; }
 	}
+	
+	private void addToInFlow(int floor, int add) {
+		this.inFlow.add(floor, this.inFlow.get(floor) + add);
+	}
+
+	private void addToOutFlow(int floor, int add) {
+		this.outFlow.add(floor, this.outFlow.get(floor) + add);
+	}
+	
+	public ArrayList<Integer> getInFlow() {
+		return inFlow;
+	}
+	
+	public ArrayList<Integer> getOutFlow() {
+		return outFlow;
+	}
+
 }
 
 
