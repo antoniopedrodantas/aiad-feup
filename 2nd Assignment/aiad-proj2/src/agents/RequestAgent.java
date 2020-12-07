@@ -10,6 +10,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
+import uchicago.src.sim.analysis.BinDataSource;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,7 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("serial")
-public class RequestAgent extends Agent{
+public class RequestAgent extends Agent implements BinDataSource{
 	
 
 
@@ -324,6 +326,19 @@ public class RequestAgent extends Agent{
 	
 	public ArrayList<Integer> getOutFlow() {
 		return outFlow;
+	}
+
+	@Override
+	public double getBinValue(Object arg0) {
+		String info = (String)arg0;
+		String[] parsedInfo = info.split(":");
+		if(parsedInfo[0] == "IN") {
+			System.out.println("IN::::::"+(double)this.getInFlow().get(Integer.parseInt(parsedInfo[1])));
+			return (double)this.getInFlow().get(Integer.parseInt(parsedInfo[1]));
+		}
+		if(parsedInfo[0] == "OUT")
+			return (double)this.getOutFlow().get(Integer.parseInt(parsedInfo[1]));
+		return 0;
 	}
 
 }

@@ -15,7 +15,7 @@ import uchicago.src.sim.engine.Schedule;
 public class FloorInOutHistogram {
 
 	private RepastLauncher repast;
-	private OpenHistogram OpenHistogram;
+	private OpenHistogram histogram;
 	private RequestAgent request;
 	private int floors;
 	
@@ -24,32 +24,22 @@ public class FloorInOutHistogram {
 		this.repast = repast;
 		this.floors = nmrFloors;
 		
-		if (this.OpenHistogram != null) OpenHistogram.dispose();
-			this.OpenHistogram = new OpenHistogram("Floor's People flow", 10, 0, repast);
+		if (this.histogram != null) histogram.dispose();
+			this.histogram = new OpenHistogram("Floor's People flow", 2, -1, repast);
 		
-		OpenHistogram.setAxisTitles("Floors", "Number of People");
+		histogram.setAxisTitles("Floors", "Number of People");
 		this.buildDisplay();
-		this.repast.getSchedule().scheduleActionAtInterval(2, OpenHistogram, "step", Schedule.LAST);
+		this.repast.getSchedule().scheduleActionAtInterval(2, histogram, "step", Schedule.LAST);
 	}
 	
 	
 	private void buildDisplay() {
 		for (int i = 0; i < this.floors; i++) {
-			OpenHistogram.createHistogramItem("Floor " + i + "IN", Collections.singletonList(this.request), new BinDataSource() {
-			      public double getBinValue(Object o) {
-			          RequestAgent agent = (RequestAgent)o;
-			          return agent.getInFlow().get(0);
-			        }
-			      }, 10, 0);
-			OpenHistogram.createHistogramItem("Floor " + i + "OUT", Collections.singletonList(this.request), new BinDataSource() {
-			      public double getBinValue(Object o) {
-			          RequestAgent agent = (RequestAgent)o;
-			          return agent.getOutFlow().get(0);
-			        }
-			      }, 10, 0);
+			histogram.createHistogramItem("Floor " + i + "IN", Collections.singletonList("IN:"+ i), this.request, 1, 0);
+			histogram.createHistogramItem("Floor " + i + "OUT", Collections.singletonList("OUT:"+ i), this.request, 1, 0);
 			//OpenHistogram.createSequence(request.getInFlow().get(i), "Floor "+ i + "IN");
 		}	
-		
-		OpenHistogram.display();
+		histogram.setXRange(0, 10.0);
+		histogram.display();
 	}
 }
