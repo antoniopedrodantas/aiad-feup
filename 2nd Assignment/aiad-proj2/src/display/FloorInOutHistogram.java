@@ -25,7 +25,10 @@ public class FloorInOutHistogram {
 		this.floors = nmrFloors;
 		
 		if (this.histogram != null) histogram.dispose();
-			this.histogram = new OpenHistogram("Floor's People flow", 2, -1, repast);
+			this.histogram = new OpenHistogram("Floor's People flow", nmrFloors, -1, repast);
+		
+
+		histogram.setYRange(0, 100.0);
 		
 		histogram.setAxisTitles("Floors", "Number of People");
 		this.buildDisplay();
@@ -34,12 +37,13 @@ public class FloorInOutHistogram {
 	
 	
 	private void buildDisplay() {
+
+		histogram.createHistogramItem("Floor " + 1 + "IN", Collections.singletonList(this.request), new HistogramBinValue(true), 1, 0);
+		histogram.createHistogramItem("Floor " + 1 + "OUT", Collections.singletonList(this.request), new HistogramBinValue(false), 1, 0);
 		for (int i = 0; i < this.floors; i++) {
-			histogram.createHistogramItem("Floor " + i + "IN", Collections.singletonList("IN:"+ i), this.request, 1, 0);
-			histogram.createHistogramItem("Floor " + i + "OUT", Collections.singletonList("OUT:"+ i), this.request, 1, 0);
+			
 			//OpenHistogram.createSequence(request.getInFlow().get(i), "Floor "+ i + "IN");
 		}	
-		histogram.setXRange(0, 10.0);
 		histogram.display();
 	}
 }

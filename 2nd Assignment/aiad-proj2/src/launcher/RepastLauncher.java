@@ -6,6 +6,7 @@ import agents.FloorPanelAgent;
 import agents.LiftAgent;
 import agents.RequestAgent;
 import display.AverageOccupationPlot;
+import display.ConsensusNetworkDisplay;
 import display.CurrentWeightDisplay;
 import display.FloorInOutHistogram;
 import display.LiftCurrentPosition;
@@ -34,7 +35,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private LiftCurrentPosition liftCurrentPos;
 	private AverageOccupationPlot avgPlot;
 	private FloorInOutHistogram peopleFlow;
-	
+	private ConsensusNetworkDisplay consensusNetwork;
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
 	private int nmrLifts = 3;
@@ -119,6 +120,10 @@ public class RepastLauncher extends Repast3Launcher {
 			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
 			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
 			this.peopleFlow = new FloorInOutHistogram(request, this.nmrFLoors, this);
+			this.consensusNetwork = new ConsensusNetworkDisplay(lifts, nmrLifts, this.nmrFLoors, this);
+			for(LiftAgent lift : lifts) {
+				lift.setConsensusNetwork(this.consensusNetwork);;
+			}
 		}
 	}
 	
@@ -271,6 +276,11 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setAvgPlot(AverageOccupationPlot avgPlot) {
 		this.avgPlot = avgPlot;
+	}
+
+
+	public ConsensusNetworkDisplay getConsensusNetwork() {
+		return consensusNetwork;
 	}
 
 }

@@ -22,7 +22,9 @@ public class LiftBullyStart {
 	         
 			for(String listener : lift.getContacts()) {
 				msg.addReceiver(new sajas.core.AID((String) listener,AID.ISLOCALNAME));
-			System.out.println("LISTENER: " + listener);
+				if(lift.getConsensusNetwork() != null)
+					lift.getConsensusNetwork().addEdge("liftAgent" + Integer.toString(lift.getId()), listener);
+				System.out.println("PRINT LISTENER  " + listener);
 			}
 				        
 	        msg.setContent(Float.toString(liftProposal.getTime()) + ":" + lift.getId());

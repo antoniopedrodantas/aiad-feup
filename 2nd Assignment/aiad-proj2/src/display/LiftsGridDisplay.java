@@ -1,11 +1,14 @@
 package display;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import agents.LiftAgent;
 import launcher.RepastLauncher;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.gui.OvalNetworkItem;
+import uchicago.src.sim.network.DefaultDrawableNode;
 import uchicago.src.sim.space.Object2DGrid;
 
 public class LiftsGridDisplay {
@@ -15,9 +18,9 @@ public class LiftsGridDisplay {
 	private Object2DGrid space;
 	private RepastLauncher repast;
 	
+	
 	private int WIDTH;
 	private int HEIGHT;
-	
 	final int offset = 1;
 	
 	public LiftsGridDisplay(ArrayList<LiftAgent> liftAgents, int nmrLifts, int nmrFloors, RepastLauncher repast) {
@@ -35,7 +38,6 @@ public class LiftsGridDisplay {
 		this.buildModel();
 		this.buildDisplay();
 		repast.getSchedule().scheduleActionAtInterval(1, dsurf, "updateDisplay", Schedule.LAST);
-		
 	}
 	
 	private void buildModel() {
@@ -57,5 +59,15 @@ public class LiftsGridDisplay {
 		dsurf.display();
 	}
 
-	
+	private DefaultDrawableNode generateNode(String label, Color color, int x, int y) {
+        OvalNetworkItem oval = new OvalNetworkItem(x,y);
+        oval.allowResizing(false);
+        oval.setHeight(5);
+        oval.setWidth(5);
+        
+		DefaultDrawableNode node = new DefaultDrawableNode(label, oval);
+		node.setColor(color);
+        
+		return node;
+	}
 }

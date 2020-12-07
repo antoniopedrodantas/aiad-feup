@@ -13,22 +13,23 @@ import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.analysis.BinDataSource;
 
 import java.sql.Date;
+import java.util.AbstractQueue;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("serial")
-public class RequestAgent extends Agent implements BinDataSource{
+public class RequestAgent extends Agent{
 	
-
-
 	private int startRequestsMade = 0;
 	private int nLifts;
 	private int floors;
-	private ArrayList<Integer> inFlow = new ArrayList<>();
-	private ArrayList<Integer> outFlow = new ArrayList<>();
+	private Queue<Integer> inFlow = new ArrayDeque<Integer>();
+	private Queue<Integer> outFlow = new ArrayDeque<Integer>();
 	
 	public RequestAgent(int floors, int lifts) {
 		this.floors = floors;
@@ -313,32 +314,22 @@ public class RequestAgent extends Agent implements BinDataSource{
 	}
 	
 	private void addToInFlow(int floor, int add) {
-		this.inFlow.add(floor, this.inFlow.get(floor) + add);
+		this.inFlow.add(floor);
 	}
 
 	private void addToOutFlow(int floor, int add) {
-		this.outFlow.add(floor, this.outFlow.get(floor) + add);
+		this.outFlow.add(floor);
 	}
 	
-	public ArrayList<Integer> getInFlow() {
-		return inFlow;
+	public int getInFlow() {
+		if(this.inFlow.isEmpty()) return -1;
+		return this.inFlow.remove();
 	}
 	
-	public ArrayList<Integer> getOutFlow() {
-		return outFlow;
-	}
+	public int getOutFlow() {
 
-	@Override
-	public double getBinValue(Object arg0) {
-		String info = (String)arg0;
-		String[] parsedInfo = info.split(":");
-		if(parsedInfo[0] == "IN") {
-			System.out.println("IN::::::"+(double)this.getInFlow().get(Integer.parseInt(parsedInfo[1])));
-			return (double)this.getInFlow().get(Integer.parseInt(parsedInfo[1]));
-		}
-		if(parsedInfo[0] == "OUT")
-			return (double)this.getOutFlow().get(Integer.parseInt(parsedInfo[1]));
-		return 0;
+		if(this.inFlow.isEmpty()) return -1;
+		return this.outFlow.remove();
 	}
 
 }

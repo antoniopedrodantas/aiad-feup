@@ -2,6 +2,7 @@ package agents;
 
 import behaviours.LiftBullyBehaviour;
 import behaviours.LiftTickerBehaviour;
+import display.ConsensusNetworkDisplay;
 import display.SwingDisplay;
 import utils.HandleRequest;
 import utils.LiftProposal;
@@ -36,6 +37,7 @@ import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
+import uchicago.src.sim.network.DefaultDrawableNode;
 
 
 
@@ -59,9 +61,11 @@ public class LiftAgent extends Agent implements Drawable{
 	private SwingDisplay swing;
 	private Analysis analysis;
 	private PrintWriter pw;
-	
+	private ConsensusNetworkDisplay consensusNetwork;
 	private int nmrFloors;
 	
+
+	private DefaultDrawableNode myNode;
 	
 	public LiftAgent() {
       	
@@ -84,6 +88,7 @@ public class LiftAgent extends Agent implements Drawable{
         this.speed = Float.parseFloat(args[2]);
         this.totalLifts = Integer.parseInt(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
+      
         this.setTimeAtFloors(Float.parseFloat(args[5]));
         
         this.currentFloor = 0;
@@ -583,4 +588,14 @@ public class LiftAgent extends Agent implements Drawable{
 	public int getY() {
 		return this.nmrFloors - this.currentFloor;
 	}
+
+	public ConsensusNetworkDisplay getConsensusNetwork() {
+		return consensusNetwork;
+	}
+	
+
+	public void setConsensusNetwork(ConsensusNetworkDisplay consensusNetwork) {
+		this.consensusNetwork = consensusNetwork;
+	}
+
 }
