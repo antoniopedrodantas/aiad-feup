@@ -36,6 +36,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private AverageOccupationPlot avgPlot;
 	private CurrentWeightHistogram currWeightHisto;
 	private ConsensusNetworkDisplay consensusNetwork;
+	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
 	private int nmrLifts = 3;
@@ -116,9 +117,6 @@ public class RepastLauncher extends Repast3Launcher {
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors, RequestAgent request) {
 		if(!this.runInBatchMode) {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
-			
-			//this.currWeight = new CurrentWeightDisplay(lifts, this);
-			
 			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
 			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
 			this.currWeightHisto = new CurrentWeightHistogram(lifts, this);
@@ -139,6 +137,16 @@ public class RepastLauncher extends Repast3Launcher {
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
+	}
+
+
+	public boolean isRunInBatchMode() {
+		return runInBatchMode;
+	}
+
+
+	public void setRunInBatchMode(boolean runInBatchMode) {
+		this.runInBatchMode = runInBatchMode;
 	}
 
 
