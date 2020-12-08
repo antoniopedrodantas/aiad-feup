@@ -25,6 +25,9 @@ public class AverageOccupationPlot {
 			this.plot = new OpenSequenceGraph("Lift's Average Occupation", repast);
 		
 		plot.setAxisTitles("time", "Lift's Average Occupation");
+		
+		plot.setYRange(0, 1);
+		
 		this.buildDisplay();
 		this.repast.getSchedule().scheduleActionAtInterval(5, plot, "step", Schedule.LAST);
 	}

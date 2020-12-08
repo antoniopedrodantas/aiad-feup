@@ -8,6 +8,7 @@ import uchicago.src.sim.analysis.OpenSequenceGraph;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 
+@Deprecated 
 public class CurrentWeightDisplay {
 
 	private RepastLauncher repast;

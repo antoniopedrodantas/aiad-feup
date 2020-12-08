@@ -42,8 +42,8 @@ public class ConsensusNetworkDisplay {
 		for(LiftAgent lift : liftAgents) {
 			int xZero = WIDTH/2;
 			int yZero = HEIGHT/2;
-			int xradius = WIDTH/6;
-			int yradius = HEIGHT/6;
+			int xradius = WIDTH/3;
+			int yradius = HEIGHT/3;
 
 			double angle = Math.toRadians(360/nmrLifts);
 			int x = (int) (xZero + (xradius * Math.cos(angle*i)));

@@ -8,7 +8,7 @@ import agents.RequestAgent;
 import display.AverageOccupationPlot;
 import display.ConsensusNetworkDisplay;
 import display.CurrentWeightDisplay;
-import display.FloorInOutHistogram;
+import display.CurrentWeightHistogram;
 import display.LiftCurrentPosition;
 import display.LiftsGridDisplay;
 import jade.core.Profile;
@@ -34,7 +34,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private CurrentWeightDisplay currWeight;
 	private LiftCurrentPosition liftCurrentPos;
 	private AverageOccupationPlot avgPlot;
-	private FloorInOutHistogram peopleFlow;
+	private CurrentWeightHistogram currWeightHisto;
 	private ConsensusNetworkDisplay consensusNetwork;
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -116,10 +116,12 @@ public class RepastLauncher extends Repast3Launcher {
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors, RequestAgent request) {
 		if(!this.runInBatchMode) {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
-			this.currWeight = new CurrentWeightDisplay(lifts, this);
+			
+			//this.currWeight = new CurrentWeightDisplay(lifts, this);
+			
 			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
 			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
-			this.peopleFlow = new FloorInOutHistogram(request, this.nmrFLoors, this);
+			this.currWeightHisto = new CurrentWeightHistogram(lifts, this);
 			this.consensusNetwork = new ConsensusNetworkDisplay(lifts, nmrLifts, this.nmrFLoors, this);
 			for(LiftAgent lift : lifts) {
 				lift.setConsensusNetwork(this.consensusNetwork);;
