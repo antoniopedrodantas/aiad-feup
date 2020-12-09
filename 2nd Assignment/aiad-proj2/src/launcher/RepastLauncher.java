@@ -45,7 +45,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
-	private float simulationTime = 1000;
+	private float simulationTime = 10000;
 	
 	private ArrayList<LiftAgent> liftAgents;
 	private BuildingAgent buildingAgent;
