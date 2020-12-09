@@ -2,9 +2,9 @@ Number of Floors,Number of Lifts,Max Weight,Max Speed,Floor Distance,Time at Flo
 18,3,600.0,2.5,5.0,1.0
 
 Floor,People entering,People exiting,
-0,8,4
+0,4,0
 1,0,0
-2,0,1
+2,0,0
 3,0,0
 4,0,0
 5,0,0
@@ -23,7 +23,7 @@ Floor,People entering,People exiting,
 18,0,0
 
 Lift,Up,Down,End,Average Occupation
-1,0,1,4,0.4375
-2,0,1,4,0.5
+1,0,1,4,0.5
+2,0,0,0,0.0
 3,0,0,0,0.0
 
