@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import agents.FloorPanelAgent;
 import launcher.RepastLauncher;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import utils.Analysis;
 
@@ -29,6 +30,15 @@ public class PeopleLeavingFloor {
 	}
 	
 	private void buildDisplay() {
-		
+		for(FloorPanelAgent fa : this.floors) {
+			
+			plot.addSequence("FloorPanelAgent"+ fa.getFloor(), new Sequence() {
+				public double getSValue() {
+					return analysis.getExitingFloor().get(fa.getFloor());
+				}
+			});
+					
+		}
+		plot.display();
 	}
 }

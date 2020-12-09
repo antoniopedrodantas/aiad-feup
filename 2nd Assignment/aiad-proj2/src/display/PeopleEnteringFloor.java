@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import agents.FloorPanelAgent;
 import launcher.RepastLauncher;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import utils.Analysis;
 
@@ -19,7 +20,7 @@ public class PeopleEnteringFloor {
 		this.floors = floors;
 		this.analysis = analysis;
 		this.repast = repast;
-		
+		 
 		if (this.plot != null) plot.dispose();
 			this.plot = new OpenSequenceGraph("People entering at floor", repast);
 		
@@ -29,6 +30,15 @@ public class PeopleEnteringFloor {
 	}
 	
 	private void buildDisplay() {
-		
+		for(FloorPanelAgent fa : this.floors) {
+					
+			plot.addSequence("FloorPanelAgent"+ fa.getFloor(), new Sequence() {
+				public double getSValue() {
+					return analysis.getEnteringFloor().get(fa.getFloor());
+				}
+			});
+					
+		}
+		plot.display();
 	}
-}
+} 
