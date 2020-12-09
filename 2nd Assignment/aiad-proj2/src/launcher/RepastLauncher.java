@@ -11,6 +11,8 @@ import display.CurrentWeightDisplay;
 import display.CurrentWeightHistogram;
 import display.LiftCurrentPosition;
 import display.LiftsGridDisplay;
+import display.PeopleEnteringFloor;
+import display.PeopleLeavingFloor;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.StaleProxyException;
@@ -37,6 +39,8 @@ public class RepastLauncher extends Repast3Launcher {
 	private AverageOccupationPlot avgPlot;
 	private CurrentWeightHistogram currWeightHisto;
 	private ConsensusNetworkDisplay consensusNetwork;
+	private PeopleEnteringFloor peopleEntering;
+	private PeopleLeavingFloor peopleLeaving;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -122,15 +126,21 @@ public class RepastLauncher extends Repast3Launcher {
 	}
 	
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors, RequestAgent request) {
+		
 		if(!this.runInBatchMode) {
+			
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
 			this.liftCurrentPos = new LiftCurrentPosition(lifts, this);
 			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
 			this.currWeightHisto = new CurrentWeightHistogram(lifts, this);
 			this.consensusNetwork = new ConsensusNetworkDisplay(lifts, nmrLifts, this.nmrFLoors, this);
+			
 			for(LiftAgent lift : lifts) {
 				lift.setConsensusNetwork(this.consensusNetwork);;
 			}
+			
+			this.peopleEntering = new PeopleEnteringFloor(floors,this.analysis, this);
+			this.peopleLeaving = new PeopleLeavingFloor(floors, this.analysis, this);
 		}
 	}
 	
@@ -317,6 +327,36 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setBuildingAgent(BuildingAgent buildingAgent) {
 		this.buildingAgent = buildingAgent;
+	}
+
+
+	public CurrentWeightHistogram getCurrWeightHisto() {
+		return currWeightHisto;
+	}
+
+
+	public void setCurrWeightHisto(CurrentWeightHistogram currWeightHisto) {
+		this.currWeightHisto = currWeightHisto;
+	}
+
+
+	public PeopleEnteringFloor getPeopleEntering() {
+		return peopleEntering;
+	}
+
+
+	public void setPeopleEntering(PeopleEnteringFloor peopleEntering) {
+		this.peopleEntering = peopleEntering;
+	}
+
+
+	public PeopleLeavingFloor getPeopleLeaving() {
+		return peopleLeaving;
+	}
+
+
+	public void setPeopleLeaving(PeopleLeavingFloor peopleLeaving) {
+		this.peopleLeaving = peopleLeaving;
 	}
 
 }
