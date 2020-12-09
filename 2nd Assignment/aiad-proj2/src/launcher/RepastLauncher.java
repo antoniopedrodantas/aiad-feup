@@ -121,9 +121,6 @@ public class RepastLauncher extends Repast3Launcher {
 		super.begin();
 	}
 	
-
-
-
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors, RequestAgent request) {
 		if(!this.runInBatchMode) {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
@@ -143,7 +140,7 @@ public class RepastLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 		
-		boolean runMode = BATCH_MODE; 
+		boolean runMode = !BATCH_MODE; 
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
