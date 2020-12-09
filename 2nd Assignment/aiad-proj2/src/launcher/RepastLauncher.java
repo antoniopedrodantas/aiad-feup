@@ -18,6 +18,7 @@ import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.AgentController;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import utils.Analysis;
 
@@ -44,6 +45,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
+	private float simulationTime = 1000;
 	
 	private ArrayList<LiftAgent> liftAgents;
 	private BuildingAgent buildingAgent;
@@ -58,7 +60,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	@Override
 	public String[] getInitParam() {
-		return new String[] { "nmrFloors", "nmrLifts", "maxWeight", "maxSpeed", "distanceBetweenFloors", "timeAtFloor"};
+		return new String[] { "nmrFloors", "nmrLifts", "maxWeight", "maxSpeed", "distanceBetweenFloors", "timeAtFloor", "simulationTime"};
 	}
 
 	@Override
@@ -96,14 +98,19 @@ public class RepastLauncher extends Repast3Launcher {
 		try {
 			this.buildingAgent = new BuildingAgent(args, mainContainer, this.analysis, this);
 			agentController = mainContainer.acceptNewAgent("buildingAgent", this.buildingAgent);
-			agentController.start();	
+			agentController.start();
+			getSchedule().scheduleActionAt(this.getSimulationTime(), this, "killSimulation", Schedule.LAST);
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 		}
 	}
 
 
-
+	public void killSimulation() throws StaleProxyException {
+		this.buildingAgent.takeDown();
+		this.stop();
+	}
+	
 	@Override
 	public void setup() {
 		super.setup();
@@ -114,6 +121,9 @@ public class RepastLauncher extends Repast3Launcher {
 		super.begin();
 	}
 	
+
+
+
 	public void buildAndScheduleDisplay(ArrayList<LiftAgent> lifts, ArrayList<FloorPanelAgent> floors, RequestAgent request) {
 		if(!this.runInBatchMode) {
 			this.liftGridDisplay = new LiftsGridDisplay(lifts, this.nmrLifts, this.nmrFLoors, this);
@@ -133,7 +143,7 @@ public class RepastLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 		
-		boolean runMode = !BATCH_MODE; 
+		boolean runMode = BATCH_MODE; 
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
@@ -291,6 +301,25 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public ConsensusNetworkDisplay getConsensusNetwork() {
 		return consensusNetwork;
+	}
+
+
+	public float getSimulationTime() {
+		return simulationTime;
+	}
+
+
+	public void setSimulationTime(float simulationTime) {
+		this.simulationTime = simulationTime;
+	}
+	
+	public BuildingAgent getBuildingAgent() {
+		return buildingAgent;
+	}
+
+
+	public void setBuildingAgent(BuildingAgent buildingAgent) {
+		this.buildingAgent = buildingAgent;
 	}
 
 }

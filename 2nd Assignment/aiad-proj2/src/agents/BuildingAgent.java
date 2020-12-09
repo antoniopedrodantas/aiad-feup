@@ -80,28 +80,22 @@ public class BuildingAgent extends Agent{
 	}
 
 	public void takeDown() {
-		
-		Codec codec = new SLCodec();    
-		Ontology jmo = JADEManagementOntology.getInstance();
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(jmo);
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		msg.addReceiver(getAMS());
-		msg.setLanguage(codec.getName());
-		msg.setOntology(jmo.getName());
-		
-		try {
-		    getContentManager().fillContent(msg, new Action(getAID(), new ShutdownPlatform()));
-		    send(msg);
-		}
-		catch (Exception e) {
-			
+		for(LiftAgent l: this.lifts) {
+			l.takeDown();
 		}
 		
-		System.out.println(getLocalName() + ": done working."); 
+		for(FloorPanelAgent f: this.floorPanels) {
+			f.takeDown();
+		}
 		
-		//calls the analysis function that aims to write the information collected to a file
+		this.request.takeDown();
+		System.out.println(getLocalName() + ":done working."); 
 		this.analysis.shutDown(); 
+		try {
+			this.mainContainer.kill();
+		} catch (StaleProxyException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

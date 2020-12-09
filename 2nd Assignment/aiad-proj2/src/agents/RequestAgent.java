@@ -30,6 +30,7 @@ public class RequestAgent extends Agent{
 	private int floors;
 	private Queue<Integer> inFlow = new ArrayDeque<Integer>();
 	private Queue<Integer> outFlow = new ArrayDeque<Integer>();
+	private ScheduledExecutorService scheduler;
 	
 	public RequestAgent(int floors, int lifts) {
 		this.floors = floors;
@@ -47,11 +48,14 @@ public class RequestAgent extends Agent{
 	
 	public void takeDown() {
 		System.out.println("RequestAgent done working...");
+		if(this.scheduler != null) {
+			this.scheduler.shutdownNow();
+		}
 	}
 	
 	private void sendRequests() {
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new Runnable() {
+		this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        this.scheduler.scheduleAtFixedRate(new Runnable() {
             	public void run() {
             		sendRequest();
             	}
