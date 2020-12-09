@@ -9,6 +9,7 @@ import agents.LiftAgent;
 import agents.RequestAgent;
 import launcher.RepastLauncher;
 import uchicago.src.sim.analysis.BinDataSource;
+import uchicago.src.sim.analysis.Histogram;
 import uchicago.src.sim.analysis.OpenHistogram;
 import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
@@ -16,7 +17,7 @@ import uchicago.src.sim.engine.Schedule;
 public class CurrentWeightHistogram {
 
 	private RepastLauncher repast;
-	private OpenHistogram histogram;
+	private Histogram histogram;
 	
 	private ArrayList<LiftAgent> lifts;
 	
@@ -25,7 +26,8 @@ public class CurrentWeightHistogram {
 		this.repast = repast;
 		
 		if (this.histogram != null) histogram.dispose();
-			this.histogram = new OpenHistogram("Lift's Current Weights", 5, -1, repast);
+			
+			this.histogram = new Histogram("Lift's Current Weights", 10, 0, repast.getMaxWeight(), repast);
 			
 		histogram.setXRange(15, 20);
 		

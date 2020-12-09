@@ -24,9 +24,8 @@ public class AverageOccupationPlot {
 		if (this.plot != null) plot.dispose();
 			this.plot = new OpenSequenceGraph("Lift's Average Occupation", repast);
 		
-		plot.setAxisTitles("time", "Lift's Average Occupation");
-		
-		plot.setYRange(0, 1);
+		this.plot.setYRange(0, 100);
+		this.plot.setAxisTitles("time", "Lift's Average Occupation");
 		
 		this.buildDisplay();
 		this.repast.getSchedule().scheduleActionAtInterval(5, plot, "step", Schedule.LAST);
@@ -38,7 +37,7 @@ public class AverageOccupationPlot {
 			
 			plot.addSequence("Lift"+ liftAgent.getId(), new Sequence() {
 				public double getSValue() {
-					return analysis.getAverageOccupation().get(liftAgent.getId() - 1).get(1);
+					return (analysis.getAverageOccupation().get(liftAgent.getId() - 1).get(1)) * 100;
 				}
 			});
 			
