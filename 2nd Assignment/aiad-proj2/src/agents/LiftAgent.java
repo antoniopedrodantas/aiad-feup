@@ -67,6 +67,10 @@ public class LiftAgent extends Agent implements Drawable{
 
 	private DefaultDrawableNode myNode;
 	
+	private float averageRequestTime = 0;
+	private float requestTimeSum = 0;
+	private float requestNumber = 0;
+	
 	public LiftAgent() {
       	
 		this.id = 1;
@@ -596,6 +600,21 @@ public class LiftAgent extends Agent implements Drawable{
 
 	public void setConsensusNetwork(ConsensusNetworkDisplay consensusNetwork) {
 		this.consensusNetwork = consensusNetwork;
+	}
+
+	public void recalculateAvgTime() {
+		
+		float currTime = this.getCurrentLiftProposal().getTime();
+		
+		this.requestTimeSum += currTime;
+		this.requestNumber++;
+		
+		this.averageRequestTime = this.requestTimeSum / this.requestNumber;
+		
+	}
+	
+	public float getAverageRequestTime() {
+		return this.averageRequestTime;
 	}
 
 }

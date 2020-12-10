@@ -165,8 +165,13 @@ public class LiftBullyBehaviour extends CyclicBehaviour {
 			}
 			
 	        lift.send(msg);
+	        
 	    }
 		this.accepted_request = true;
+		
+		// add to averageLiftTime
+		lift.recalculateAvgTime();
+		
 	}
 	
 	private void processAgreeMessage(ACLMessage msg) {

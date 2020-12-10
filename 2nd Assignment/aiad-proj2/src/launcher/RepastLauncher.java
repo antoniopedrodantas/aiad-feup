@@ -6,6 +6,7 @@ import agents.FloorPanelAgent;
 import agents.LiftAgent;
 import agents.RequestAgent;
 import display.AverageOccupationPlot;
+import display.AverageTimeHistogram;
 import display.ConsensusNetworkDisplay;
 import display.CurrentWeightDisplay;
 import display.CurrentWeightHistogram;
@@ -37,6 +38,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private AverageOccupationPlot avgPlot;
 	private CurrentWeightHistogram currWeightHisto;
 	private ConsensusNetworkDisplay consensusNetwork;
+	private AverageTimeHistogram averageTimeHistogram;
 	
 	/* This values can be changed in Model Parameters*/
 	private int nmrFLoors = 18;
@@ -128,6 +130,7 @@ public class RepastLauncher extends Repast3Launcher {
 			this.avgPlot = new AverageOccupationPlot(lifts, this.analysis, this);
 			this.currWeightHisto = new CurrentWeightHistogram(lifts, this);
 			this.consensusNetwork = new ConsensusNetworkDisplay(lifts, nmrLifts, this.nmrFLoors, this);
+			this.averageTimeHistogram = new AverageTimeHistogram(lifts, this);
 			for(LiftAgent lift : lifts) {
 				lift.setConsensusNetwork(this.consensusNetwork);;
 			}
