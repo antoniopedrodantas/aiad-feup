@@ -112,7 +112,7 @@ public class BuildingAgent extends Agent{
 	protected void createLiftAgent(Integer lift, SwingDisplay swing, Analysis analysis) {
 		
 		AgentController liftAgent;
-		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), this.nmrFloors, swing, analysis);
+		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), this.nmrFloors, swing, analysis, this.repast);
 		
 		try {
 			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, newLiftAgent);
@@ -164,7 +164,7 @@ public class BuildingAgent extends Agent{
 		
 		AgentController requestAgent;
 		try {
-			this.request = new RequestAgent(nmrFloors, nmrLifts);
+			this.request = new RequestAgent(nmrFloors, nmrLifts, this.repast);
 			requestAgent = this.mainContainer.acceptNewAgent("requestAgent", this.request);
 			requestAgent.start();
 		} catch(StaleProxyException e) {

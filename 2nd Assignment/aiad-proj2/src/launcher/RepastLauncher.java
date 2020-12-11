@@ -52,7 +52,9 @@ public class RepastLauncher extends Repast3Launcher {
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
 	private float simulationTime = 10000;
-	
+	private double ticksBetweenRequests = 100;
+	private double ticksBetweenMove = 5;
+
 	private ArrayList<LiftAgent> liftAgents;
 	private BuildingAgent buildingAgent;
 	private Analysis analysis;
@@ -66,7 +68,7 @@ public class RepastLauncher extends Repast3Launcher {
 	
 	@Override
 	public String[] getInitParam() {
-		return new String[] { "nmrFloors", "nmrLifts", "maxWeight", "maxSpeed", "distanceBetweenFloors", "timeAtFloor", "simulationTime"};
+		return new String[] { "nmrFloors", "nmrLifts", "maxWeight", "maxSpeed", "distanceBetweenFloors", "timeAtFloor", "simulationTime", "ticksBetweenRequests", "ticksBetweenMove"};
 	}
 
 	@Override
@@ -360,6 +362,25 @@ public class RepastLauncher extends Repast3Launcher {
 
 	public void setPeopleLeaving(PeopleLeavingFloor peopleLeaving) {
 		this.peopleLeaving = peopleLeaving;
+	}
+
+	
+	public void setTicksBetweenRequests(double ticksBetweenRequests) {
+		this.ticksBetweenRequests = ticksBetweenRequests;
+	}
+
+	public double getTicksBetweenRequests() {
+		return this.ticksBetweenRequests;
+	}
+
+
+	public double getTicksBetweenMove() {
+		return this.ticksBetweenMove;
+	}
+
+
+	public void setTicksBetweenMove(double ticksBetweenMove) {
+		this.ticksBetweenMove = ticksBetweenMove;
 	}
 
 }

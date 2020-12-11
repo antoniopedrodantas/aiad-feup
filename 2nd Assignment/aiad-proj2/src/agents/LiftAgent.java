@@ -33,6 +33,7 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import launcher.RepastLauncher;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.gui.Drawable;
@@ -63,7 +64,7 @@ public class LiftAgent extends Agent implements Drawable{
 	private PrintWriter pw;
 	private ConsensusNetworkDisplay consensusNetwork;
 	private int nmrFloors;
-	
+	private RepastLauncher repast;
 
 	private DefaultDrawableNode myNode;
 	
@@ -85,14 +86,14 @@ public class LiftAgent extends Agent implements Drawable{
         
 	}
 	
-	public LiftAgent(String[] args, int nmrFloors, SwingDisplay swing, Analysis analysis) {
+	public LiftAgent(String[] args, int nmrFloors, SwingDisplay swing, Analysis analysis, RepastLauncher repast) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
         this.speed = Float.parseFloat(args[2]);
         this.totalLifts = Integer.parseInt(args[3]);
         this.floorDistance = Float.parseFloat(args[4]);
-      
+        this.repast = repast;
         this.setTimeAtFloors(Float.parseFloat(args[5]));
         
         this.currentFloor = 0;
@@ -175,7 +176,7 @@ public class LiftAgent extends Agent implements Drawable{
 		
 		addLiftListener();
 		
-		this.addBehaviour(new LiftTickerBehaviour(this, 1000));
+		this.addBehaviour(new LiftTickerBehaviour(this, this.repast));
 		this.addBehaviour(new LiftBullyBehaviour(this)); 
 	}
 	

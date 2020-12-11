@@ -8,9 +8,11 @@ import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import launcher.RepastLauncher;
 import sajas.proto.AchieveREInitiator;
 import sajas.proto.AchieveREResponder;
 import uchicago.src.sim.analysis.BinDataSource;
+import uchicago.src.sim.engine.Schedule;
 
 import java.sql.Date;
 import java.util.AbstractQueue;
@@ -31,18 +33,20 @@ public class RequestAgent extends Agent{
 	private Queue<Integer> inFlow = new ArrayDeque<Integer>();
 	private Queue<Integer> outFlow = new ArrayDeque<Integer>();
 	private ScheduledExecutorService scheduler;
+	private RepastLauncher repast;
 	
-	public RequestAgent(int floors, int lifts) {
+	public RequestAgent(int floors, int lifts, RepastLauncher repast) {
 		this.floors = floors;
 		this.nLifts = lifts;
 		for (int i = 0; i < floors; i++) {
 			this.inFlow.add(0);
 			this.outFlow.add(0);
 		}
+		this.repast = repast;
 	}
 	
 	public void setup() {
-		sendRequests();
+		scheduleNextRequest();
 		addListener();
 	}
 	
@@ -53,18 +57,13 @@ public class RequestAgent extends Agent{
 		}
 	}
 	
-	private void sendRequests() {
-		this.scheduler = Executors.newSingleThreadScheduledExecutor();
-        this.scheduler.scheduleAtFixedRate(new Runnable() {
-            	public void run() {
-            		sendRequest();
-            	}
-          	}, 5000, 5000, TimeUnit.MILLISECONDS);
+	private void scheduleNextRequest() {
+		repast.getSchedule().scheduleActionAt(repast.getTickCount()+repast.getTicksBetweenRequests(), this, "sendRequest", Schedule.LAST);
 	}
 	
 	
-	private void sendRequest() {
-		
+	public void sendRequest() {
+		this.scheduleNextRequest();
 		Random rand = new Random();
 		int randomInteger = rand.nextInt(floors + 1);
 		if(startRequestsMade < nLifts) {

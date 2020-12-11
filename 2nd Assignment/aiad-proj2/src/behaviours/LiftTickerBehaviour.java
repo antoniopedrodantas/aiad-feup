@@ -1,36 +1,38 @@
 package behaviours;
 
 import agents.LiftAgent;
-
+import launcher.RepastLauncher;
 import sajas.core.Agent;
+import sajas.core.behaviours.CyclicBehaviour;
 import sajas.core.behaviours.TickerBehaviour;
 
 @SuppressWarnings("serial")
-public class LiftTickerBehaviour extends TickerBehaviour {
+public class LiftTickerBehaviour extends CyclicBehaviour {
 	
 	private LiftAgent myAgent;
 	private float realAgentPosition;
 	private int tick;
+	private RepastLauncher repast;
 	
-	public LiftTickerBehaviour(Agent agent, long period) {
-		super(agent, period);
+	public LiftTickerBehaviour(Agent agent, RepastLauncher repast) {
+		super(agent);
 		this.myAgent = (LiftAgent) agent;
 		this.realAgentPosition = (float) this.myAgent.getFloor();
 		this.tick = 0;
+		this.repast = repast;
 	}
 
-	@Override
-	protected void onTick() {
+	protected void moveLifts() {
 		
 		if(!this.myAgent.getTaskList().isEmpty()) {
 			if(this.myAgent.getTaskList().get(0).getFloor() == this.myAgent.getFloor()) {
 				processRequest();
 			}
 			else if(this.myAgent.getTaskList().get(0).getFloor() > this.myAgent.getFloor()) {
-				this.realAgentPosition += (float) (this.getPeriod() / 1000) / this.myAgent.getSpeed();
+				this.realAgentPosition += this.myAgent.getSpeed() / this.myAgent.getFloorDistance();
 			}
 			else {
-				this.realAgentPosition -= (float) (this.getPeriod() / 1000) / this.myAgent.getSpeed();
+				this.realAgentPosition -= this.myAgent.getSpeed()/ this.myAgent.getFloorDistance();
 			}
 			
 			updatePosition();
@@ -58,6 +60,13 @@ public class LiftTickerBehaviour extends TickerBehaviour {
 	protected void processRequest() {
 		this.myAgent.askRequestAgent();
 		removeEntry();
+	}
+
+	@Override
+	public void action() {
+		if((int)this.repast.getTickCount()%(int)this.repast.getTicksBetweenMove() == 0) {
+			this.moveLifts();
+		}		
 	}
 	
 	
