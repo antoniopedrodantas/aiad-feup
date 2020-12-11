@@ -249,7 +249,7 @@ public class Analysis {
 	public void setMaxSpeed(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
-
+  
 	public float getFloorDistance() {
 		return floorDistance;
 	}
@@ -282,5 +282,13 @@ public class Analysis {
 
 	public void setAverageWaitingTime(ArrayList<Float> averageWaitingTime) {
 		this.averageWaitingTime = averageWaitingTime;
+	}
+	
+	public ArrayList<Integer> getEnteringFloor() {
+		return this.enteringAtFloor;
+	}
+	
+	public ArrayList<Integer> getExitingFloor() {
+		return this.exitingAtFloor;
 	}
 }
