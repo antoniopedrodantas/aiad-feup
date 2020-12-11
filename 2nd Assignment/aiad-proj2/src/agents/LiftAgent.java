@@ -610,6 +610,7 @@ public class LiftAgent extends Agent implements Drawable{
 		this.requestNumber++;
 		
 		this.averageRequestTime = this.requestTimeSum / this.requestNumber;
+		this.analysis.getAverageWaitingTime().set(this.getId()-1, averageRequestTime);
 		
 	}
 	

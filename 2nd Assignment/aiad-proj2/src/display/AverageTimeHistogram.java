@@ -27,9 +27,8 @@ public class AverageTimeHistogram {
 		
 		if (this.histogram != null) histogram.dispose();
 			
-			this.histogram = new Histogram("Lift's Average Time", 10, 0, 30, repast);
+		this.histogram = new Histogram("Lift's Average Time", 10, 0, 50, repast);
 			
-		histogram.setXRange(15, 20);
 		
 		histogram.setAxisTitles("Average Time", "Number of Lifts");
 		this.buildDisplay();
@@ -39,7 +38,7 @@ public class AverageTimeHistogram {
 	
 	private void buildDisplay() {
 
-		histogram.createHistogramItem("Lift's Current Weight", this.lifts, new BinDataSource() {
+		histogram.createHistogramItem("Lift's Average waiting time", this.lifts, new BinDataSource() {
 			public double getBinValue(Object o) {
 			    LiftAgent agent = (LiftAgent)o;
 			    return agent.getAverageRequestTime();

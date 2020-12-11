@@ -21,7 +21,9 @@ public class Analysis {
 	private ArrayList<Integer> exitingAtFloor;
 	private ArrayList<ArrayList<Integer>> liftTasks;
 	private ArrayList<ArrayList<Float>> averageOccupation;
+	private ArrayList<Float> averageWaitingTime;
 
+	
 	public Analysis(String[] args) {
 		this.nmrFloors = Integer.parseInt(args[0]);
         this.nmrLifts = Integer.parseInt(args[1]);
@@ -32,10 +34,15 @@ public class Analysis {
         
         enteringAtFloor = new ArrayList<Integer>(this.nmrFloors + 1);
         exitingAtFloor = new ArrayList<Integer>(this.nmrFloors + 1);
+        averageWaitingTime = new ArrayList<Float>(this.nmrLifts);
         
         for (int i = 0; i <= this.nmrFloors; i++) {
         	 this.enteringAtFloor.add(0);
         	 this.exitingAtFloor.add(0);
+        }
+        
+        for(int j = 0; j < this.nmrLifts; j++) {
+        	this.averageWaitingTime.add((float) 0);
         }
         
         /* initialize arraylist to keep track of tasks performed by lifts */
@@ -180,6 +187,8 @@ public class Analysis {
 		    sb.append("End");
 		    sb.append(",");
 		    sb.append("Average Occupation");
+		    sb.append(",");
+		    sb.append("Average Waiting Time");
 		    sb.append("\r\n");
 		    
 		    
@@ -193,6 +202,8 @@ public class Analysis {
 			    sb.append(this.liftTasks.get(k).get(2));
 			    sb.append(",");
 			    sb.append(this.averageOccupation.get(k).get(1));
+			    sb.append(",");
+			    sb.append(this.averageWaitingTime.get(k));
 			    sb.append("\r\n");
 		    }
 		    
@@ -262,5 +273,14 @@ public class Analysis {
 
 	public void setAverageOccupation(ArrayList<ArrayList<Float>> averageOccupation) {
 		this.averageOccupation = averageOccupation;
+	}
+	
+	public ArrayList<Float> getAverageWaitingTime() {
+		return averageWaitingTime;
+	}
+
+
+	public void setAverageWaitingTime(ArrayList<Float> averageWaitingTime) {
+		this.averageWaitingTime = averageWaitingTime;
 	}
 }
