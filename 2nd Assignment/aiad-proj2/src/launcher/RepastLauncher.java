@@ -45,10 +45,10 @@ public class RepastLauncher extends Repast3Launcher {
 	private PeopleLeavingFloor peopleLeaving;
 	
 	/* This values can be changed in Model Parameters*/
-	private int nmrFLoors = 100;
-	private int nmrLifts = 14;
+	private int nmrFLoors = 30;
+	private int nmrLifts = 5;
 	private float maxSpeed = (float)2.5;
-	private float maxWeight = 900;
+	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
 	private float simulationTime = 50000;
@@ -155,7 +155,7 @@ public class RepastLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 		
-		boolean runMode = BATCH_MODE; 
+		boolean runMode = !BATCH_MODE; 
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);
