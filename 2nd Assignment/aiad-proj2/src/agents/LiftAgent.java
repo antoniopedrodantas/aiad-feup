@@ -3,7 +3,6 @@ package agents;
 import behaviours.LiftBullyBehaviour;
 import behaviours.LiftTickerBehaviour;
 import display.ConsensusNetworkDisplay;
-import display.SwingDisplay;
 import utils.HandleRequest;
 import utils.LiftProposal;
 import utils.LiftTaskListEntry;
@@ -59,7 +58,6 @@ public class LiftAgent extends Agent implements Drawable{
 	private ArrayList<String> liftContacts;
 	private LiftProposal currentLiftProposal = null;
 	
-	private SwingDisplay swing;
 	private Analysis analysis;
 	private PrintWriter pw;
 	private ConsensusNetworkDisplay consensusNetwork;
@@ -86,7 +84,7 @@ public class LiftAgent extends Agent implements Drawable{
         
 	}
 	
-	public LiftAgent(String[] args, int nmrFloors, SwingDisplay swing, Analysis analysis, RepastLauncher repast) {
+	public LiftAgent(String[] args, int nmrFloors, Analysis analysis, RepastLauncher repast) {
 		
 		this.id = Integer.parseInt(args[0]);
         this.maxWeight = Float.parseFloat(args[1]);
@@ -103,7 +101,6 @@ public class LiftAgent extends Agent implements Drawable{
         
         this.nmrFloors = nmrFloors;
         
-        this.swing = swing;
         this.analysis = analysis;
         
         initiatePrintWriter();

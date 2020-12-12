@@ -51,7 +51,7 @@ public class RepastLauncher extends Repast3Launcher {
 	private float maxWeight = 600;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
-	private float simulationTime = 10000;
+	private float simulationTime = 2000;
 	private double ticksBetweenRequests = 100;
 	private double ticksBetweenMove = 5;
 
@@ -155,7 +155,7 @@ public class RepastLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 		
-		boolean runMode = !BATCH_MODE; 
+		boolean runMode = BATCH_MODE; 
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new RepastLauncher(runMode), null, runMode);

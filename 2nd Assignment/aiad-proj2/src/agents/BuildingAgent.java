@@ -9,15 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-
 import agents.FloorPanelAgent;
 import agents.RequestAgent;
-import display.SwingDisplay;
 
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -67,16 +60,12 @@ public class BuildingAgent extends Agent{
 		System.out.println(getLocalName() + ": started working.\n");
 		System.out.println(this.toString());
 		
-		SwingDisplay swing = new SwingDisplay(lifts, floorPanels);
-		
-		launchLiftAgents(this.nmrLifts, swing, analysis);
+		launchLiftAgents(this.nmrLifts, analysis);
 		launchRequestAgent(this.nmrFloors);
 		launchFloorPanelAgents(this.nmrFloors, this.nmrLifts);
 	
 		this.repast.buildAndScheduleDisplay(this.lifts, this.floorPanels, this.request);
 		
-		swing.update(lifts, floorPanels);
-//		swing.draw();
 	}
 
 	public void takeDown() {
@@ -101,18 +90,18 @@ public class BuildingAgent extends Agent{
 	
 	/*LiftAgents launching functions */
 	
-	protected void launchLiftAgents(Integer nmrLifts, SwingDisplay swing, Analysis analysis) {
+	protected void launchLiftAgents(Integer nmrLifts, Analysis analysis) {
 		
 		int lift;
 		for(lift = 1; lift <= nmrLifts; lift++) {
-			createLiftAgent(lift, swing, analysis);
+			createLiftAgent(lift, analysis);
 		}
 	}
 	
-	protected void createLiftAgent(Integer lift, SwingDisplay swing, Analysis analysis) {
+	protected void createLiftAgent(Integer lift, Analysis analysis) {
 		
 		AgentController liftAgent;
-		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), this.nmrFloors, swing, analysis, this.repast);
+		LiftAgent newLiftAgent = new LiftAgent(buildArgs(lift), this.nmrFloors, analysis, this.repast);
 		
 		try {
 			liftAgent = this.mainContainer.acceptNewAgent("liftAgent" + lift, newLiftAgent);
