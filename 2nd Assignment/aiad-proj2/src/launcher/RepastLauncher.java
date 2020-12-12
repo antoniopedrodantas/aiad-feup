@@ -45,13 +45,13 @@ public class RepastLauncher extends Repast3Launcher {
 	private PeopleLeavingFloor peopleLeaving;
 	
 	/* This values can be changed in Model Parameters*/
-	private int nmrFLoors = 30;
-	private int nmrLifts = 5;
+	private int nmrFLoors = 100;
+	private int nmrLifts = 14;
 	private float maxSpeed = (float)2.5;
-	private float maxWeight = 600;
+	private float maxWeight = 900;
 	private float distanceBetweenFloors = 5;
 	private float timeAtFloor = 1;
-	private float simulationTime = 2000;
+	private float simulationTime = 50000;
 	private double ticksBetweenRequests = 100;
 	private double ticksBetweenMove = 5;
 
