@@ -12,4 +12,4 @@ The objective of this project is to develop a **Multi-Agent System** for the man
  * **Final report:** You can access all the slides that served as support for our presentation **[here](https://github.com/vitorhugo13/feup-aiad/blob/main/1st%20Assignment/docs/report.pdf)**.  
 * **Instructions:** Instructions for running the MAS can be viewed **[here](https://github.com/vitorhugo13/feup-aiad/blob/main/1st%20Assignment/docs/README.txt)**.
 ## Grade
-19.5 out of 20
+* 19.5/20
